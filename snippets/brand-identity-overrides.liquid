@@ -513,4 +513,65 @@
       height: 220px !important;
     }
   }
+
+  body.template-index .health-benefit-grid__container,
+  body.template-index .product-carousel-section > .container,
+  body.template-index .homepage-knowledge__container {
+    width: min(var(--homepage-max), calc(100vw - (var(--homepage-edge) * 2))) !important;
+    max-width: var(--homepage-max) !important;
+    padding: clamp(1rem, 1.8vw, 1.6rem) 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  body.template-index .health-benefit-grid {
+    gap: clamp(1.1rem, 1.8vw, 1.6rem) !important;
+  }
+
+  body.template-index .health-benefit-card {
+    min-height: auto !important;
+    padding: 1rem 0.65rem !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.template-index .health-benefit-card:hover,
+  body.template-index .health-benefit-card:focus-visible {
+    border: 0 !important;
+    box-shadow: none !important;
+    transform: translateY(-1px) !important;
+  }
+
+  body.template-index .amzn-card {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.template-index .amzn-card:hover,
+  body.template-index .amzn-card:focus-within {
+    box-shadow: none !important;
+  }
+
+  body.template-index .amzn-card__media {
+    border: 0 !important;
+    background: #f2f2f2 !important;
+  }
+
+  body.template-index .homepage-knowledge-card {
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.template-index .homepage-knowledge-card:hover,
+  body.template-index .homepage-knowledge-card:focus-visible {
+    border: 0 !important;
+    box-shadow: none !important;
+  }
 {% endstyle %}

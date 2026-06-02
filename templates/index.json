@@ -9,77 +9,6 @@
  */
 {
   "sections": {
-    "hero-banner": {
-      "type": "hero-banner",
-      "blocks": {
-        "slide_EY7A4d": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Apr_21_2026_10_06_03_PM.png",
-            "nav_title": "Women's Health",
-            "nav_caption": "Shop Now",
-            "grid_title": "Women's Health",
-            "grid_text": "Daily wellness essentials for women",
-            "link": "/collections/all"
-          }
-        },
-        "slide_jALWGg": {
-          "type": "slide",
-          "settings": {
-            "nav_title": "Sunscreen",
-            "nav_caption": "BOGO 50% Off",
-            "grid_title": "Sunscreen",
-            "grid_text": "Protect and save on everyday sun care",
-            "link": "/collections/all"
-          }
-        },
-        "slide_7TBgeP": {
-          "type": "slide",
-          "settings": {
-            "nav_title": "Buy One, Get One Free",
-            "nav_caption": "Shop Now",
-            "grid_title": "Buy One, Get One Free",
-            "grid_text": "Double-value wellness picks",
-            "link": "/collections/all"
-          }
-        },
-        "slide-1": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/ChatGPT_Image_Apr_21_2026_10_06_03_PM.png",
-            "nav_title": "Wellness Essentials",
-            "nav_caption": "Shop Now",
-            "grid_title": "Wellness Essentials",
-            "grid_text": "Supplements and daily health favorites",
-            "link": "/collections/all"
-          }
-        }
-      },
-      "block_order": [
-        "slide_EY7A4d",
-        "slide_jALWGg",
-        "slide_7TBgeP",
-        "slide-1"
-      ],
-      "settings": {
-        "autoplay": false,
-        "autoplay_interval": 5,
-        "mobile_ratio": "auto",
-        "hero_eyebrow": "Premium herbal supplements",
-        "seo_h1": "Herbal by Nature. Backed by Science.",
-        "hero_lead": "Premium, clean-label supplements crafted with care for your everyday wellness.",
-        "hero_cta_label": "Shop Now",
-        "hero_cta_link": "/collections/all",
-        "hero_proof_1": "Halal Certified",
-        "hero_proof_2": "Clean & Transparent Ingredients",
-        "hero_proof_3": "Fast Delivery Across Pakistan",
-        "show_bottom_strip": false,
-        "view_all_label": "View all",
-        "view_all_heading": "Explore all featured banners",
-        "promo_top_link": "",
-        "promo_bottom_link": ""
-      }
-    },
     "health-benefit-grid": {
       "type": "health-benefit-grid",
       "blocks": {
@@ -216,10 +145,89 @@
         "blog": "news",
         "show_view_all": false
       }
+    },
+    "promo-slideshow": {
+      "type": "promo-slideshow",
+      "blocks": {
+        "promo-heart": {
+          "type": "slide",
+          "settings": {
+            "heading": "15% Off Heart Health",
+            "subheading": "CoQ10, Omega-3, Spirulina and more",
+            "code": "Use Code: MAY26HH",
+            "tab_label": "Heart Health",
+            "tab_caption": "15% Off",
+            "link": "/collections/all",
+            "background_color": "#F3D06B"
+          }
+        },
+        "promo-pro": {
+          "type": "slide",
+          "settings": {
+            "heading": "Earn 10% Credit",
+            "subheading": "On professional wellness brands",
+            "code": "Shop clean-label supplements",
+            "tab_label": "Professional Brands",
+            "tab_caption": "Earn 10% Credit",
+            "link": "/collections/all",
+            "background_color": "#F5D67D"
+          }
+        },
+        "promo-bogo": {
+          "type": "slide",
+          "settings": {
+            "heading": "Buy One, Get One",
+            "subheading": "Daily wellness support for less",
+            "code": "Shop Now",
+            "tab_label": "Buy One, Get One 80% Off",
+            "tab_caption": "Shop Now",
+            "link": "/collections/all",
+            "background_color": "#F2CF70"
+          }
+        },
+        "promo-sunscreen": {
+          "type": "slide",
+          "settings": {
+            "heading": "Sunscreen",
+            "subheading": "Everyday sun care offers",
+            "code": "BOGO 50% Off",
+            "tab_label": "Sunscreen",
+            "tab_caption": "BOGO 50% Off",
+            "link": "/collections/all",
+            "background_color": "#F4D987"
+          }
+        },
+        "promo-essentials": {
+          "type": "slide",
+          "settings": {
+            "heading": "CoQ10 Essentials",
+            "subheading": "Support heart and daily vitality",
+            "code": "Learn More",
+            "tab_label": "CoQ10: Heart Essentials",
+            "tab_caption": "Learn More",
+            "link": "/collections/all",
+            "background_color": "#F3D06B"
+          }
+        }
+      },
+      "block_order": [
+        "promo-heart",
+        "promo-pro",
+        "promo-bogo",
+        "promo-sunscreen",
+        "promo-essentials"
+      ],
+      "settings": {
+        "collection": "all",
+        "autoplay": false,
+        "autoplay_interval": 5,
+        "view_all_label": "View all",
+        "view_all_link": "/collections/all"
+      }
     }
   },
   "order": [
-    "hero-banner",
+    "promo-slideshow",
     "health-benefit-grid",
     "top-selling-combo",
     "homepage-trust-strip",

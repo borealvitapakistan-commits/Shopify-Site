@@ -1,0 +1,530 @@
+{%- comment -%}
+  Homepage promotional slideshow.
+{%- endcomment -%}
+
+{%- assign promo_collection = collections[section.settings.collection] -%}
+{%- if promo_collection == blank -%}
+  {%- assign promo_collection = collections.all -%}
+{%- endif -%}
+
+<section
+  class="promo-slideshow-section"
+  id="PromoSlideshow-{{ section.id }}"
+  data-promo-slider="{{ section.id }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-interval="{{ section.settings.autoplay_interval | times: 1000 }}"
+>
+  <div class="promo-slideshow">
+    <div class="promo-slideshow__viewport">
+      <div class="promo-slideshow__track" data-promo-track>
+        {%- for block in section.blocks -%}
+          {%- assign slide_link = block.settings.link | default: routes.all_products_collection_url -%}
+          <article
+            class="promo-slideshow__slide{% if forloop.first %} is-active{% endif %}"
+            data-promo-slide
+            style="--promo-bg: {{ block.settings.background_color }};"
+            {{ block.shopify_attributes }}
+          >
+            <a class="promo-slideshow__slide-link" href="{{ slide_link }}">
+              <span class="promo-slideshow__copy">
+                <strong class="promo-slideshow__headline">{{ block.settings.heading }}</strong>
+                <span class="promo-slideshow__subheading">{{ block.settings.subheading }}</span>
+                {%- if block.settings.code != blank -%}
+                  <span class="promo-slideshow__code">{{ block.settings.code }}</span>
+                {%- endif -%}
+              </span>
+
+              <span class="promo-slideshow__products" aria-hidden="true">
+                {%- if promo_collection != blank and promo_collection.products.size > 0 -%}
+                  {%- for product in promo_collection.products limit: 4 -%}
+                    {%- assign product_image = product.featured_media.preview_image | default: product.featured_image -%}
+                    {%- if product_image != blank -%}
+                      <img
+                        class="promo-slideshow__product-image promo-slideshow__product-image--{{ forloop.index }}"
+                        src="{{ product_image | image_url: width: 420 }}"
+                        srcset="
+                          {{ product_image | image_url: width: 220 }} 220w,
+                          {{ product_image | image_url: width: 320 }} 320w,
+                          {{ product_image | image_url: width: 420 }} 420w
+                        "
+                        sizes="(min-width: 990px) 12vw, 38vw"
+                        alt=""
+                        width="{{ product_image.width }}"
+                        height="{{ product_image.height }}"
+                        loading="{% if forloop.parentloop.first and forloop.first %}eager{% else %}lazy{% endif %}"
+                      >
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              </span>
+            </a>
+          </article>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 1 -%}
+      <button class="promo-slideshow__arrow promo-slideshow__arrow--prev" type="button" aria-label="Previous promotion" data-promo-prev>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+          <path d="M15 18 9 12l6-6"></path>
+        </svg>
+      </button>
+      <button class="promo-slideshow__arrow promo-slideshow__arrow--next" type="button" aria-label="Next promotion" data-promo-next>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"></path>
+        </svg>
+      </button>
+
+      <div class="promo-slideshow__tabs" role="tablist" aria-label="Promotions">
+        {%- for block in section.blocks -%}
+          <button
+            class="promo-slideshow__tab{% if forloop.first %} is-active{% endif %}"
+            type="button"
+            data-promo-tab
+            data-promo-index="{{ forloop.index0 }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            role="tab"
+          >
+            <span>{{ block.settings.tab_label | default: block.settings.heading }}</span>
+            {%- if block.settings.tab_caption != blank -%}
+              <strong>{{ block.settings.tab_caption }}</strong>
+            {%- endif -%}
+          </button>
+        {%- endfor -%}
+        {%- if section.settings.view_all_label != blank -%}
+          <a class="promo-slideshow__view-all" href="{{ section.settings.view_all_link | default: routes.all_products_collection_url }}">
+            {{ section.settings.view_all_label }}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+              <path d="M5 12h14M13 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .promo-slideshow-section {
+    padding: clamp(0.8rem, 1.5vw, 1.4rem) 0 clamp(1.45rem, 2.6vw, 2.4rem);
+    background: #ffffff;
+  }
+
+  .promo-slideshow {
+    position: relative;
+    width: min(1540px, calc(100vw - clamp(2rem, 14vw, 15rem)));
+    margin: 0 auto;
+  }
+
+  .promo-slideshow__viewport {
+    overflow: hidden;
+    border-radius: 18px;
+    background: #f5cf68;
+  }
+
+  .promo-slideshow__track {
+    display: flex;
+    transition: transform 420ms ease;
+    will-change: transform;
+  }
+
+  .promo-slideshow__slide {
+    flex: 0 0 100%;
+    background: var(--promo-bg, #f5cf68);
+  }
+
+  .promo-slideshow__slide-link {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.95fr) minmax(0, 1.05fr);
+    align-items: center;
+    min-height: clamp(235px, 17.2vw, 318px);
+    padding: clamp(1.3rem, 2.9vw, 3.2rem) clamp(2.2rem, 5vw, 6.8rem);
+    color: #111111;
+    text-decoration: none;
+  }
+
+  .promo-slideshow__copy {
+    display: grid;
+    gap: clamp(0.55rem, 1vw, 0.9rem);
+    justify-items: start;
+  }
+
+  .promo-slideshow__headline,
+  .promo-slideshow__subheading,
+  .promo-slideshow__code {
+    display: block;
+    color: #111111;
+    line-height: 1.08;
+  }
+
+  .promo-slideshow__headline {
+    max-width: 13ch;
+    font-family: "DM Sans", var(--font-heading, sans-serif);
+    font-size: clamp(2rem, 3.35vw, 3.45rem);
+    font-weight: 900;
+    letter-spacing: 0;
+  }
+
+  .promo-slideshow__subheading {
+    max-width: 30rem;
+    font-size: clamp(1.05rem, 1.55vw, 1.65rem);
+    font-weight: 800;
+  }
+
+  .promo-slideshow__code {
+    font-size: clamp(1rem, 1.45vw, 1.5rem);
+    font-weight: 900;
+  }
+
+  .promo-slideshow__products {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 170px;
+  }
+
+  .promo-slideshow__product-image {
+    width: clamp(105px, 12vw, 190px);
+    height: clamp(150px, 15vw, 245px);
+    object-fit: contain;
+    object-position: center;
+    margin-left: clamp(-1rem, -1.8vw, -0.45rem);
+  }
+
+  .promo-slideshow__product-image:first-child {
+    margin-left: 0;
+  }
+
+  .promo-slideshow__product-image--1 {
+    transform: rotate(-6deg) translateY(8px);
+  }
+
+  .promo-slideshow__product-image--2 {
+    transform: translateY(-12px);
+  }
+
+  .promo-slideshow__product-image--3 {
+    transform: rotate(5deg) translateY(5px);
+  }
+
+  .promo-slideshow__product-image--4 {
+    transform: rotate(8deg) translateY(-2px);
+  }
+
+  .promo-slideshow__arrow {
+    position: absolute;
+    top: calc(50% - 16px);
+    z-index: 4;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 54px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #ffffff;
+  }
+
+  .promo-slideshow__arrow svg {
+    width: 34px;
+    height: 34px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.22));
+  }
+
+  .promo-slideshow__arrow--prev {
+    left: clamp(0.5rem, 1.1vw, 1rem);
+  }
+
+  .promo-slideshow__arrow--next {
+    right: clamp(0.5rem, 1.1vw, 1rem);
+  }
+
+  .promo-slideshow__tabs {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    width: min(840px, calc(100% - 5rem));
+    min-height: 52px;
+    margin: -8px auto 0;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #f7f7f5;
+  }
+
+  .promo-slideshow__tab,
+  .promo-slideshow__view-all {
+    display: grid;
+    place-items: center;
+    gap: 0.12rem;
+    min-width: 0;
+    padding: 0.42rem 0.85rem;
+    border: 0;
+    background: transparent;
+    color: #4f5554;
+    font-family: "DM Sans", var(--font-body, sans-serif);
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.14;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .promo-slideshow__tab {
+    flex: 1 1 0;
+  }
+
+  .promo-slideshow__tab strong {
+    color: var(--brand-primary, #0A282C);
+    font-size: 0.86rem;
+    font-weight: 900;
+  }
+
+  .promo-slideshow__tab.is-active {
+    background: #ffffff;
+    color: var(--brand-primary, #0A282C);
+  }
+
+  .promo-slideshow__view-all {
+    grid-auto-flow: column;
+    flex: 0 0 auto;
+    color: #0067b1;
+    font-weight: 900;
+    text-decoration: underline;
+    text-underline-offset: 0.13em;
+  }
+
+  .promo-slideshow__view-all svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  @media (max-width: 989px) {
+    .promo-slideshow {
+      width: min(100%, calc(100vw - 1rem));
+    }
+
+    .promo-slideshow__slide-link {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      min-height: auto;
+      padding: 1.5rem 1.25rem 2rem;
+    }
+
+    .promo-slideshow__headline {
+      max-width: 12ch;
+      font-size: clamp(2rem, 9vw, 3rem);
+    }
+
+    .promo-slideshow__subheading,
+    .promo-slideshow__code {
+      font-size: 1.05rem;
+    }
+
+    .promo-slideshow__products {
+      justify-content: flex-start;
+      overflow: hidden;
+    }
+
+    .promo-slideshow__product-image {
+      width: clamp(92px, 31vw, 130px);
+      height: clamp(130px, 38vw, 170px);
+    }
+
+    .promo-slideshow__tabs {
+      justify-content: start;
+      width: calc(100% - 1.5rem);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .promo-slideshow__tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .promo-slideshow__tab {
+      flex: 0 0 148px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const section = document.querySelector('[data-promo-slider="{{ section.id }}"]');
+    if (!section || section.dataset.bound === 'true') return;
+
+    section.dataset.bound = 'true';
+
+    const track = section.querySelector('[data-promo-track]');
+    const slides = Array.from(section.querySelectorAll('[data-promo-slide]'));
+    const tabs = Array.from(section.querySelectorAll('[data-promo-tab]'));
+    const prev = section.querySelector('[data-promo-prev]');
+    const next = section.querySelector('[data-promo-next]');
+
+    if (!track || slides.length === 0) return;
+
+    let activeIndex = 0;
+    let timer = null;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const autoplay = section.dataset.autoplay === 'true' && !reduceMotion;
+    const interval = Number(section.dataset.interval) || 5000;
+
+    const setActive = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+      track.style.transform = `translateX(-${activeIndex * 100}%)`;
+
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle('is-active', slideIndex === activeIndex);
+      });
+
+      tabs.forEach((tab, tabIndex) => {
+        const isActive = tabIndex === activeIndex;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+    };
+
+    const stop = () => {
+      window.clearInterval(timer);
+      timer = null;
+    };
+
+    const start = () => {
+      if (!autoplay || slides.length < 2) return;
+      stop();
+      timer = window.setInterval(() => setActive(activeIndex + 1), interval);
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        setActive(Number(tab.dataset.promoIndex) || 0);
+        start();
+      });
+    });
+
+    if (prev) {
+      prev.addEventListener('click', () => {
+        setActive(activeIndex - 1);
+        start();
+      });
+    }
+
+    if (next) {
+      next.addEventListener('click', () => {
+        setActive(activeIndex + 1);
+        start();
+      });
+    }
+
+    section.addEventListener('mouseenter', stop);
+    section.addEventListener('mouseleave', start);
+    section.addEventListener('focusin', stop);
+    section.addEventListener('focusout', start);
+
+    setActive(0);
+    start();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Promo slideshow",
+  "tag": "section",
+  "class": "section-promo-slideshow",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Product image collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Autoplay interval",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View all link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "15% Off Heart Health"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "CoQ10, Omega-3, Spirulina and more"
+        },
+        {
+          "type": "text",
+          "id": "code",
+          "label": "Code line",
+          "default": "Use Code: MAY26HH"
+        },
+        {
+          "type": "text",
+          "id": "tab_label",
+          "label": "Tab label",
+          "default": "Heart Health"
+        },
+        {
+          "type": "text",
+          "id": "tab_caption",
+          "label": "Tab caption",
+          "default": "15% Off"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#F3D06B"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo slideshow",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
