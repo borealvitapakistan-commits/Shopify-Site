@@ -65,67 +65,137 @@
         "autoplay": false,
         "autoplay_interval": 5,
         "mobile_ratio": "auto",
-        "hero_eyebrow": "Northern apothecary meets modern science",
-        "seo_h1": "Herbal By Nature. Antioxidants that protect cells.",
-        "hero_lead": "Canadian-made herbal supplements with clear labels, NPN-registered formulas, and delivery for Pakistan.",
-        "hero_cta_label": "Shop wellness formulas",
+        "hero_eyebrow": "Premium herbal supplements",
+        "seo_h1": "Herbal by Nature. Backed by Science.",
+        "hero_lead": "Premium, clean-label supplements crafted with care for your everyday wellness.",
+        "hero_cta_label": "Shop Now",
         "hero_cta_link": "/collections/all",
-        "hero_proof_1": "Made in Canada",
-        "hero_proof_2": "NPN registered",
-        "hero_proof_3": "Readable product facts",
-        "show_bottom_strip": true,
+        "hero_proof_1": "Halal Certified",
+        "hero_proof_2": "Clean & Transparent Ingredients",
+        "hero_proof_3": "Fast Delivery Across Pakistan",
+        "show_bottom_strip": false,
         "view_all_label": "View all",
         "view_all_heading": "Explore all featured banners",
         "promo_top_link": "",
         "promo_bottom_link": ""
       }
     },
+    "health-benefit-grid": {
+      "type": "health-benefit-grid",
+      "blocks": {
+        "benefit-immune": {
+          "type": "benefit",
+          "settings": {
+            "title": "Immune Support",
+            "text": "Strengthen your body's defense",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "immune"
+          }
+        },
+        "benefit-energy": {
+          "type": "benefit",
+          "settings": {
+            "title": "Energy & Vitality",
+            "text": "Boost energy and fight fatigue",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "energy"
+          }
+        },
+        "benefit-stress": {
+          "type": "benefit",
+          "settings": {
+            "title": "Stress & Sleep",
+            "text": "Relax your mind. Sleep better.",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "sleep"
+          }
+        },
+        "benefit-heart": {
+          "type": "benefit",
+          "settings": {
+            "title": "Heart Health",
+            "text": "Care for your heart naturally",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "heart"
+          }
+        },
+        "benefit-bone": {
+          "type": "benefit",
+          "settings": {
+            "title": "Bone & Joint",
+            "text": "Stronger bones. Better mobility.",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "bone"
+          }
+        },
+        "benefit-digestive": {
+          "type": "benefit",
+          "settings": {
+            "title": "Digestive Health",
+            "text": "Support gut health and digestion",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "digestive"
+          }
+        }
+      },
+      "block_order": [
+        "benefit-immune",
+        "benefit-energy",
+        "benefit-stress",
+        "benefit-heart",
+        "benefit-bone",
+        "benefit-digestive"
+      ],
+      "settings": {
+        "heading": "Shop by Health Benefit"
+      }
+    },
     "top-selling-combo": {
       "type": "product-carousel",
       "settings": {
-        "header_style": "featured_tabs",
-        "eyebrow": "POPULAR PICKS",
-        "title": "Trending Now",
+        "header_style": "standard",
+        "eyebrow": "",
+        "title": "Best Sellers",
         "primary_tab_label": "Best Sellings",
         "secondary_tab_label": "New Arrivals",
         "collection": "all",
-        "products_to_show": 12,
+        "products_to_show": 10,
         "products_order": "collection",
-        "show_view_all": false,
-        "view_all_label": "view all",
-        "view_all_style": "link",
+        "show_view_all": true,
+        "view_all_label": "View all products",
+        "view_all_style": "button",
         "show_rating": true,
         "show_pricing": true,
         "show_unit_price": true,
-        "show_delivery": true,
-        "show_social_proof": true,
+        "show_delivery": false,
+        "show_social_proof": false,
         "show_add_to_cart": true
       }
     },
-    "browse-by-discount": {
-      "type": "browse-by-discount",
+    "homepage-trust-strip": {
+      "type": "homepage-trust-strip",
       "settings": {
-        "eyebrow": "SPECIAL OFFERS",
-        "heading": "Deals Picked for You",
-        "collection": "all",
-        "products_to_show": 10,
-        "show_shop_all": true,
-        "show_mission_banner": false
       }
     },
     "trending-now-after-offer": {
       "type": "product-carousel",
       "settings": {
-        "header_style": "centered_title",
-        "eyebrow": "WELLNESS BUNDLES",
+        "header_style": "standard",
+        "eyebrow": "",
         "title": "Wellness Bundles",
         "primary_tab_label": "Best Sellings",
         "secondary_tab_label": "New Arrivals",
         "collection": "all",
-        "products_to_show": 12,
+        "products_to_show": 8,
         "products_order": "collection",
-        "show_view_all": false,
-        "view_all_label": "Spring Essentials!",
+        "show_view_all": true,
+        "view_all_label": "View all bundles",
         "view_all_style": "button",
         "show_rating": true,
         "show_pricing": true,
@@ -139,33 +209,21 @@
         "science_button_label": "Know more"
       }
     },
-    "balance-your-wellness": {
-      "type": "balance-your-wellness",
+    "homepage-knowledge": {
+      "type": "homepage-knowledge-grid",
       "settings": {
-        "eyebrow": "BALANCE YOUR WELLNESS",
-        "heading": "Herbal Products for Your Wellness",
-        "description": "<p>Explore herbal wellness support for every stage of daily health.</p>",
-        "men_collection": "all",
-        "female_collection": "all",
-        "kids_collection": "all"
-      }
-    },
-    "homepage-blogs": {
-      "type": "homepage-blogs",
-      "settings": {
-        "eyebrow": "Wellness journal",
-        "title": "Blogs",
+        "title": "Wellness Knowledge",
         "blog": "news",
-        "show_view_all": true
+        "show_view_all": false
       }
     }
   },
   "order": [
     "hero-banner",
+    "health-benefit-grid",
     "top-selling-combo",
-    "browse-by-discount",
+    "homepage-trust-strip",
     "trending-now-after-offer",
-    "balance-your-wellness",
-    "homepage-blogs"
+    "homepage-knowledge"
   ]
 }

@@ -1,0 +1,246 @@
+{%- comment -%}
+  Clean homepage education cards.
+{%- endcomment -%}
+
+{%- assign blog_handle = section.settings.blog | default: 'news' -%}
+{%- assign selected_blog = blogs[blog_handle] -%}
+{%- assign has_articles = false -%}
+{%- if selected_blog != blank and selected_blog.articles.size > 0 -%}
+  {%- assign has_articles = true -%}
+{%- endif -%}
+
+<section class="homepage-knowledge" id="HomepageKnowledge-{{ section.id }}">
+  <div class="container homepage-knowledge__container">
+    <div class="homepage-knowledge__header">
+      <h2 class="homepage-knowledge__title">{{ section.settings.title | default: 'Wellness Knowledge' }}</h2>
+      {%- if section.settings.show_view_all -%}
+        <a class="homepage-knowledge__view-all" href="{% if selected_blog != blank %}{{ selected_blog.url }}{% else %}/blogs/news{% endif %}">
+          View all
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="homepage-knowledge__grid">
+      {%- if has_articles -%}
+        {%- for article in selected_blog.articles limit: 4 -%}
+          <a class="homepage-knowledge-card" href="{{ article.url }}">
+            <span class="homepage-knowledge-card__media">
+              {%- if article.image != blank -%}
+                <img
+                  src="{{ article.image | image_url: width: 720 }}"
+                  srcset="
+                    {{ article.image | image_url: width: 360 }} 360w,
+                    {{ article.image | image_url: width: 520 }} 520w,
+                    {{ article.image | image_url: width: 720 }} 720w
+                  "
+                  sizes="(min-width: 990px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  alt="{{ article.image.alt | default: article.title | escape }}"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                <span class="homepage-knowledge-card__placeholder" aria-hidden="true">{{ article.title | slice: 0 | upcase }}</span>
+              {%- endif -%}
+            </span>
+            <span class="homepage-knowledge-card__body">
+              <strong>{{ article.title }}</strong>
+              <span>Read More</span>
+            </span>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- assign fallback_titles = 'How Ashwagandha Helps Manage Stress Naturally|5 Nutrients That Support a Strong Immune System|Omega-3 Benefits for Heart, Brain & Joints|Our Commitment to Clean & Transparent Labels' | split: '|' -%}
+        {%- assign fallback_images = 'leaf|shield|runner|label' | split: '|' -%}
+        {%- for title in fallback_titles -%}
+          <a class="homepage-knowledge-card" href="/blogs/news">
+            <span class="homepage-knowledge-card__media homepage-knowledge-card__media--{{ fallback_images[forloop.index0] }}">
+              <span class="homepage-knowledge-card__placeholder" aria-hidden="true">{{ title | slice: 0 }}</span>
+            </span>
+            <span class="homepage-knowledge-card__body">
+              <strong>{{ title }}</strong>
+              <span>Read More</span>
+            </span>
+          </a>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .homepage-knowledge {
+    padding: clamp(1.15rem, 2.2vw, 2rem) 0 clamp(1.8rem, 3vw, 2.6rem);
+    background: #ffffff;
+  }
+
+  .homepage-knowledge__container {
+    width: min(1540px, calc(100vw - clamp(2rem, 4.2vw, 4rem)));
+    max-width: 1540px;
+    padding: clamp(1.35rem, 2.2vw, 2rem) clamp(1.25rem, 2vw, 2rem);
+    border: 1px solid rgba(10, 40, 44, 0.08);
+    border-radius: 22px;
+    background: #ffffff;
+    box-shadow: 0 14px 34px rgba(10, 40, 44, 0.045);
+  }
+
+  .homepage-knowledge__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: clamp(1rem, 1.7vw, 1.35rem);
+  }
+
+  .homepage-knowledge__title {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    font-size: clamp(1.45rem, 2vw, 2rem);
+    font-weight: 900;
+    line-height: 1.12;
+  }
+
+  .homepage-knowledge__view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-height: 2.25rem;
+    padding: 0 1rem;
+    border-radius: 999px;
+    background: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .homepage-knowledge__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.9rem, 1.35vw, 1.25rem);
+  }
+
+  .homepage-knowledge-card {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid rgba(10, 40, 44, 0.08);
+    border-radius: 10px;
+    background: #ffffff;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .homepage-knowledge-card:hover,
+  .homepage-knowledge-card:focus-visible {
+    border-color: rgba(10, 40, 44, 0.2);
+    box-shadow: 0 14px 26px rgba(10, 40, 44, 0.08);
+    outline: none;
+    transform: translateY(-2px);
+  }
+
+  .homepage-knowledge-card__media {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #f2f2f2;
+  }
+
+  .homepage-knowledge-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .homepage-knowledge-card__placeholder {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    color: var(--brand-primary, #0A282C);
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    font-weight: 900;
+  }
+
+  .homepage-knowledge-card__body {
+    display: grid;
+    gap: 0.55rem;
+    min-height: 118px;
+    padding: 0.9rem 1rem 1rem;
+  }
+
+  .homepage-knowledge-card__body strong {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--brand-primary-dark, #06181B);
+    font-size: clamp(0.88rem, 0.92vw, 1rem);
+    font-weight: 900;
+    line-height: 1.28;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .homepage-knowledge-card__body span {
+    align-self: end;
+    color: var(--brand-primary, #0A282C);
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+
+  @media (max-width: 989px) {
+    .homepage-knowledge__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 639px) {
+    .homepage-knowledge__container {
+      width: min(100%, calc(100vw - 2rem));
+      padding: 1rem;
+    }
+
+    .homepage-knowledge__header {
+      grid-template-columns: 1fr;
+      justify-items: start;
+    }
+
+    .homepage-knowledge__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Homepage knowledge grid",
+  "tag": "section",
+  "class": "section-homepage-knowledge",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Wellness Knowledge"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show view all link",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Homepage knowledge grid"
+    }
+  ]
+}
+{% endschema %}
