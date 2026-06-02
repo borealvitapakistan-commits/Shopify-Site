@@ -527,35 +527,36 @@
   }
 
   body.template-index .health-benefit-grid {
-    gap: clamp(1.1rem, 1.8vw, 1.6rem) !important;
+    gap: clamp(0.75rem, 1.25vw, 1rem) !important;
   }
 
   body.template-index .health-benefit-card {
-    min-height: clamp(10.75rem, 13vw, 12.8rem) !important;
-    padding: clamp(1rem, 1.45vw, 1.25rem) 0.75rem !important;
-    border: 1px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.12) !important;
-    border-radius: 0.78rem !important;
+    min-height: 8.9rem !important;
+    padding: 0.95rem 0.75rem 0.85rem !important;
+    border: 1px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.11) !important;
+    border-radius: 0.65rem !important;
     background: #ffffff !important;
     box-shadow: none !important;
-    transform: translateY(0) scale(1) !important;
+    color: var(--brand-primary, #0A282C) !important;
+    transform: translateY(0) !important;
     transition:
       transform 0.22s ease,
       border-color 0.22s ease,
       box-shadow 0.22s ease,
-      background-color 0.22s ease !important;
+      color 0.22s ease !important;
   }
 
   body.template-index .health-benefit-card:hover,
   body.template-index .health-benefit-card:focus-visible {
-    border-color: rgba(var(--brand-primary-rgb, 10, 40, 44), 0.24) !important;
+    border-color: #111111 !important;
     background: #ffffff !important;
-    box-shadow: 0 0.75rem 1.45rem rgba(10, 40, 44, 0.08) !important;
-    transform: translateY(-0.22rem) scale(1.015) !important;
+    box-shadow: none !important;
+    color: #111111 !important;
+    transform: translateY(-0.12rem) !important;
   }
 
   body.template-index .health-benefit-card__icon,
-  body.template-index .health-benefit-card__title,
-  body.template-index .health-benefit-card__text {
+  body.template-index .health-benefit-card__title {
     transition: transform 0.22s ease, color 0.22s ease !important;
   }
 
@@ -566,7 +567,13 @@
 
   body.template-index .health-benefit-card:hover .health-benefit-card__title,
   body.template-index .health-benefit-card:focus-visible .health-benefit-card__title {
-    transform: translateY(-0.08rem) !important;
+    color: currentColor !important;
+    text-decoration-color: currentColor !important;
+    transform: translateY(-0.04rem) !important;
+  }
+
+  body.template-index .health-benefit-card__text {
+    display: none !important;
   }
 
   body.template-index .product-carousel__slide .amzn-card {
