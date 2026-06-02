@@ -3,21 +3,20 @@
    ============================================ */
 
 .site-footer {
-  --footer-bg-start: #0A282C;
-  --footer-bg-end: #126D74;
-  --footer-accent: var(--brand-accent-dark, var(--brand-green-dark, #C89F27));
-  --footer-accent-light: var(--brand-accent, var(--brand-green, #FAD054));
-  --footer-accent-glow: rgba(var(--brand-green-rgb, 250, 208, 84), 0.22);
-  --footer-heading: #ffffff;
-  --footer-text: rgba(255, 255, 255, 0.88);
-  --footer-muted: rgba(255, 255, 255, 0.78);
-  --footer-soft: rgba(255, 255, 255, 0.09);
-  --footer-soft-strong: rgba(255, 255, 255, 0.14);
-  --footer-border: rgba(255, 255, 255, 0.18);
-  background: linear-gradient(135deg, var(--footer-bg-start) 0%, var(--footer-bg-end) 100%);
+  --footer-accent: var(--brand-primary, #0A282C);
+  --footer-accent-light: #0A282C;
+  --footer-accent-glow: rgba(10, 40, 44, 0.08);
+  --footer-heading: #222222;
+  --footer-text: #333333;
+  --footer-muted: #4b4f50;
+  --footer-soft: #ffffff;
+  --footer-soft-strong: #f7f7f7;
+  --footer-border: rgba(10, 40, 44, 0.14);
+  background: #f2f2f2;
   color: var(--footer-text);
   margin-top: clamp(2.5rem, 4vw, 4rem);
-  padding: clamp(0.95rem, 2vw, 1.45rem) 0 0.45rem;
+  padding: clamp(1.35rem, 2.4vw, 2rem) 0 0.7rem;
+  border-top: 1px solid rgba(10, 40, 44, 0.12);
 }
 
 .site-footer__container {
@@ -122,17 +121,16 @@
   min-height: 2.95rem;
   padding: 0.22rem 0.22rem 0.22rem 0.88rem;
   border: 1px solid var(--footer-border);
-  border-radius: 16px;
+  border-radius: 0.45rem;
   background: var(--footer-soft);
-  backdrop-filter: blur(10px);
   transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .site-footer__newsletter-fields:hover,
 .site-footer__newsletter-fields:focus-within {
   border-color: var(--footer-accent-light);
-  background: rgba(255, 255, 255, 0.13);
-  box-shadow: 0 0 0 3px rgba(var(--brand-green-rgb, 250, 208, 84), 0.12), 0 16px 30px rgba(10, 40, 44, 0.12);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(10, 40, 44, 0.06);
   transform: translateY(-1px);
 }
 
@@ -140,7 +138,7 @@
   width: 100%;
   border: 0;
   background: transparent;
-  color: #ffffff;
+  color: #222222;
   font-family: var(--font-body, "DM Sans", sans-serif);
   font-size: 0.94rem;
   line-height: 1.2;
@@ -148,7 +146,7 @@
 }
 
 .site-footer__newsletter-input::placeholder {
-  color: rgba(255, 255, 255, 0.64);
+  color: #747879;
 }
 
 .site-footer__newsletter-input:focus {
@@ -162,9 +160,9 @@
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 12px;
-  background: #ffffff;
-  color: #0A282C;
+  border-radius: 0.35rem;
+  background: var(--brand-primary, #0A282C);
+  color: #ffffff;
   cursor: pointer;
   transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
 }
@@ -180,7 +178,7 @@
 .site-footer__newsletter-button:hover,
 .site-footer__newsletter-button:focus-visible {
   background: var(--footer-accent-light);
-  color: var(--brand-primary, #0A282C);
+  color: #ffffff;
   opacity: 1;
   transform: translateX(1px);
   box-shadow: 0 10px 24px var(--footer-accent-glow);
@@ -189,7 +187,7 @@
 
 .site-footer__form-note {
   margin: 0.75rem 0 0;
-  color: rgba(255, 255, 255, 0.74);
+  color: #5f6668;
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -210,8 +208,8 @@
   justify-content: center;
   border: 1px solid var(--footer-border);
   border-radius: 999px;
-  background: var(--footer-soft);
-  color: #ffffff;
+  background: #ffffff;
+  color: #111111;
   text-decoration: none;
   transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
 }
@@ -226,8 +224,8 @@
 a.site-footer__social:focus-visible {
   background: var(--footer-accent-light);
   border-color: var(--footer-accent-light);
-  color: var(--brand-primary, #0A282C);
-  box-shadow: 0 14px 28px var(--footer-accent-glow);
+  color: #ffffff;
+  box-shadow: none;
   transform: translateY(-2px) scale(1.03);
   outline: none;
 }
@@ -237,7 +235,7 @@ a.site-footer__social:focus-visible {
 }
 
 .site-footer__bottom {
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(10, 40, 44, 0.12);
   margin-top: 0.1rem;
   padding-top: 0.8rem;
   text-align: center;
@@ -245,7 +243,7 @@ a.site-footer__social:focus-visible {
 
 .site-footer__bottom p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.62);
+  color: #5f6668;
   font-family: var(--font-body, "DM Sans", sans-serif);
   font-size: 0.82rem;
   line-height: 1.5;

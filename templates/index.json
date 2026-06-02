@@ -9,143 +9,6 @@
  */
 {
   "sections": {
-    "health-benefit-grid": {
-      "type": "health-benefit-grid",
-      "blocks": {
-        "benefit-immune": {
-          "type": "benefit",
-          "settings": {
-            "title": "Immune Support",
-            "text": "Strengthen your body's defense",
-            "collection": "",
-            "link": "/collections/all",
-            "icon": "immune"
-          }
-        },
-        "benefit-energy": {
-          "type": "benefit",
-          "settings": {
-            "title": "Energy & Vitality",
-            "text": "Boost energy and fight fatigue",
-            "collection": "",
-            "link": "/collections/all",
-            "icon": "energy"
-          }
-        },
-        "benefit-stress": {
-          "type": "benefit",
-          "settings": {
-            "title": "Stress & Sleep",
-            "text": "Relax your mind. Sleep better.",
-            "collection": "",
-            "link": "/collections/all",
-            "icon": "sleep"
-          }
-        },
-        "benefit-heart": {
-          "type": "benefit",
-          "settings": {
-            "title": "Heart Health",
-            "text": "Care for your heart naturally",
-            "collection": "",
-            "link": "/collections/all",
-            "icon": "heart"
-          }
-        },
-        "benefit-bone": {
-          "type": "benefit",
-          "settings": {
-            "title": "Bone & Joint",
-            "text": "Stronger bones. Better mobility.",
-            "collection": "",
-            "link": "/collections/all",
-            "icon": "bone"
-          }
-        },
-        "benefit-digestive": {
-          "type": "benefit",
-          "settings": {
-            "title": "Digestive Health",
-            "text": "Support gut health and digestion",
-            "collection": "",
-            "link": "/collections/all",
-            "icon": "digestive"
-          }
-        }
-      },
-      "block_order": [
-        "benefit-immune",
-        "benefit-energy",
-        "benefit-stress",
-        "benefit-heart",
-        "benefit-bone",
-        "benefit-digestive"
-      ],
-      "settings": {
-        "heading": "Shop by Health Benefit"
-      }
-    },
-    "top-selling-combo": {
-      "type": "product-carousel",
-      "settings": {
-        "header_style": "standard",
-        "eyebrow": "",
-        "title": "Best Sellers",
-        "primary_tab_label": "Best Sellings",
-        "secondary_tab_label": "New Arrivals",
-        "collection": "all",
-        "products_to_show": 10,
-        "products_order": "collection",
-        "show_view_all": true,
-        "view_all_label": "View all products",
-        "view_all_style": "button",
-        "show_rating": true,
-        "show_pricing": true,
-        "show_unit_price": true,
-        "show_delivery": false,
-        "show_social_proof": false,
-        "show_add_to_cart": true
-      }
-    },
-    "homepage-trust-strip": {
-      "type": "homepage-trust-strip",
-      "settings": {
-      }
-    },
-    "trending-now-after-offer": {
-      "type": "product-carousel",
-      "settings": {
-        "header_style": "standard",
-        "eyebrow": "",
-        "title": "Wellness Bundles",
-        "primary_tab_label": "Best Sellings",
-        "secondary_tab_label": "New Arrivals",
-        "collection": "all",
-        "products_to_show": 8,
-        "products_order": "collection",
-        "show_view_all": true,
-        "view_all_label": "View all bundles",
-        "view_all_style": "button",
-        "show_rating": true,
-        "show_pricing": true,
-        "show_unit_price": true,
-        "show_delivery": false,
-        "show_social_proof": false,
-        "show_add_to_cart": true,
-        "show_science_banner": false,
-        "science_heading": "WE ARE BACKED BY SCIENCE",
-        "science_text": "<p>Our carefully curated formulations are prepared in a controlled environment under strict supervision of our healthcare experts.</p>",
-        "science_button_label": "Know more"
-      }
-    },
-    "homepage-knowledge": {
-      "type": "homepage-knowledge-grid",
-      "settings": {
-        "title": "Wellness Knowledge",
-        "blog": "news",
-        "show_view_all": false
-      }
-    },
     "promo-slideshow": {
       "type": "promo-slideshow",
       "blocks": {
@@ -224,14 +87,285 @@
         "view_all_label": "View all",
         "view_all_link": "/collections/all"
       }
+    },
+    "shop-category": {
+      "type": "shop-by-category-carousel",
+      "blocks": {
+        "cat-supplements": {
+          "type": "category",
+          "settings": {
+            "title": "Supplements",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "supplements",
+            "tone": "mist"
+          }
+        },
+        "cat-sports": {
+          "type": "category",
+          "settings": {
+            "title": "Sports",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "sports",
+            "tone": "mist"
+          }
+        },
+        "cat-bath": {
+          "type": "category",
+          "settings": {
+            "title": "Bath & Personal Care",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "bath-personal-care",
+            "tone": "mist"
+          }
+        },
+        "cat-beauty": {
+          "type": "category",
+          "settings": {
+            "title": "Beauty",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "beauty",
+            "tone": "mist"
+          }
+        },
+        "cat-grocery": {
+          "type": "category",
+          "settings": {
+            "title": "Grocery",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "grocery",
+            "tone": "mist"
+          }
+        },
+        "cat-home": {
+          "type": "category",
+          "settings": {
+            "title": "Home",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "home",
+            "tone": "mist"
+          }
+        },
+        "cat-baby": {
+          "type": "category",
+          "settings": {
+            "title": "Baby & Kids",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "baby-kids",
+            "tone": "mist"
+          }
+        },
+        "cat-pets": {
+          "type": "category",
+          "settings": {
+            "title": "Pets",
+            "collection": "",
+            "link": "/collections/all",
+            "icon": "pets",
+            "tone": "mist"
+          }
+        }
+      },
+      "block_order": [
+        "cat-supplements",
+        "cat-sports",
+        "cat-bath",
+        "cat-beauty",
+        "cat-grocery",
+        "cat-home",
+        "cat-baby",
+        "cat-pets"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Shop by category"
+      }
+    },
+    "deals-carousel": {
+      "type": "product-carousel",
+      "settings": {
+        "header_style": "standard",
+        "eyebrow": "",
+        "title": "Deals",
+        "primary_tab_label": "Deals",
+        "secondary_tab_label": "New Arrivals",
+        "collection": "all",
+        "products_to_show": 10,
+        "products_order": "collection",
+        "show_view_all": true,
+        "view_all_label": "Shop all",
+        "view_all_style": "link",
+        "show_rating": true,
+        "show_pricing": true,
+        "show_unit_price": true,
+        "show_delivery": false,
+        "show_social_proof": false,
+        "show_add_to_cart": true
+      }
+    },
+    "top-selling-combo": {
+      "type": "product-carousel",
+      "settings": {
+        "header_style": "standard",
+        "eyebrow": "",
+        "title": "Best Sellers",
+        "primary_tab_label": "Best Sellings",
+        "secondary_tab_label": "New Arrivals",
+        "collection": "all",
+        "products_to_show": 10,
+        "products_order": "collection",
+        "show_view_all": true,
+        "view_all_label": "View all products",
+        "view_all_style": "button",
+        "show_rating": true,
+        "show_pricing": true,
+        "show_unit_price": true,
+        "show_delivery": false,
+        "show_social_proof": false,
+        "show_add_to_cart": true
+      }
+    },
+    "video-ad": {
+      "type": "homepage-video-ad",
+      "settings": {
+        "heading": "Video",
+        "collection": "all",
+        "label": "Sponsored",
+        "fallback_title": "Clean-label herbal wellness support",
+        "rating_text": "4.8 stars | trusted by customers",
+        "offer_text": "Save on your first order",
+        "delivery_text": "Fast delivery across Pakistan"
+      }
+    },
+    "new-arrivals": {
+      "type": "product-carousel",
+      "settings": {
+        "header_style": "standard",
+        "eyebrow": "",
+        "title": "New Arrivals",
+        "primary_tab_label": "New Arrivals",
+        "secondary_tab_label": "Best Sellings",
+        "collection": "all",
+        "products_to_show": 10,
+        "products_order": "newest",
+        "show_view_all": true,
+        "view_all_label": "View all new arrivals",
+        "view_all_style": "button",
+        "show_rating": false,
+        "show_pricing": true,
+        "show_unit_price": true,
+        "show_delivery": false,
+        "show_social_proof": false,
+        "show_add_to_cart": true
+      }
+    },
+    "main-sale": {
+      "type": "homepage-main-sale",
+      "blocks": {
+        "sale-feature-1": {
+          "type": "feature",
+          "settings": {
+            "text": "Detailed labels and ingredient sourcing information"
+          }
+        },
+        "sale-feature-2": {
+          "type": "feature",
+          "settings": {
+            "text": "Quality-focused supplements for daily wellness"
+          }
+        },
+        "sale-feature-3": {
+          "type": "feature",
+          "settings": {
+            "text": "Clean formulas selected for transparency"
+          }
+        },
+        "sale-feature-4": {
+          "type": "feature",
+          "settings": {
+            "text": "Fast delivery across Pakistan"
+          }
+        },
+        "brand-boreal": {
+          "type": "brand",
+          "settings": {
+            "name": "Boreal Vita",
+            "link": "/collections/all"
+          }
+        },
+        "brand-quality": {
+          "type": "brand",
+          "settings": {
+            "name": "Quality",
+            "link": "/collections/all"
+          }
+        },
+        "brand-science": {
+          "type": "brand",
+          "settings": {
+            "name": "Science",
+            "link": "/collections/all"
+          }
+        },
+        "brand-clean": {
+          "type": "brand",
+          "settings": {
+            "name": "Clean Label",
+            "link": "/collections/all"
+          }
+        },
+        "brand-support": {
+          "type": "brand",
+          "settings": {
+            "name": "Daily Support",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "sale-feature-1",
+        "sale-feature-2",
+        "sale-feature-3",
+        "sale-feature-4",
+        "brand-boreal",
+        "brand-quality",
+        "brand-science",
+        "brand-clean",
+        "brand-support"
+      ],
+      "settings": {
+        "eyebrow": "Featured offer",
+        "heading": "Professional Brands",
+        "text": "<p>Curated supplements selected for quality, transparency, and daily wellness support.</p>",
+        "collection": "all",
+        "button_label": "Learn More",
+        "button_link": "/collections/all",
+        "background_color": "#15599A"
+      }
+    },
+    "homepage-knowledge": {
+      "type": "homepage-knowledge-grid",
+      "settings": {
+        "title": "Blogs",
+        "blog": "news",
+        "show_view_all": true
+      }
     }
   },
   "order": [
     "promo-slideshow",
-    "health-benefit-grid",
+    "shop-category",
+    "deals-carousel",
     "top-selling-combo",
-    "homepage-trust-strip",
-    "trending-now-after-offer",
+    "video-ad",
+    "new-arrivals",
+    "main-sale",
     "homepage-knowledge"
   ]
 }

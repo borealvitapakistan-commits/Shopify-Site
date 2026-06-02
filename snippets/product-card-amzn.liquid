@@ -4,6 +4,7 @@ Usage:
 {%- endcomment -%}
 
 {%- assign p = product -%}
+{%- assign show_rating = show_rating | default: true, allow_false: true -%}
 {%- assign show_pricing = show_pricing | default: true, allow_false: true -%}
 {%- assign show_add_to_cart = show_add_to_cart | default: true, allow_false: true -%}
 {%- assign show_reviews_icon = settings.show_product_card_reviews_icon -%}
@@ -157,7 +158,7 @@ Usage:
         <a class="amzn-card__link" href="{{ p.url }}">
           <h2 class="amzn-card__title">{{ p.title }}</h2>
         </a>
-        {%- if show_reviews_icon -%}
+        {%- if show_rating and show_reviews_icon -%}
           <span class="amzn-card__reviews" role="img" aria-label="5 star reviews">
             <span class="amzn-card__reviews-stars" aria-hidden="true"></span>
           </span>
