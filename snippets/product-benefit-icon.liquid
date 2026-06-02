@@ -1,0 +1,92 @@
+{% liquid
+  assign icon_name = icon | default: 'auto'
+  assign source_text = text | default: '' | downcase
+
+  if icon_name == 'auto'
+    if source_text contains 'kidney' or source_text contains 'urine' or source_text contains 'urinary' or source_text contains 'creatinine' or source_text contains 'stone'
+      assign icon_name = 'kidney'
+    elsif source_text contains 'immune' or source_text contains 'allergy' or source_text contains 'protection' or source_text contains 'defense'
+      assign icon_name = 'shield'
+    elsif source_text contains 'digest' or source_text contains 'gut' or source_text contains 'liver' or source_text contains 'detox'
+      assign icon_name = 'digestion'
+    elsif source_text contains 'heart' or source_text contains 'blood' or source_text contains 'cardio'
+      assign icon_name = 'heart'
+    elsif source_text contains 'joint' or source_text contains 'bone' or source_text contains 'mobility'
+      assign icon_name = 'joint'
+    elsif source_text contains 'pain' or source_text contains 'burning' or source_text contains 'inflammation' or source_text contains 'swelling'
+      assign icon_name = 'comfort'
+    elsif source_text contains 'sleep' or source_text contains 'stress' or source_text contains 'mood' or source_text contains 'calm'
+      assign icon_name = 'sleep'
+    elsif source_text contains 'energy' or source_text contains 'stamina' or source_text contains 'vitality' or source_text contains 'performance'
+      assign icon_name = 'energy'
+    elsif source_text contains 'skin' or source_text contains 'hair' or source_text contains 'beauty'
+      assign icon_name = 'leaf'
+    else
+      assign icon_name = 'check'
+    endif
+  endif
+%}
+
+{% if custom_icon != blank %}
+  <img
+    src="{{ custom_icon | image_url: width: 72 }}"
+    alt="{{ text | default: 'Product benefit icon' | escape }}"
+    width="36"
+    height="36"
+    loading="lazy"
+  >
+{% else %}
+  {% case icon_name %}
+    {% when 'kidney' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9.4 3.8c-2.3.3-4.2 2.7-4.2 5.9 0 2.6 1.1 4.7 2.8 5.7 1.1.7 2.6.1 2.6-1.3V5.6c0-1.1-.3-1.9-1.2-1.8Z"></path>
+        <path d="M14.6 3.8c2.3.3 4.2 2.7 4.2 5.9 0 2.6-1.1 4.7-2.8 5.7-1.1.7-2.6.1-2.6-1.3V5.6c0-1.1.3-1.9 1.2-1.8Z"></path>
+        <path d="M12 8v11"></path>
+      </svg>
+    {% when 'shield' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3 5.5 5.6v5.3c0 4.2 2.6 7.7 6.5 9.1 3.9-1.4 6.5-4.9 6.5-9.1V5.6L12 3Z"></path>
+        <path d="m9.2 12 1.8 1.8 3.9-4"></path>
+      </svg>
+    {% when 'digestion' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3v7.3a4 4 0 0 0 4 4h1.5a3.5 3.5 0 0 1 0 7H12"></path>
+        <path d="M12 3v7"></path>
+        <path d="M16 4.5c2 .8 3.2 2.4 3.2 4.5 0 2.8-2.2 5-5 5"></path>
+      </svg>
+    {% when 'heart' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.8 8.5c0 5.2-8.8 10.2-8.8 10.2S3.2 13.7 3.2 8.5A4.6 4.6 0 0 1 12 6.4a4.6 4.6 0 0 1 8.8 2.1Z"></path>
+      </svg>
+    {% when 'joint' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="8" cy="8" r="3.2"></circle>
+        <circle cx="16" cy="16" r="3.2"></circle>
+        <path d="m10.3 10.3 3.4 3.4"></path>
+        <path d="M5 14.5c2.5-.9 4.4-.5 5.8 1.2"></path>
+      </svg>
+    {% when 'comfort' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3s5 5.4 5 10a5 5 0 0 1-10 0c0-4.6 5-10 5-10Z"></path>
+        <path d="M9.2 14.2c1.2 1.4 4.4 1.4 5.6 0"></path>
+      </svg>
+    {% when 'sleep' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18.5 15.7A7.2 7.2 0 0 1 8.3 5.5 7.7 7.7 0 1 0 18.5 15.7Z"></path>
+        <path d="M15 4h4l-4 4h4"></path>
+      </svg>
+    {% when 'energy' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M13 2 5 13h6l-1 9 8-12h-6l1-8Z"></path>
+      </svg>
+    {% when 'leaf' %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 4c-8.5.2-13.8 4.8-14 13 7.8-.1 12.8-5.2 14-13Z"></path>
+        <path d="M6 17c3.6-4.2 7.1-6.8 11-8"></path>
+      </svg>
+    {% else %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 6 9 17l-5-5"></path>
+      </svg>
+  {% endcase %}
+{% endif %}

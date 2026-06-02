@@ -1,0 +1,111 @@
+{% liquid
+  assign topic_key = topic_title | default: '' | downcase
+  assign topic_icon = 'supplement'
+
+  if topic_key contains 'hair' or topic_key contains 'skin' or topic_key contains 'acne' or topic_key contains 'dark spots' or topic_key contains 'photo-aging' or topic_key contains 'saggy' or topic_key contains 'shiny'
+    assign topic_icon = 'beauty'
+  elsif topic_key contains 'sleep' or topic_key contains 'insomnia' or topic_key contains 'anxiety' or topic_key contains 'stress'
+    assign topic_icon = 'sleep'
+  elsif topic_key contains 'brain' or topic_key contains 'migraine' or topic_key contains 'numbness'
+    assign topic_icon = 'brain'
+  elsif topic_key contains 'gut' or topic_key contains 'digestive' or topic_key contains 'constipation' or topic_key contains 'acidity' or topic_key contains 'cravings' or topic_key contains 'metabolism'
+    assign topic_icon = 'gut'
+  elsif topic_key contains 'heart' or topic_key contains 'blood pressure' or topic_key contains 'cholesterol'
+    assign topic_icon = 'heart'
+  elsif topic_key contains 'fertility' or topic_key contains 'pcos' or topic_key contains 'motherhood' or topic_key contains 'uti' or topic_key contains 'kids' or topic_key contains 'teens'
+    assign topic_icon = 'fertility'
+  elsif topic_key contains 'male' or topic_key contains 'prostate' or topic_key contains 'testosterone' or topic_key contains 'erectile'
+    assign topic_icon = 'male'
+  elsif topic_key contains 'eye' or topic_key contains 'eyesight'
+    assign topic_icon = 'eye'
+  elsif topic_key contains 'muscle' or topic_key contains 'joint' or topic_key contains 'bones' or topic_key contains 'workout' or topic_key contains 'gout'
+    assign topic_icon = 'muscle'
+  elsif topic_key contains 'cold' or topic_key contains 'flu' or topic_key contains 'immunity' or topic_key contains 'immune' or topic_key contains 'sore throat'
+    assign topic_icon = 'shield'
+  endif
+%}
+
+{% case topic_icon %}
+  {% when 'beauty' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M24 58c2-17 6-27 16-39"/>
+      <path d="M37 20c6-4 12-4 18 0"/>
+      <path d="M32 56c7-4 14-5 21-2"/>
+      <path d="M24 58c10 5 23 5 34 0"/>
+      <path d="M35 22c-4 7-3 13 2 18"/>
+      <path d="M47 21c5 8 5 16-1 22"/>
+    </svg>
+  {% when 'brain' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M31 58c-8 0-14-6-14-13 0-5 3-9 7-11 0-8 6-14 14-14 4 0 8 2 10 5 8-1 15 5 15 13 5 2 8 7 8 13 0 8-7 14-15 14"/>
+      <path d="M35 24c-4 3-6 7-5 12"/>
+      <path d="M47 23c4 3 6 8 4 13"/>
+      <path d="M27 44c5 2 10 1 14-2"/>
+      <path d="M45 45c4 1 7 3 10 7"/>
+    </svg>
+  {% when 'gut' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M31 18c-8 2-13 8-13 16 0 7 4 13 11 15"/>
+      <path d="M49 18c8 2 13 8 13 16 0 7-4 13-11 15"/>
+      <path d="M33 18v30c0 8 5 13 12 13 6 0 10-4 10-10 0-7-6-10-12-7"/>
+      <path d="M51 18v22"/>
+      <path d="M29 35h12"/>
+    </svg>
+  {% when 'sleep' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M52 16c-14 2-25 14-25 29 0 8 3 15 9 20-13-2-23-13-23-27 0-15 12-27 27-27 4 0 8 1 12 5Z"/>
+      <path d="M54 20h11l-11 13h11"/>
+      <path d="M57 39h9l-9 11h9"/>
+    </svg>
+  {% when 'heart' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M40 61S18 47 18 31c0-8 6-14 14-14 4 0 7 2 10 6 3-4 6-6 10-6 8 0 14 6 14 14 0 16-26 30-26 30Z"/>
+      <path d="M20 40h12l5-10 7 19 5-9h11"/>
+    </svg>
+  {% when 'fertility' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M40 62S18 49 18 32c0-8 6-14 14-14 4 0 7 2 10 5 3-3 6-5 10-5 8 0 14 6 14 14 0 17-26 30-26 30Z"/>
+      <path d="M31 51c-6-7-8-13-5-18"/>
+      <path d="M49 51c6-7 8-13 5-18"/>
+      <circle cx="40" cy="39" r="4"/>
+    </svg>
+  {% when 'male' %}
+    <svg viewBox="0 0 80 80">
+      <circle cx="32" cy="46" r="17"/>
+      <path d="M44 34 62 16"/>
+      <path d="M47 16h15v15"/>
+      <path d="M23 62c3-5 8-8 14-8"/>
+    </svg>
+  {% when 'eye' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M11 40s11-17 29-17 29 17 29 17-11 17-29 17S11 40 11 40Z"/>
+      <circle cx="40" cy="40" r="8"/>
+      <path d="M40 18v-6"/>
+      <path d="M22 25l-4-5"/>
+      <path d="M58 25l4-5"/>
+    </svg>
+  {% when 'muscle' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M25 53c9 3 21 2 31-6"/>
+      <path d="M25 53c-6-4-7-12-2-18 4-5 10-4 12 1"/>
+      <path d="M36 36c6-13 15-19 22-17-7 5-9 10-7 16"/>
+      <path d="M34 41c4 2 7 5 9 9"/>
+      <path d="M19 58c15 7 33 5 45-6"/>
+    </svg>
+  {% when 'shield' %}
+    <svg viewBox="0 0 80 80">
+      <path d="M40 65S19 55 19 35V20c10 0 16-4 21-9 5 5 11 9 21 9v15c0 20-21 30-21 30Z"/>
+      <path d="M40 29v20"/>
+      <path d="M30 39h20"/>
+    </svg>
+  {% else %}
+    <svg viewBox="0 0 80 80">
+      <rect x="18" y="24" width="18" height="30" rx="4"/>
+      <path d="M21 24v-8h12v8"/>
+      <rect x="31" y="21" width="29" height="35" rx="6"/>
+      <path d="M36 21v-7h19v7"/>
+      <path d="M41 39h10"/>
+      <path d="M46 34v10"/>
+      <rect x="61" y="30" width="8" height="22" rx="3"/>
+    </svg>
+{% endcase %}

@@ -1,0 +1,1418 @@
+{%- comment -%}
+  Product Carousel Section
+  Horizontal scrolling carousel with product cards including ratings and Quick Add
+{%- endcomment -%}
+
+{% assign carousel_collection = collections[section.settings.collection] %}
+{% assign primary_products = blank %}
+{% assign secondary_products = blank %}
+{%- assign science_button_link = section.settings.science_button_link -%}
+{%- assign carousel_eyebrow = section.settings.eyebrow | default: '' -%}
+
+{%- if science_button_link == blank -%}
+  {%- assign science_button_link = '/pages/about-us' -%}
+  {%- if pages['about-us'] != blank -%}
+    {%- assign science_button_link = pages['about-us'].url -%}
+  {%- elsif pages['about'] != blank -%}
+    {%- assign science_button_link = pages['about'].url -%}
+  {%- elsif pages['contact'] != blank -%}
+    {%- assign science_button_link = pages['contact'].url | append: '?view=about-us' -%}
+  {%- elsif pages['contact-us'] != blank -%}
+    {%- assign science_button_link = pages['contact-us'].url | append: '?view=about-us' -%}
+  {%- endif -%}
+{%- endif -%}
+
+{% if carousel_collection != blank %}
+  {% assign primary_products = carousel_collection.products %}
+  {% if section.settings.products_order == 'newest' %}
+    {% assign primary_products = primary_products | sort: 'published_at' | reverse %}
+  {% elsif section.settings.products_order == 'oldest' %}
+    {% assign primary_products = primary_products | sort: 'published_at' %}
+  {% endif %}
+
+  {% assign secondary_products = carousel_collection.products | sort: 'published_at' | reverse %}
+{% endif %}
+
+<section
+  class="product-carousel-section"
+  data-section-id="{{ section.id }}"
+  data-carousel-collection-url="{{ carousel_collection.url | default: routes.all_products_collection_url }}"
+  data-carousel-limit="{{ section.settings.products_to_show }}"
+>
+  <div class="container">
+
+    {% if section.settings.header_style == 'featured_tabs' %}
+      <div class="product-carousel__featured-header">
+        {% if carousel_eyebrow != blank %}
+          <p class="product-carousel__eyebrow">{{ carousel_eyebrow }}</p>
+        {% endif %}
+        <div class="product-carousel__featured-title-wrap">
+          {% if section.settings.title != blank %}
+            <h2 class="product-carousel__featured-title">{{ section.settings.title }}</h2>
+          {% endif %}
+        </div>
+
+        <div class="product-carousel__featured-tabs" role="tablist" aria-label="Product categories">
+          <button
+            type="button"
+            class="product-carousel__featured-tab is-active"
+            data-product-carousel-tab="primary"
+            id="ProductCarouselTab-{{ section.id }}-primary"
+            role="tab"
+            aria-selected="true"
+            aria-controls="ProductCarouselPanel-{{ section.id }}-primary"
+            tabindex="0"
+          >
+            {{ section.settings.primary_tab_label | default: 'Best Sellings' }}
+          </button>
+          <span class="product-carousel__featured-divider" aria-hidden="true">/</span>
+          <button
+            type="button"
+            class="product-carousel__featured-tab"
+            data-product-carousel-tab="secondary"
+            id="ProductCarouselTab-{{ section.id }}-secondary"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ProductCarouselPanel-{{ section.id }}-secondary"
+            tabindex="-1"
+          >
+            {{ section.settings.secondary_tab_label | default: 'New Arrivals' }}
+          </button>
+        </div>
+      </div>
+    {% elsif section.settings.header_style == 'centered_title' %}
+      <div class="product-carousel__featured-header product-carousel__featured-header--title-only">
+        {% if carousel_eyebrow != blank %}
+          <p class="product-carousel__eyebrow">{{ carousel_eyebrow }}</p>
+        {% endif %}
+        <div class="product-carousel__featured-title-wrap">
+          {% if section.settings.title != blank %}
+            <h2 class="product-carousel__featured-title">{{ section.settings.title }}</h2>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      <div class="product-carousel__header">
+        <div class="product-carousel__header-copy">
+          {% if carousel_eyebrow != blank %}
+            <p class="product-carousel__eyebrow">{{ carousel_eyebrow }}</p>
+          {% endif %}
+          {% if section.settings.title != blank %}
+            <h2 class="section-title">{{ section.settings.title }}</h2>
+          {% endif %}
+        </div>
+        
+        {% if section.settings.show_view_all %}
+          <a href="{{ carousel_collection.url | default: '/collections/all' }}" class="product-carousel__view-all product-carousel__view-all--{{ section.settings.view_all_style | default: 'link' }}">
+            {{ section.settings.view_all_label | default: 'View All' }}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.header_style == 'featured_tabs' %}
+      <div
+        class="product-carousel__panel is-active"
+        data-carousel-panel="primary"
+        data-carousel-sort="best-selling"
+        id="ProductCarouselPanel-{{ section.id }}-primary"
+        role="tabpanel"
+        aria-labelledby="ProductCarouselTab-{{ section.id }}-primary"
+      >
+        <div class="product-carousel__wrapper">
+          <button type="button" class="carousel-nav carousel-nav--prev" aria-label="Previous" data-carousel-prev>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          
+          <div class="product-carousel__track" data-carousel-track data-auto-marquee data-marquee-speed="0.04">
+            {% for product in primary_products limit: section.settings.products_to_show %}
+              <div class="product-carousel__slide">
+                {% render 'product-card-amzn',
+                  product: product,
+                  show_rating: section.settings.show_rating,
+                  show_pricing: section.settings.show_pricing,
+                  show_unit_price: section.settings.show_unit_price,
+                  show_delivery: section.settings.show_delivery,
+                  show_social_proof: section.settings.show_social_proof,
+                  show_add_to_cart: section.settings.show_add_to_cart
+                %}
+              </div>
+            {% else %}
+              <div class="product-carousel__empty">
+                No products found. Add products to this collection in Shopify admin.
+              </div>
+            {% endfor %}
+          </div>
+          
+          <button type="button" class="carousel-nav carousel-nav--next" aria-label="Next" data-carousel-next>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div
+        class="product-carousel__panel"
+        data-carousel-panel="secondary"
+        data-carousel-sort="created-descending"
+        id="ProductCarouselPanel-{{ section.id }}-secondary"
+        role="tabpanel"
+        aria-labelledby="ProductCarouselTab-{{ section.id }}-secondary"
+        hidden
+      >
+        <div class="product-carousel__wrapper">
+          <button type="button" class="carousel-nav carousel-nav--prev" aria-label="Previous" data-carousel-prev>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          
+          <div class="product-carousel__track" data-carousel-track data-auto-marquee data-marquee-speed="0.04">
+            {% for product in secondary_products limit: section.settings.products_to_show %}
+              <div class="product-carousel__slide">
+                {% render 'product-card-amzn',
+                  product: product,
+                  show_rating: section.settings.show_rating,
+                  show_pricing: section.settings.show_pricing,
+                  show_unit_price: section.settings.show_unit_price,
+                  show_delivery: section.settings.show_delivery,
+                  show_social_proof: section.settings.show_social_proof,
+                  show_add_to_cart: section.settings.show_add_to_cart
+                %}
+              </div>
+            {% else %}
+              <div class="product-carousel__empty">
+                No products found. Add products to this collection in Shopify admin.
+              </div>
+            {% endfor %}
+          </div>
+          
+          <button type="button" class="carousel-nav carousel-nav--next" aria-label="Next" data-carousel-next>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    {% else %}
+      <div class="product-carousel__wrapper">
+        <button type="button" class="carousel-nav carousel-nav--prev" aria-label="Previous" data-carousel-prev>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        
+        <div class="product-carousel__track" data-carousel-track data-auto-marquee data-marquee-speed="0.04">
+          {% for product in primary_products limit: section.settings.products_to_show %}
+            <div class="product-carousel__slide">
+              {% render 'product-card-amzn',
+                product: product,
+                show_rating: section.settings.show_rating,
+                show_pricing: section.settings.show_pricing,
+                show_unit_price: section.settings.show_unit_price,
+                show_delivery: section.settings.show_delivery,
+                show_social_proof: section.settings.show_social_proof,
+                show_add_to_cart: section.settings.show_add_to_cart
+              %}
+            </div>
+          {% else %}
+            <div class="product-carousel__empty">
+              No products found. Add products to this collection in Shopify admin.
+            </div>
+          {% endfor %}
+        </div>
+        
+        <button type="button" class="carousel-nav carousel-nav--next" aria-label="Next" data-carousel-next>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    {% endif %}
+
+    {% if section.settings.show_science_banner %}
+      <div class="product-carousel__science-banner">
+        <div class="product-carousel__science-visual" aria-hidden="true">
+          {% if section.settings.science_image != blank %}
+            <img
+              class="product-carousel__science-image"
+              src="{{ section.settings.science_image | image_url: width: 2200 }}"
+              srcset="
+                {{ section.settings.science_image | image_url: width: 900 }} 900w,
+                {{ section.settings.science_image | image_url: width: 1400 }} 1400w,
+                {{ section.settings.science_image | image_url: width: 1800 }} 1800w,
+                {{ section.settings.science_image | image_url: width: 2200 }} 2200w
+              "
+              sizes="(max-width: 767px) 100vw, 48vw"
+              alt="{{ section.settings.science_image.alt | default: section.settings.science_heading | escape }}"
+              width="{{ section.settings.science_image.width }}"
+              height="{{ section.settings.science_image.height }}"
+              loading="lazy"
+            >
+          {% else %}
+            <img
+              class="product-carousel__science-image"
+              src="{{ 'wellness-bundles-science-doctor.jfif' | asset_url }}"
+              alt="Healthcare professionals illustration"
+              width="735"
+              height="412"
+              loading="lazy"
+            >
+          {% endif %}
+        </div>
+
+        <div class="product-carousel__science-content">
+          {% if section.settings.science_heading != blank %}
+            <h3 class="product-carousel__science-title">{{ section.settings.science_heading }}</h3>
+          {% endif %}
+
+          {% if section.settings.science_text != blank %}
+            <div class="product-carousel__science-text rte">
+              {{ section.settings.science_text }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.science_button_label != blank %}
+            <a class="product-carousel__science-button" href="{{ science_button_link }}">
+              {{ section.settings.science_button_label }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .product-carousel-section {
+    padding: clamp(1.45rem, 2.8vw, 2.6rem) 0;
+  }
+
+  .product-carousel-section > .container {
+    width: min(1280px, calc(100vw - clamp(2rem, 10vw, 11rem)));
+    max-width: 1280px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .product-carousel__featured-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.45rem;
+    text-align: center;
+  }
+
+  .product-carousel__featured-title-wrap {
+    display: block;
+    width: 100%;
+  }
+
+  .product-carousel__featured-header--title-only {
+    margin-bottom: 1.7rem;
+  }
+
+  .product-carousel__featured-line {
+    display: none;
+  }
+
+  .product-carousel__featured-line:last-child {
+    display: none;
+  }
+
+  .product-carousel__eyebrow {
+    margin: 0;
+    color: var(--brand-accent-dark, #C89F27);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(0.86rem, 1.05vw, 1.08rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .product-carousel__featured-title {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.9rem, 3vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.15;
+    text-align: center;
+    text-transform: none;
+    white-space: normal;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  .product-carousel__featured-tabs {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.8rem, 1.25vw, 1.55rem);
+    flex-wrap: wrap;
+  }
+
+  .product-carousel__featured-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding: 0.5rem 1.15rem 0.68rem;
+    border: none;
+    background: transparent;
+    border-radius: 0.3rem;
+    color: #181419;
+    font-size: clamp(0.98rem, 1.04vw, 1.12rem);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .product-carousel__featured-tab::after {
+    content: "";
+    position: absolute;
+    right: 0.9rem;
+    bottom: 0.18rem;
+    left: 0.9rem;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--brand-accent-dark, #C89F27), var(--brand-accent, #FAD054));
+    opacity: 0;
+    transform: scaleX(0.45);
+    transform-origin: center;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .product-carousel__featured-tab.is-active {
+    background: transparent;
+    color: var(--brand-primary, #0A282C);
+    box-shadow: 0 0.55rem 1.1rem rgba(var(--brand-primary-rgb, 10, 40, 44), 0.08);
+  }
+
+  .product-carousel__featured-tab:hover,
+  .product-carousel__featured-tab:focus-visible {
+    background: transparent;
+    box-shadow: 0 0.45rem 0.9rem rgba(var(--brand-primary-rgb, 10, 40, 44), 0.06);
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  .product-carousel__featured-tab.is-active::after,
+  .product-carousel__featured-tab:hover::after,
+  .product-carousel__featured-tab:focus-visible::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .product-carousel__featured-divider {
+    color: var(--brand-purple, #0A282C);
+    font-size: 1.4rem;
+    line-height: 1;
+    font-weight: 700;
+  }
+
+  .product-carousel__header {
+    display: grid;
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    gap: 1rem;
+  }
+
+  .product-carousel__header-copy {
+    display: grid;
+    justify-items: start;
+    gap: 0.72rem;
+  }
+
+  .product-carousel__header .section-title {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    font-size: clamp(1.9rem, 3vw, 2.75rem);
+    letter-spacing: 0;
+    line-height: 1.15;
+    text-transform: none;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  .product-carousel__view-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.34rem;
+    min-height: 2.25rem;
+    padding: 0 1rem;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease, gap 0.2s ease;
+  }
+
+  .product-carousel__view-all:hover {
+    gap: 0.48rem;
+    color: #ffffff;
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  .product-carousel__view-all--button {
+    background: var(--brand-primary, #0A282C);
+  }
+
+  .product-carousel__view-all--button:hover,
+  .product-carousel__view-all--button:focus-visible {
+    background: var(--brand-primary-dark, #06181B);
+    color: #ffffff;
+    outline: none;
+  }
+
+  .product-carousel__wrapper {
+    position: relative;
+  }
+
+  .product-carousel__panel[hidden] {
+    display: none;
+  }
+
+  .product-carousel__track {
+    display: flex;
+    gap: clamp(0.95rem, 1.35vw, 1.25rem);
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 1.15rem 0.2rem 1.15rem;
+    margin: -0.45rem -0.2rem -0.7rem;
+  }
+
+  .product-carousel__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .product-carousel__track[data-marquee-ready="true"] {
+    scroll-snap-type: none;
+  }
+
+  .product-carousel__track[data-marquee-ready="true"] .product-carousel__slide {
+    scroll-snap-align: none;
+  }
+
+  .product-carousel__slide {
+    flex: 0 0 clamp(13rem, 17vw, 14.25rem);
+    scroll-snap-align: start;
+  }
+
+  @media (min-width: 640px) {
+    .product-carousel__slide {
+      flex-basis: clamp(13.25rem, 18vw, 14.5rem);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .product-carousel__slide {
+      flex-basis: clamp(13.75rem, 16vw, 14.75rem);
+    }
+  }
+
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .carousel-nav:hover {
+    background: linear-gradient(135deg, var(--brand-purple-light, #163E43) 0%, var(--brand-purple, #0A282C) 100%);
+    color: var(--color-primary-foreground);
+    border-color: var(--brand-purple, #0A282C);
+  }
+
+  .carousel-nav:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .carousel-nav--prev {
+    left: -12px;
+  }
+
+  .carousel-nav--next {
+    right: -12px;
+  }
+
+  @media (max-width: 767px) {
+    .product-carousel-section > .container {
+      width: 100%;
+      max-width: var(--site-content-max-width, var(--site-max-width, 1920px));
+      padding-right: var(--site-edge-gutter, 0.9rem);
+      padding-left: var(--site-edge-gutter, 0.9rem);
+    }
+
+    .product-carousel__featured-header {
+      gap: 0.75rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .product-carousel__featured-title-wrap {
+      display: block;
+    }
+
+    .product-carousel__featured-line {
+      display: none;
+    }
+
+    .product-carousel__featured-title {
+      font-size: clamp(1.65rem, 8vw, 2.05rem);
+      max-width: 18ch;
+    }
+
+    .product-carousel__featured-tabs {
+      gap: 0.65rem;
+    }
+
+    .product-carousel__featured-tab {
+      min-height: 2.2rem;
+      padding: 0.42rem 0.82rem;
+      font-size: 0.86rem;
+    }
+
+    .product-carousel__featured-divider {
+      font-size: 1.15rem;
+    }
+
+    .carousel-nav {
+      display: none;
+    }
+  }
+
+  .product-carousel__science-banner {
+    display: grid;
+    grid-template-columns: minmax(320px, 1.5fr) minmax(280px, 1fr);
+    align-items: center;
+    gap: clamp(1.3rem, 3vw, 3.4rem);
+    margin-top: clamp(1.8rem, 3vw, 2.8rem);
+    padding-top: clamp(0.2rem, 0.8vw, 0.45rem);
+  }
+
+  .product-carousel__science-visual {
+    position: relative;
+  }
+
+  .product-carousel__science-visual::before,
+  .product-carousel__science-visual::after {
+    content: '';
+    position: absolute;
+    border-radius: 999px;
+    background: rgba(147, 170, 216, 0.12);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .product-carousel__science-visual::before {
+    width: 74%;
+    height: 84%;
+    left: 10%;
+    top: 8%;
+    border-radius: 42% 58% 48% 52% / 46% 44% 56% 54%;
+  }
+
+  .product-carousel__science-visual::after {
+    width: 28%;
+    height: 26%;
+    right: 7%;
+    top: 2%;
+    opacity: 0.7;
+  }
+
+  .product-carousel__science-image {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .product-carousel__science-content {
+    display: grid;
+    gap: 1rem;
+    align-content: center;
+    max-width: 30rem;
+  }
+
+  .product-carousel__science-title {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    background: var(--brand-title-gradient, linear-gradient(135deg, #0A282C 0%, #163E43 100%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.35rem, 1rem + 1.2vw, 2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+  }
+
+  .product-carousel__science-text {
+    color: var(--brand-text, #22343A);
+    font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    font-size: clamp(0.96rem, 0.92rem + 0.18vw, 1.04rem);
+    line-height: 1.85;
+  }
+
+  .product-carousel__science-text p {
+    margin: 0;
+  }
+
+  .product-carousel__science-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.95rem;
+    width: fit-content;
+    padding: 0 1.45rem;
+    border-radius: 0.45rem;
+    background: var(--brand-green-gradient, linear-gradient(135deg, #C89F27 0%, #FAD054 100%));
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-transform: uppercase;
+    box-shadow: 0 10px 22px rgba(var(--brand-green-rgb, 250, 208, 84), 0.2);
+    transition: transform 0.18s ease, box-shadow 0.22s ease, background 0.18s ease, color 0.18s ease;
+  }
+
+  .product-carousel__science-button:hover,
+  .product-carousel__science-button:focus-visible {
+    background: var(--brand-green-gradient, linear-gradient(135deg, #163E43 0%, #0A282C 100%));
+    color: #ffffff;
+    box-shadow: 0 12px 26px rgba(10, 40, 44, 0.2);
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 767px) {
+    .product-carousel__science-banner {
+      grid-template-columns: 1fr;
+      gap: 1.3rem;
+      margin-top: 1.5rem;
+    }
+
+    .product-carousel__science-content {
+      max-width: 100%;
+      justify-items: start;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .product-carousel__science-banner {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .product-carousel__science-visual {
+      width: min(100%, 44rem);
+      margin: 0 auto;
+    }
+
+    .product-carousel__science-content {
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .product-carousel__science-title {
+      font-size: 1.3rem;
+    }
+
+    .product-carousel__science-button {
+      width: 100%;
+      max-width: 220px;
+    }
+  }
+
+  /* Product Card Carousel Styles */
+  .product-card-carousel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--color-background);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    padding: 0.75rem;
+    transition: transform 0.2s ease;
+  }
+
+  .product-card-carousel:hover {
+    box-shadow: none;
+    transform: translateY(-2px);
+  }
+
+  .product-card-carousel__image {
+    position: relative;
+    aspect-ratio: 1;
+    background: #f2f2f2;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 0;
+  }
+
+  .product-card-carousel__image a {
+    position: relative;
+    display: block;
+    height: 100%;
+  }
+
+  .product-card-carousel__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 2.35s ease-in-out, transform 2.35s ease-in-out;
+    padding: 0.25rem;
+    will-change: opacity, transform;
+  }
+
+  .product-card-carousel__img--hover {
+    position: absolute;
+    inset: 0.35rem;
+    z-index: 2;
+    opacity: 0;
+    object-fit: contain;
+    object-position: center;
+    padding: 0;
+    transform: scale(1.025);
+    transition: opacity 2.55s ease-in-out, transform 2.55s ease-in-out;
+    transition-delay: 0.12s;
+  }
+
+  .product-card-carousel__image:hover img,
+  .product-card-carousel__image:focus-within img {
+    transform: scale(1.01);
+  }
+
+  .product-card-carousel__image:hover .product-card-carousel__img--primary:has(+ .product-card-carousel__img--hover),
+  .product-card-carousel__image:focus-within .product-card-carousel__img--primary:has(+ .product-card-carousel__img--hover) {
+    opacity: 0;
+    transform: scale(0.985);
+    transition-duration: 2.7s;
+  }
+
+  .product-card-carousel__image:hover .product-card-carousel__img--hover,
+  .product-card-carousel__image:focus-within .product-card-carousel__img--hover {
+    opacity: 1;
+    transform: scale(1);
+    transition-duration: 2.9s;
+  }
+
+  .product-card-carousel__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .product-card-carousel__badge--save {
+    background: var(--brand-green, #FAD054);
+    color: var(--color-accent-foreground, #0A282C);
+  }
+
+  .product-card-carousel__badge--crazy {
+    left: auto;
+    right: 10px;
+    top: 10px;
+    background: var(--brand-green-gradient, var(--color-primary));
+    color: var(--brand-green, #FAD054);
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 0.6rem;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .product-card-carousel__pill {
+    align-self: center;
+    margin: 0.75rem 0 0.5rem;
+    background: var(--brand-yellow-gradient, linear-gradient(135deg, #FAD054 0%, #FFF8E7 100%));
+    color: var(--brand-purple, #0A282C);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .product-card-carousel__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.5rem 0.25rem 0.25rem;
+    flex: 1;
+  }
+
+  .product-card-carousel__title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0.25rem 0;
+    line-height: 1.35;
+  }
+
+  .product-card-carousel__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .product-card-carousel__price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+.price-current {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--brand-purple, #0A282C);
+  }
+
+  .price-compare {
+    font-size: 0.9rem;
+    color: var(--color-muted-foreground);
+    text-decoration: line-through;
+  }
+
+  .product-card-carousel__points,
+  .product-card-carousel__countdown {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-muted-foreground, #33585D);
+  }
+
+  .product-card-carousel__countdown {
+    color: var(--brand-purple, #0A282C);
+  }
+
+  .product-card-carousel__rating {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--color-muted-foreground, #33585D);
+  }
+
+  .rating-stars--small {
+    display: flex;
+    gap: 2px;
+  }
+
+  .rating-stars--small .star-icon {
+    width: 14px;
+    height: 14px;
+    color: hsl(45, 93%, 47%);
+  }
+
+  .rating-stars--small .star-icon.empty {
+    color: var(--color-muted-foreground);
+    opacity: 0.3;
+  }
+
+  .rating-value {
+    font-weight: 600;
+  }
+
+  .product-card-carousel__sku {
+    font-size: 0.8rem;
+    color: var(--color-muted-foreground);
+    margin-top: 0.3rem;
+  }
+
+  .product-card-carousel__form {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .product-card-carousel__qty {
+    display: grid;
+    gap: 0.25rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+  }
+
+  .product-card-carousel__qty input {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .btn--quick-add {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    background: var(--brand-green-gradient, var(--color-primary));
+    color: var(--color-primary-foreground);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .btn--quick-add:hover {
+    opacity: 0.92;
+    background: var(--brand-purple-dark, #06181B);
+  }
+
+  .btn--quick-add:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn--quick-add.is-loading {
+    pointer-events: none;
+  }
+
+  .product-carousel__empty {
+    padding: 2rem;
+    border: 1px dashed var(--color-border);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--color-muted-foreground);
+    width: 100%;
+  }
+</style>
+
+<script>
+  (function() {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if (!section) return;
+
+    const wrapperStates = new Map();
+    const collectionUrl = section.dataset.carouselCollectionUrl;
+    const productLimit = parseInt(section.dataset.carouselLimit || '12', 10);
+
+    const bindWrapper = (wrapper) => {
+      if (!wrapper || wrapper.dataset.carouselBound === 'true') {
+        return wrapperStates.get(wrapper) || null;
+      }
+
+      const track = wrapper.querySelector('[data-carousel-track]');
+      const prevBtn = wrapper.querySelector('[data-carousel-prev]');
+      const nextBtn = wrapper.querySelector('[data-carousel-next]');
+
+      if (!track) {
+        return null;
+      }
+
+      const getScrollAmount = () => {
+        const slideWidth = track.querySelector('.product-carousel__slide')?.offsetWidth || 220;
+        const trackStyles = window.getComputedStyle(track);
+        const gap = parseFloat(trackStyles.columnGap || trackStyles.gap) || 16;
+        return (slideWidth + gap) * 2;
+      };
+
+      const updateNavStates = () => {
+        if (prevBtn) {
+          prevBtn.disabled = track.scrollLeft <= 0;
+        }
+        if (nextBtn) {
+          nextBtn.disabled = track.scrollLeft >= track.scrollWidth - track.clientWidth - 10;
+        }
+      };
+
+      prevBtn?.addEventListener('click', () => {
+        track.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+      });
+
+      nextBtn?.addEventListener('click', () => {
+        track.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+      });
+
+      track.addEventListener('scroll', updateNavStates);
+      window.addEventListener('resize', updateNavStates);
+
+      const state = { track, updateNavStates };
+      wrapper.dataset.carouselBound = 'true';
+      wrapperStates.set(wrapper, state);
+
+      window.requestAnimationFrame(updateNavStates);
+      return state;
+    };
+
+    const fetchSortedPanelProducts = async (panel) => {
+      if (!panel || !collectionUrl || panel.dataset.productsLoaded === 'true' || panel.dataset.productsLoading === 'true') {
+        return;
+      }
+
+      const sortBy = panel.dataset.carouselSort;
+      const track = panel.querySelector('[data-carousel-track]');
+      if (!sortBy || !track) {
+        return;
+      }
+
+      panel.dataset.productsLoading = 'true';
+
+      try {
+        const requestUrl = new URL(collectionUrl, window.location.origin);
+        requestUrl.searchParams.set('sort_by', sortBy);
+
+        const response = await fetch(requestUrl.toString(), {
+          credentials: 'same-origin',
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Status ' + response.status);
+        }
+
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const cards = Array.from(doc.querySelectorAll('.collection-products .products-grid > .amzn-card')).slice(0, productLimit);
+
+        if (!cards.length) {
+          throw new Error('No sorted products returned');
+        }
+
+        track.innerHTML = cards.map((card) => `<div class="product-carousel__slide">${card.outerHTML}</div>`).join('');
+        track.scrollLeft = 0;
+
+        if (window.resetAutoMarqueeTrack) {
+          window.resetAutoMarqueeTrack(track);
+        }
+
+        const wrapper = panel.querySelector('.product-carousel__wrapper');
+        const state = bindWrapper(wrapper);
+        state?.updateNavStates();
+        panel.dataset.productsLoaded = 'true';
+      } catch (error) {
+        console.error('Product carousel sort fetch failed:', error);
+      } finally {
+        delete panel.dataset.productsLoading;
+      }
+    };
+
+    section.querySelectorAll('.product-carousel__wrapper').forEach((wrapper) => {
+      bindWrapper(wrapper);
+    });
+
+    const tabs = Array.from(section.querySelectorAll('[data-product-carousel-tab]'));
+    const panels = Array.from(section.querySelectorAll('[data-carousel-panel]'));
+
+    if (!tabs.length || !panels.length) {
+      return;
+    }
+
+    const setActivePanel = (panelName) => {
+      tabs.forEach((tab) => {
+        const isActive = tab.dataset.productCarouselTab === panelName;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        tab.setAttribute('tabindex', isActive ? '0' : '-1');
+      });
+
+      let activeState = null;
+
+      panels.forEach((panel) => {
+        const isActive = panel.dataset.carouselPanel === panelName;
+        panel.hidden = !isActive;
+        panel.classList.toggle('is-active', isActive);
+
+        if (isActive) {
+          fetchSortedPanelProducts(panel);
+          const wrapper = panel.querySelector('.product-carousel__wrapper');
+          activeState = bindWrapper(wrapper);
+        }
+      });
+
+      if (activeState?.track) {
+        activeState.track.scrollLeft = 0;
+      }
+
+      window.requestAnimationFrame(() => {
+        window.dispatchEvent(new Event('resize'));
+        activeState?.updateNavStates();
+      });
+    };
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        setActivePanel(tab.dataset.productCarouselTab);
+      });
+    });
+
+    panels.forEach((panel) => {
+      fetchSortedPanelProducts(panel);
+    });
+
+    setActivePanel(section.querySelector('[data-product-carousel-tab].is-active')?.dataset.productCarouselTab || 'primary');
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Carousel",
+  "tag": "section",
+  "class": "section-product-carousel",
+  "settings": [
+    {
+      "type": "select",
+      "id": "header_style",
+      "label": "Header style",
+      "default": "standard",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard"
+        },
+        {
+          "value": "centered_title",
+          "label": "Centered title"
+        },
+        {
+          "value": "featured_tabs",
+          "label": "Featured tabs"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured Products"
+    },
+    {
+      "type": "text",
+      "id": "primary_tab_label",
+      "label": "Primary tab label",
+      "default": "Best Sellings"
+    },
+    {
+      "type": "text",
+      "id": "secondary_tab_label",
+      "label": "Secondary tab label",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "default": 12,
+      "label": "Products to show"
+    },
+    {
+      "type": "select",
+      "id": "products_order",
+      "label": "Product order",
+      "options": [
+        {
+          "value": "collection",
+          "label": "Collection order"
+        },
+        {
+          "value": "newest",
+          "label": "Newest first"
+        },
+        {
+          "value": "oldest",
+          "label": "Oldest first"
+        }
+      ],
+      "default": "collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all label",
+      "default": "View All"
+    },
+    {
+      "type": "select",
+      "id": "view_all_style",
+      "label": "View all style",
+      "options": [
+        {
+          "value": "link",
+          "label": "Text link"
+        },
+        {
+          "value": "button",
+          "label": "Button"
+        }
+      ],
+      "default": "link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pricing",
+      "label": "Show pricing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_unit_price",
+      "label": "Show unit price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery",
+      "label": "Show delivery text",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_proof",
+      "label": "Show social proof",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_to_cart",
+      "label": "Show add to cart",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_science_banner",
+      "label": "Show science banner below products",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "science_heading",
+      "label": "Science banner heading",
+      "default": "WE ARE BACKED BY SCIENCE"
+    },
+    {
+      "type": "richtext",
+      "id": "science_text",
+      "label": "Science banner text",
+      "default": "<p>Our carefully curated formulations are prepared in a controlled environment under strict supervision of our healthcare experts.</p>"
+    },
+    {
+      "type": "text",
+      "id": "science_button_label",
+      "label": "Science button label",
+      "default": "Know more"
+    },
+    {
+      "type": "url",
+      "id": "science_button_link",
+      "label": "Science button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "science_image",
+      "label": "Science banner image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand_highlight",
+      "name": "Brand highlight",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Carousel"
+    }
+  ]
+}
+{% endschema %}

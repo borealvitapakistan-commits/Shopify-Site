@@ -1,0 +1,344 @@
+{%- comment -%}
+  Product Card for Carousel
+  Compact card with image, price, badges, rating, sku, qty, and add to cart
+  Usage: {% render 'product-card-carousel', product: product %}
+{%- endcomment -%}
+
+{% assign tags_string = product.tags | join: ',' | downcase %}
+{% assign show_crazy = false %}
+{% assign show_month = false %}
+{% if tags_string contains 'crazy deal' or tags_string contains 'crazy-deal' %}
+  {% assign show_crazy = true %}
+{% endif %}
+{% if tags_string contains 'deal of the month' or tags_string contains 'deal-of-the-month' %}
+  {% assign show_month = true %}
+{% endif %}
+
+{% assign rating_value = product.metafields.reviews.rating.value %}
+{% assign rating_count = product.metafields.reviews.rating_count %}
+{% assign rating_int = rating_value | floor %}
+{% assign points_value = product.metafields.custom.points | default: blank %}
+{% assign deal_end = product.metafields.custom.deal_end | default: blank %}
+{% assign sku_value = product.selected_or_first_available_variant.sku | default: '' %}
+{% assign card_sold_out = true %}
+{% for variant in product.variants %}
+  {% assign variant_sold_out = false %}
+  {% if variant.available == false %}
+    {% assign variant_sold_out = true %}
+  {% elsif variant.inventory_management != blank and variant.inventory_quantity <= 0 %}
+    {% assign variant_sold_out = true %}
+  {% endif %}
+  {% if variant_sold_out == false %}
+    {% assign card_sold_out = false %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div class="product-card-carousel" data-product-id="{{ product.id }}">
+  <div class="product-card-carousel__image">
+    <a href="{{ product.url }}">
+      {% if product.featured_media %}
+        {%- assign hover_image = blank -%}
+        {%- for image in product.images -%}
+          {%- if image.id != product.featured_media.id -%}
+            {%- assign hover_image = image -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <img
+          class="product-card-carousel__img product-card-carousel__img--primary"
+          src="{{ product.featured_media | image_url: width: 500 }}"
+          alt="{{ product.featured_media.alt | escape | default: product.title }}"
+          loading="lazy"
+          width="500"
+          height="500"
+        >
+        {% if hover_image != blank %}
+          <img
+            class="product-card-carousel__img product-card-carousel__img--hover"
+            src="{{ hover_image | image_url: width: 500 }}"
+            alt="{{ hover_image.alt | escape | default: product.title }}"
+            loading="lazy"
+            width="500"
+            height="500"
+          >
+        {% endif %}
+      {% else %}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card-carousel__placeholder' }}
+      {% endif %}
+    </a>
+
+    {% if product.compare_at_price > product.price %}
+      {% assign savings = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
+      <span class="product-card-carousel__badge product-card-carousel__badge--save">Save {{ savings }}%</span>
+    {% endif %}
+
+    {% if show_crazy %}
+      <span class="product-card-carousel__badge product-card-carousel__badge--crazy">Crazy Deal</span>
+    {% endif %}
+  </div>
+
+  {% if show_month %}
+    <div class="product-card-carousel__pill">Deal Of The Month</div>
+  {% endif %}
+
+  <div class="product-card-carousel__content">
+    <h3 class="product-card-carousel__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+
+    <div class="product-card-carousel__price">
+      <span class="price-current">{{ product.price | money }}</span>
+      {% if product.compare_at_price > product.price %}
+        <span class="price-compare">{{ product.compare_at_price | money }}</span>
+      {% endif %}
+    </div>
+
+    {% if points_value != blank %}
+      <div class="product-card-carousel__points">Earn {{ points_value }} Points</div>
+    {% endif %}
+
+    {% if deal_end != blank %}
+      <div class="product-card-carousel__countdown" data-deal-end="{{ deal_end }}">
+        Ends soon
+      </div>
+    {% endif %}
+
+    {% if rating_value != blank %}
+      <div class="product-card-carousel__rating">
+        <div class="rating-stars rating-stars--small">
+          {% for i in (1..5) %}
+            {% if i <= rating_int %}
+              <svg class="star-icon" viewBox="0 0 20 20" fill="currentColor">
+                <polygon points="10,1 12.5,6.5 18.5,7 14,11 15.5,17 10,14 4.5,17 6,11 1.5,7 7.5,6.5"/>
+              </svg>
+            {% else %}
+              <svg class="star-icon empty" viewBox="0 0 20 20" fill="currentColor">
+                <polygon points="10,1 12.5,6.5 18.5,7 14,11 15.5,17 10,14 4.5,17 6,11 1.5,7 7.5,6.5"/>
+              </svg>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="rating-value">{{ rating_value }}{% if rating_count != blank %} ({{ rating_count }}){% endif %}</div>
+      </div>
+    {% endif %}
+
+    {% if sku_value != blank %}
+      <div class="product-card-carousel__sku">SKU: {{ sku_value }}</div>
+    {% endif %}
+
+    {% if card_sold_out == false %}
+      {% if product.has_only_default_variant %}
+        {% form 'product', product, class: 'product-card-carousel__form', data-product-form: '' %}
+          {% comment %}
+            Automatically inserted by Shop Pay Installments theme updater
+          {% endcomment %}
+          {% unless settings.disable_autogenerated_payment_terms %}
+            {{ form | payment_terms }}
+          {% endunless %}
+          <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+          <label class="product-card-carousel__qty">
+            <span>QTY</span>
+            <input type="number" name="quantity" value="1" min="1">
+          </label>
+          <button type="submit" class="btn btn--quick-add"><span>Buy Now</span></button>
+        {% endform %}
+      {% else %}
+        <a href="{{ product.url }}" class="btn btn--quick-add">View Details</a>
+      {% endif %}
+    {% else %}
+      <button class="btn btn--quick-add" disabled>Sold Out</button>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .product-card-carousel {
+    display: flex;
+    flex-direction: column;
+    min-height: 26.35rem;
+    height: 100%;
+    padding: 0.88rem;
+    border: 1px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.12);
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 0.6rem 1.55rem rgba(10, 40, 44, 0.06);
+    overflow: hidden;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+
+  .product-card-carousel:hover,
+  .product-card-carousel:focus-within {
+    border-color: rgba(var(--brand-primary-rgb, 10, 40, 44), 0.2);
+    box-shadow: 0 0.9rem 1.9rem rgba(10, 40, 44, 0.1);
+    transform: translateY(-0.18rem);
+  }
+
+  .product-card-carousel__image {
+    position: relative;
+    aspect-ratio: 1 / 1.08;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f2f2f2;
+    border: 0;
+    border-radius: 0.82rem;
+    overflow: hidden;
+  }
+
+  .product-card-carousel__image a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-card-carousel__image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    object-position: center;
+    transition: opacity 0.38s ease, transform 0.38s ease;
+  }
+
+  .product-card-carousel__img--hover {
+    position: absolute;
+    inset: 1rem;
+    z-index: 2;
+    width: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+    max-height: calc(100% - 2rem);
+    opacity: 0;
+    object-fit: contain;
+    object-position: center;
+    pointer-events: none;
+  }
+
+  .product-card-carousel:hover .product-card-carousel__img--primary:has(+ .product-card-carousel__img--hover),
+  .product-card-carousel:focus-within .product-card-carousel__img--primary:has(+ .product-card-carousel__img--hover) {
+    opacity: 0;
+  }
+
+  .product-card-carousel:hover .product-card-carousel__img--hover,
+  .product-card-carousel:focus-within .product-card-carousel__img--hover {
+    opacity: 1;
+  }
+
+  .product-card-carousel__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.46rem;
+    padding: 0.86rem 0.08rem 0;
+    text-align: center;
+    transition: transform 0.22s ease;
+  }
+
+  .product-card-carousel:hover .product-card-carousel__content,
+  .product-card-carousel:focus-within .product-card-carousel__content {
+    transform: translateY(-0.32rem);
+  }
+
+  .product-card-carousel__title {
+    margin: 0.25rem 0;
+    color: var(--brand-primary, #0A282C);
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.28;
+  }
+
+  .product-card-carousel__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .product-card-carousel__price,
+  .product-card-carousel__rating {
+    display: flex;
+    justify-content: center;
+  }
+
+  .product-card-carousel__qty {
+    display: none;
+  }
+
+  .product-card-carousel__form {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+    margin-top: auto;
+  }
+
+  .product-card-carousel__form,
+  .product-card-carousel__content > .btn--quick-add {
+    min-height: 2.65rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.78rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+
+  .product-card-carousel:hover .product-card-carousel__form,
+  .product-card-carousel:focus-within .product-card-carousel__form,
+  .product-card-carousel:hover .product-card-carousel__content > .btn--quick-add,
+  .product-card-carousel:focus-within .product-card-carousel__content > .btn--quick-add {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .product-card-carousel .btn--quick-add {
+    width: 100%;
+    min-height: 2.65rem;
+    padding: 0 1rem;
+    border: 0;
+    border-radius: 0.45rem;
+    background: var(--brand-title-gradient, linear-gradient(135deg, #0A282C 0%, #163E43 100%));
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  @media (max-width: 767px), (hover: none) {
+    .product-card-carousel {
+      min-height: 0;
+    }
+
+    .product-card-carousel:hover .product-card-carousel__content,
+    .product-card-carousel:focus-within .product-card-carousel__content {
+      transform: none;
+    }
+
+    .product-card-carousel__form,
+    .product-card-carousel__content > .btn--quick-add {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .product-card-carousel,
+    .product-card-carousel__content,
+    .product-card-carousel__form,
+    .product-card-carousel__content > .btn--quick-add {
+      transition: none;
+    }
+
+    .product-card-carousel:hover,
+    .product-card-carousel:focus-within,
+    .product-card-carousel:hover .product-card-carousel__content,
+    .product-card-carousel:focus-within .product-card-carousel__content,
+    .product-card-carousel__form,
+    .product-card-carousel__content > .btn--quick-add {
+      transform: none;
+    }
+  }
+</style>

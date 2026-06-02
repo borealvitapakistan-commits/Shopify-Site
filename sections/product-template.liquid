@@ -1,0 +1,691 @@
+{% comment %}
+  Main Product Section - iHerb-style PDP
+  Clean, modern layout with thumbnail gallery, tabs, trust badges, and recommendations
+{% endcomment %}
+
+{% assign current_variant = product.selected_or_first_available_variant %}
+{% assign initial_sold_out = false %}
+{% if current_variant.available == false %}
+  {% assign initial_sold_out = true %}
+{% endif %}
+{% if current_variant.inventory_management != blank and current_variant.inventory_quantity <= 0 %}
+  {% assign initial_sold_out = true %}
+{% endif %}
+
+{% assign tags_string = product.tags | join: ',' | downcase %}
+{% assign show_crazy = false %}
+{% assign show_month = false %}
+{% if tags_string contains 'crazy deal' or tags_string contains 'crazy-deal' %}
+  {% assign show_crazy = true %}
+{% endif %}
+{% if tags_string contains 'deal of the month' or tags_string contains 'deal-of-the-month' %}
+  {% assign show_month = true %}
+{% endif %}
+
+{% assign rating_value = product.metafields.reviews.rating.value %}
+{% assign rating_count = product.metafields.reviews.rating_count %}
+{% assign rating_int = rating_value | floor %}
+{% assign points_value = product.metafields.custom.points | default: blank %}
+{% assign deal_end = product.metafields.custom.deal_end | default: blank %}
+{% assign sku_value = product.selected_or_first_available_variant.sku | default: '' %}
+
+<link rel="stylesheet" href="{{ 'section-main-product.css' | asset_url }}" media="print" onload="this.media='all'">
+
+<section class="pdp-section">
+  <div class="container">
+    {%- comment -%} Breadcrumbs {%- endcomment -%}
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol class="breadcrumbs__list">
+        <li class="breadcrumbs__item">
+          <a href="{{ routes.root_url }}" class="breadcrumbs__link">Home</a>
+          {% render 'icon-chevron-right' %}
+        </li>
+        {% if product.collections.first %}
+          <li class="breadcrumbs__item">
+            <a href="{{ product.collections.first.url }}" class="breadcrumbs__link">{{ product.collections.first.title }}</a>
+            {% render 'icon-chevron-right' %}
+          </li>
+        {% endif %}
+        <li class="breadcrumbs__item breadcrumbs__item--current">
+          <span>{{ product.title | truncate: 50 }}</span>
+        </li>
+      </ol>
+    </nav>
+
+    <div class="pdp-grid">
+      {%- comment -%} Image Gallery with Thumbnails Below {%- endcomment -%}
+      <div class="pdp-gallery">
+        <div class="pdp-gallery__main">
+          {% if product.featured_media %}
+            <img
+              id="ProductMainImage"
+              src="{{ product.featured_media | image_url: width: 800 }}"
+              alt="{{ product.featured_media.alt | escape }}"
+              class="pdp-gallery__image"
+              width="{{ product.featured_media.width }}"
+              height="{{ product.featured_media.height }}"
+              loading="eager"
+            >
+          {% else %}
+            {{ 'product-1' | placeholder_svg_tag: 'pdp-gallery__placeholder' }}
+          {% endif %}
+          
+          {% if product.compare_at_price > product.price %}
+            {% assign savings = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round %}
+            <span class="pdp-badge pdp-badge--sale">Save {{ savings }}%</span>
+          {% endif %}
+
+          {% if show_crazy %}
+            <span class="pdp-badge pdp-badge--crazy">Crazy Deal</span>
+          {% endif %}
+        </div>
+
+        {% if product.media.size > 1 %}
+          <div class="pdp-gallery__thumbs">
+            {% for media in product.media limit: 6 %}
+              <button
+                type="button"
+                class="pdp-gallery__thumb {% if forloop.first %}is-active{% endif %}"
+                data-media-id="{{ media.id }}"
+                data-image-url="{{ media | image_url: width: 800 }}"
+                aria-label="View {{ media.alt | default: product.title }}"
+              >
+                <img
+                  src="{{ media | image_url: width: 120 }}"
+                  alt="{{ media.alt | escape }}"
+                  width="{{ media.width }}"
+                  height="{{ media.height }}"
+                  loading="lazy"
+                >
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      {%- comment -%} Product Details {%- endcomment -%}
+      <div class="pdp-details">
+        {% if product.vendor %}
+          <a href="{{ routes.collections_url }}/vendors?q={{ product.vendor | url_encode }}" class="pdp-info__vendor">{{ product.vendor }}</a>
+        {% endif %}
+
+        <h1 class="pdp-info__title">{{ product.title }}</h1>
+
+        {%- comment -%} Rating Row {%- endcomment -%}
+        {% if rating_value != blank %}
+          <div class="pdp-info__rating">
+            <div class="rating-stars">
+              {% for i in (1..5) %}
+                {% if i <= rating_int %}
+                  <svg class="star-icon star-icon--filled" viewBox="0 0 20 20" fill="currentColor">
+                    <polygon points="10,1 12.5,6.5 18.5,7 14,11 15.5,17 10,14 4.5,17 6,11 1.5,7 7.5,6.5"/>
+                  </svg>
+                {% else %}
+                  <svg class="star-icon star-icon--empty" viewBox="0 0 20 20" fill="currentColor">
+                    <polygon points="10,1 12.5,6.5 18.5,7 14,11 15.5,17 10,14 4.5,17 6,11 1.5,7 7.5,6.5"/>
+                  </svg>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <span class="rating-value">{{ rating_value }}{% if rating_count != blank %} ({{ rating_count }}){% endif %}</span>
+          </div>
+        {% endif %}
+
+        {%- comment -%} Short Description {%- endcomment -%}
+        {% if product.metafields.custom.short_description %}
+          <p class="pdp-info__short-desc">{{ product.metafields.custom.short_description }}</p>
+        {% endif %}
+      </div>
+
+      {%- comment -%} Buy Box {%- endcomment -%}
+      <aside class="pdp-buybox">
+        <div class="pdp-purchase-card">
+          {% if show_month %}
+            <div class="pdp-card__pill">Deal Of The Month</div>
+          {% endif %}
+
+          <div class="pdp-card__price" id="ProductPrice">
+            <span class="price-current">{{ product.price | money }}</span>
+            {% if product.compare_at_price > product.price %}
+              <span class="price-compare">{{ product.compare_at_price | money }}</span>
+            {% endif %}
+          </div>
+
+          {% if points_value != blank %}
+            <div class="pdp-card__points">Earn {{ points_value }} Points</div>
+          {% endif %}
+
+          {% if deal_end != blank %}
+            <div class="pdp-card__countdown" data-deal-end="{{ deal_end }}">Ends soon</div>
+          {% endif %}
+
+          <div class="pdp-card__stock {% if initial_sold_out %}pdp-card__stock--out{% else %}pdp-card__stock--in{% endif %}" id="ProductStock">
+            {% if initial_sold_out %}Out of Stock{% else %}In Stock{% endif %}
+          </div>
+
+          {% if sku_value != blank %}
+            <div class="pdp-card__sku">SKU: {{ sku_value }}</div>
+          {% endif %}
+
+          {% form 'product', product, id: 'ProductForm', class: 'pdp-form', data-product-form: '' %}
+            {% comment %}
+              Automatically inserted by Shop Pay Installments theme updater
+            {% endcomment %}
+            {% unless settings.disable_autogenerated_payment_terms %}
+              {{ form | payment_terms }}
+            {% endunless %}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="ProductVariantId">
+
+            {%- comment -%} Variant Selectors {%- endcomment -%}
+            {% unless product.has_only_default_variant %}
+              {% for option in product.options_with_values %}
+                <div class="pdp-variant-selector">
+                  <label class="pdp-variant-selector__label">
+                    {{ option.name }}:
+                    <span class="pdp-variant-selector__selected">{{ option.selected_value }}</span>
+                  </label>
+                  <div class="pdp-variant-selector__options">
+                    {% for value in option.values %}
+                      <button
+                        type="button"
+                        class="pdp-variant-option {% if option.selected_value == value %}is-selected{% endif %}"
+                        data-option-position="{{ option.position }}"
+                        data-option-value="{{ value | escape }}"
+                        aria-label="{{ option.name }}: {{ value }}"
+                      >
+                        {{ value }}
+                      </button>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% endunless %}
+
+            {%- comment -%} Hidden variant select {%- endcomment -%}
+            <select name="id" id="ProductSelect" class="visually-hidden" aria-label="Product variants">
+              {% for variant in product.variants %}
+                {% assign variant_sold_out = false %}
+                {% if variant.available == false %}
+                  {% assign variant_sold_out = true %}
+                {% elsif variant.inventory_management != blank and variant.inventory_quantity <= 0 %}
+                  {% assign variant_sold_out = true %}
+                {% endif %}
+                <option
+                  value="{{ variant.id }}"
+                  {% if variant == product.selected_or_first_available_variant %}selected{% endif %}
+                  {% if variant_sold_out %}disabled{% endif %}
+                  data-price="{{ variant.price }}"
+                  data-compare-price="{{ variant.compare_at_price }}"
+                  data-available="{{ variant.available }}"
+                  data-inventory-management="{{ variant.inventory_management }}"
+                  data-inventory-quantity="{{ variant.inventory_quantity }}"
+                >
+                  {{ variant.title }} - {{ variant.price | money }}
+                </option>
+              {% endfor %}
+            </select>
+
+            {%- comment -%} Quantity & Add to Cart {%- endcomment -%}
+            <div class="pdp-card__form">
+              <label class="pdp-card__qty">
+                <span>QTY</span>
+                <input
+                  type="number"
+                  name="quantity"
+                  id="ProductQuantity"
+                  value="1"
+                  min="1"
+                  class="pdp-quantity__input"
+                  aria-label="Quantity"
+                >
+              </label>
+              <button
+                type="submit"
+                name="add"
+                class="pdp-btn pdp-btn--primary"
+                {% if initial_sold_out %}disabled{% endif %}
+                id="AddToCart"
+              >
+                <span id="AddToCartText">
+                  {% if initial_sold_out %}Sold Out{% else %}Add to Cart{% endif %}
+                </span>
+              </button>
+            </div>
+          {% endform %}
+
+          {%- comment -%} Trust Badges Row {%- endcomment -%}
+          <div class="pdp-trust-row">
+            {% for block in section.blocks %}
+              {% if block.type == 'trust_badge' %}
+                <div class="pdp-trust-badge" {{ block.shopify_attributes }}>
+                  {% case block.settings.icon %}
+                    {% when 'shipping' %}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    {% when 'secure' %}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    {% when 'returns' %}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                    {% when 'quality' %}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    {% else %}
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  {% endcase %}
+                  <span>{{ block.settings.text }}</span>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </aside>
+      </div>
+    </div>
+</section>
+
+{%- comment -%} Amazon-style Information Sections {%- endcomment -%}
+<section class="pdp-info-sections">
+  <div class="container">
+    {% assign legal_disclaimer = product.metafields.custom.legal_disclaimer %}
+    {% if legal_disclaimer != blank %}
+      <div class="pdp-info-block">
+        <h3>Important information</h3>
+        <h4>Legal Disclaimer</h4>
+        <div class="rte">{{ legal_disclaimer }}</div>
+      </div>
+    {% endif %}
+
+    <div class="pdp-info-block">
+      <h3>Product description</h3>
+      <div class="rte">
+        {% if product.description != blank %}
+          {{ product.description }}
+        {% else %}
+          <p>Product description coming soon.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% assign manufacturer = product.metafields.custom.manufacturer %}
+    {% assign place_of_business = product.metafields.custom.place_of_business %}
+    {% assign parcel_dimensions = product.metafields.custom.parcel_dimensions %}
+    {% assign asin = product.metafields.custom.asin %}
+    {% assign item_form = product.metafields.custom.item_form %}
+    {% assign flavour = product.metafields.custom.flavour | default: product.metafields.custom.flavor %}
+    {% assign number_of_items = product.metafields.custom.number_of_items %}
+
+    {% assign best_sellers_rank = product.metafields.custom.best_sellers_rank %}
+    {% assign date_first_available = product.metafields.custom.date_first_available %}
+    {% assign country_of_origin = product.metafields.custom.country_of_origin %}
+    {% assign item_weight = product.metafields.custom.item_weight %}
+    {% assign certifications = product.metafields.custom.certifications %}
+
+    {% if manufacturer != blank or place_of_business != blank or parcel_dimensions != blank or asin != blank or item_form != blank or flavour != blank or number_of_items != blank or best_sellers_rank != blank or date_first_available != blank or country_of_origin != blank or item_weight != blank or certifications != blank %}
+      <div class="pdp-info-block">
+        <h3>Product information</h3>
+        <div class="pdp-info-columns">
+          <div class="pdp-info-table">
+            <h4>Technical Details</h4>
+            <dl class="pdp-info-table__list">
+              {% if manufacturer != blank %}<div class="pdp-info-table__row"><dt>Manufacturer</dt><dd>{{ manufacturer }}</dd></div>{% endif %}
+              {% if place_of_business != blank %}<div class="pdp-info-table__row"><dt>Place of Business</dt><dd>{{ place_of_business }}</dd></div>{% endif %}
+              {% if parcel_dimensions != blank %}<div class="pdp-info-table__row"><dt>Parcel Dimensions</dt><dd>{{ parcel_dimensions }}</dd></div>{% endif %}
+              {% if asin != blank %}<div class="pdp-info-table__row"><dt>ASIN</dt><dd>{{ asin }}</dd></div>{% endif %}
+              {% if item_form != blank %}<div class="pdp-info-table__row"><dt>Item form</dt><dd>{{ item_form }}</dd></div>{% endif %}
+              {% if flavour != blank %}<div class="pdp-info-table__row"><dt>Flavour</dt><dd>{{ flavour }}</dd></div>{% endif %}
+              {% if number_of_items != blank %}<div class="pdp-info-table__row"><dt>Number of Items</dt><dd>{{ number_of_items }}</dd></div>{% endif %}
+            </dl>
+          </div>
+
+          <div class="pdp-info-table">
+            <h4>Additional Information</h4>
+            <dl class="pdp-info-table__list">
+              {% if best_sellers_rank != blank %}<div class="pdp-info-table__row"><dt>Best Sellers Rank</dt><dd>{{ best_sellers_rank }}</dd></div>{% endif %}
+              {% if date_first_available != blank %}<div class="pdp-info-table__row"><dt>Date First Available</dt><dd>{{ date_first_available }}</dd></div>{% endif %}
+              {% if country_of_origin != blank %}<div class="pdp-info-table__row"><dt>Country of Origin</dt><dd>{{ country_of_origin }}</dd></div>{% endif %}
+              {% if item_weight != blank %}<div class="pdp-info-table__row"><dt>Item Weight</dt><dd>{{ item_weight }}</dd></div>{% endif %}
+              {% if certifications != blank %}<div class="pdp-info-table__row"><dt>Certifications</dt><dd>{{ certifications }}</dd></div>{% endif %}
+            </dl>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% assign bullet_points = product.metafields.custom.bullet_points.value %}
+    {% if bullet_points != blank %}
+      <div class="pdp-info-block">
+        <h3>Product details</h3>
+        <ul class="pdp-details-list">
+          {% for item in bullet_points %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{%- comment -%} Frequently Bought Together {%- endcomment -%}
+{% if section.settings.show_recommendations %}
+  <section class="pdp-recommendations">
+    <div class="container">
+      <h2 class="section-title">{{ section.settings.recommendations_title | default: 'Frequently Bought Together' }}</h2>
+      <div class="pdp-recommendations__grid">
+        {% assign rec_collection = collections[section.settings.recommendations_collection] %}
+        {% if rec_collection.products.size > 0 %}
+          {% for rec_product in rec_collection.products limit: 4 %}
+            {% if rec_product.id != product.id %}
+              {% render 'product-card-carousel', product: rec_product %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% for rec_product in product.collections.first.products limit: 5 %}
+            {% if rec_product.id != product.id %}
+              {% render 'product-card-carousel', product: rec_product %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{%- comment -%} Disclaimer {%- endcomment -%}
+<section class="pdp-disclaimer">
+  <div class="container">
+    <p>
+      * These statements have not been evaluated by the Food and Drug Administration.
+      This product is not intended to diagnose, treat, cure, or prevent any disease.
+    </p>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Gallery thumbnail switching
+  const mainImage = document.getElementById('ProductMainImage');
+  const thumbnails = document.querySelectorAll('.pdp-gallery__thumb');
+  const galleryMain = document.querySelector('.pdp-gallery__main');
+  
+  thumbnails.forEach(thumb => {
+    thumb.addEventListener('click', function() {
+      const imageUrl = this.dataset.imageUrl;
+      if (mainImage && imageUrl) {
+        mainImage.src = imageUrl;
+        thumbnails.forEach(t => t.classList.remove('is-active'));
+        this.classList.add('is-active');
+      }
+    });
+  });
+
+  if (galleryMain && mainImage) {
+    galleryMain.addEventListener('mousemove', function(e) {
+      const rect = galleryMain.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      mainImage.style.transformOrigin = `${x}% ${y}%`;
+    });
+
+    galleryMain.addEventListener('mouseleave', function() {
+      mainImage.style.transformOrigin = 'center center';
+    });
+  }
+  
+  // Variant selection
+  const variantOptions = document.querySelectorAll('.pdp-variant-option');
+  const variantSelect = document.getElementById('ProductSelect');
+  const variantIdInput = document.getElementById('ProductVariantId');
+  
+  variantOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      const position = this.dataset.optionPosition;
+      this.parentElement.querySelectorAll('.pdp-variant-option').forEach(o => o.classList.remove('is-selected'));
+      this.classList.add('is-selected');
+      
+      // Update selected label
+      const label = this.closest('.pdp-variant-selector').querySelector('.pdp-variant-selector__selected');
+      if (label) label.textContent = this.dataset.optionValue;
+      
+      updateVariant();
+    });
+  });
+  
+  function updateVariant() {
+    const selectedOptions = [];
+    document.querySelectorAll('.pdp-variant-selector').forEach(selector => {
+      const selected = selector.querySelector('.pdp-variant-option.is-selected');
+      if (selected) selectedOptions.push(selected.dataset.optionValue);
+    });
+    
+    for (let i = 0; i < variantSelect.options.length; i++) {
+      const option = variantSelect.options[i];
+      const matches = selectedOptions.every(val => option.text.includes(val));
+      
+      if (matches) {
+        variantSelect.selectedIndex = i;
+        variantIdInput.value = option.value;
+        
+        const price = parseInt(option.dataset.price);
+        const comparePrice = parseInt(option.dataset.comparePrice);
+        const available = option.dataset.available === 'true';
+        const inventoryManagement = option.dataset.inventoryManagement;
+        const inventoryQuantity = parseInt(option.dataset.inventoryQuantity || '0', 10);
+        const soldOut = !available || (inventoryManagement && inventoryQuantity <= 0);
+
+        updatePrice(price, comparePrice);
+        updateAvailability(soldOut);
+        break;
+      }
+    }
+  }
+  
+  function updatePrice(price, comparePrice) {
+    const priceContainer = document.getElementById('ProductPrice');
+    const formattedPrice = Shopify.formatMoney(price);
+    let html = `<span class="price-current">${formattedPrice}</span>`;
+
+    if (comparePrice && comparePrice > price) {
+      const formattedCompare = Shopify.formatMoney(comparePrice);
+      html += `<span class="price-compare">${formattedCompare}</span>`;
+    }
+    
+    priceContainer.innerHTML = html;
+  }
+  
+  function updateAvailability(soldOut) {
+    const addToCartBtn = document.getElementById('AddToCart');
+    const addToCartText = document.getElementById('AddToCartText');
+    const stockStatus = document.getElementById('ProductStock');
+    
+    if (!soldOut) {
+      addToCartBtn.disabled = false;
+      addToCartText.textContent = 'Add to Cart';
+      if (stockStatus) stockStatus.textContent = 'In Stock';
+      if (stockStatus) {
+        stockStatus.classList.remove('pdp-stock--out');
+        stockStatus.classList.add('pdp-stock--in');
+      }
+    } else {
+      addToCartBtn.disabled = true;
+      addToCartText.textContent = 'Sold Out';
+      if (stockStatus) stockStatus.textContent = 'Out of Stock';
+      if (stockStatus) {
+        stockStatus.classList.remove('pdp-stock--in');
+        stockStatus.classList.add('pdp-stock--out');
+      }
+    }
+  }
+  
+  // Quantity buttons
+  const quantityInput = document.getElementById('ProductQuantity');
+  document.querySelectorAll('.pdp-quantity__btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const action = this.dataset.action;
+      let value = parseInt(quantityInput.value) || 1;
+      
+      if (action === 'increase') {
+        quantityInput.value = value + 1;
+      } else if (action === 'decrease' && value > 1) {
+        quantityInput.value = value - 1;
+      }
+    });
+  });
+  
+  // Tabs functionality
+  const tabTriggers = document.querySelectorAll('[data-tab-trigger]');
+  const tabPanels = document.querySelectorAll('[data-tab-panel]');
+  
+  tabTriggers.forEach(trigger => {
+    trigger.addEventListener('click', function() {
+      const tabId = this.dataset.tabTrigger;
+      
+      tabTriggers.forEach(t => {
+        t.classList.remove('is-active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tabPanels.forEach(p => p.classList.remove('is-active'));
+      
+      this.classList.add('is-active');
+      this.setAttribute('aria-selected', 'true');
+      document.querySelector(`[data-tab-panel="${tabId}"]`).classList.add('is-active');
+    });
+  });
+  
+  // AJAX Add to Cart
+  const productForm = document.getElementById('ProductForm');
+  if (productForm) {
+    productForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const addToCartBtn = document.getElementById('AddToCart');
+      const addToCartText = document.getElementById('AddToCartText');
+      const originalText = addToCartText.textContent;
+      
+      addToCartBtn.disabled = true;
+      addToCartText.textContent = 'Adding...';
+      
+      const formData = new FormData(this);
+      
+      fetch('/cart/add.js', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        addToCartText.textContent = 'Added!';
+        
+        // Open cart drawer if available
+        if (typeof window.openCartDrawer === 'function') {
+          window.openCartDrawer();
+        }
+        
+        setTimeout(() => {
+          addToCartBtn.disabled = false;
+          addToCartText.textContent = originalText;
+        }, 1500);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        addToCartBtn.disabled = false;
+        addToCartText.textContent = originalText;
+      });
+    });
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "Product Page",
+  "tag": "div",
+  "class": "section-main-product",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Recommendations"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_recommendations",
+      "label": "Show product recommendations",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "recommendations_title",
+      "label": "Recommendations heading",
+      "default": "Frequently Bought Together"
+    },
+    {
+      "type": "collection",
+      "id": "recommendations_collection",
+      "label": "Recommendations collection",
+      "info": "Leave empty to use products from the same collection"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_badge",
+      "name": "Trust Badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "shipping",
+          "options": [
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "secure", "label": "Secure" },
+            { "value": "returns", "label": "Returns" },
+            { "value": "quality", "label": "Quality" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free Shipping $49+"
+        }
+      ]
+    },
+    {
+      "type": "tab",
+      "name": "Content Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Tab Title",
+          "default": "Description"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "info": "Leave empty to use defaults"
+        },
+        {
+          "type": "checkbox",
+          "id": "use_product_description",
+          "label": "Use product description",
+          "default": false,
+          "info": "For Description tab only"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Page",
+      "blocks": [
+        { "type": "trust_badge", "settings": { "icon": "shipping", "text": "Free Shipping $49+" } },
+        { "type": "trust_badge", "settings": { "icon": "secure", "text": "Secure Checkout" } },
+        { "type": "trust_badge", "settings": { "icon": "returns", "text": "30-Day Returns" } },
+        { "type": "trust_badge", "settings": { "icon": "quality", "text": "Quality Guaranteed" } },
+        { "type": "tab", "settings": { "title": "Benefits" } },
+        { "type": "tab", "settings": { "title": "Ingredients" } },
+        { "type": "tab", "settings": { "title": "Directions" } },
+        { "type": "tab", "settings": { "title": "FAQs" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

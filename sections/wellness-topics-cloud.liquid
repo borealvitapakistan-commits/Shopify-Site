@@ -1,0 +1,482 @@
+{%- comment -%}
+  Scrollable wellness topics section with themed heading and benefit-style cards.
+{%- endcomment -%}
+
+{% liquid
+  assign topic_lines = section.settings.topics_list | newline_to_br | split: '<br />'
+%}
+
+<section
+  id="WellnessTopicsCloud-{{ section.id }}"
+  class="wellness-topics-cloud-section"
+  data-wellness-topics-cloud
+>
+  <div class="container wellness-topics-cloud__container">
+    {% if section.settings.title != blank %}
+      <div class="wellness-topics-cloud__heading-wrap">
+        <span class="wellness-topics-cloud__heading-line" aria-hidden="true"></span>
+        <h2 class="wellness-topics-cloud__heading">{{ section.settings.title }}</h2>
+        <span class="wellness-topics-cloud__heading-line" aria-hidden="true"></span>
+      </div>
+    {% endif %}
+
+    <div class="wellness-topics-cloud__carousel">
+      <button
+        type="button"
+        class="wellness-topics-cloud__nav wellness-topics-cloud__nav--prev"
+        aria-label="Previous health benefits"
+        data-topics-prev
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+      </button>
+
+      <div class="wellness-topics-cloud__scroller" data-topics-scroller>
+        <div class="wellness-topics-cloud__track" role="list" aria-label="{{ section.settings.title | default: 'Wellness topics' | escape }}">
+          {% for block in section.blocks %}
+            {% assign topic_title = block.settings.title | strip %}
+            {% if topic_title == blank %}
+              {% continue %}
+            {% endif %}
+
+            {% assign topic_url = block.settings.link %}
+            {% if topic_url == blank %}
+              {% assign encoded_topic = topic_title | url_encode %}
+              {% assign topic_url = routes.search_url | append: '?type=product&q=' | append: encoded_topic %}
+            {% endif %}
+
+            <a
+              href="{{ topic_url }}"
+              class="wellness-topics-cloud__card"
+              role="listitem"
+              aria-label="Open {{ topic_title | escape }}"
+              {{ block.shopify_attributes }}
+            >
+              <span class="wellness-topics-cloud__card-icon-wrap" aria-hidden="true">
+                <span class="wellness-topics-cloud__card-icon-ring"></span>
+                <span class="wellness-topics-cloud__card-icon">
+                  {% if block.settings.image != blank %}
+                    <img
+                      src="{{ block.settings.image | image_url: width: 220 }}"
+                      srcset="
+                        {{ block.settings.image | image_url: width: 120 }} 120w,
+                        {{ block.settings.image | image_url: width: 180 }} 180w,
+                        {{ block.settings.image | image_url: width: 220 }} 220w,
+                        {{ block.settings.image | image_url: width: 280 }} 280w
+                      "
+                      sizes="74px"
+                      alt="{{ topic_title | escape }}"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.height }}"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    {% render 'topic-benefit-icon', topic_title: topic_title %}
+                  {% endif %}
+                </span>
+              </span>
+              <span class="wellness-topics-cloud__card-title">{{ topic_title | escape }}</span>
+            </a>
+          {% endfor %}
+
+          {% for topic_line in topic_lines %}
+            {% assign topic_title = topic_line | strip %}
+            {% if topic_title == blank %}
+              {% continue %}
+            {% endif %}
+
+            {% assign encoded_topic = topic_title | url_encode %}
+            {% assign topic_url = routes.search_url | append: '?type=product&q=' | append: encoded_topic %}
+
+            <a
+              href="{{ topic_url }}"
+              class="wellness-topics-cloud__card"
+              role="listitem"
+              aria-label="Search products for {{ topic_title | escape }}"
+            >
+              <span class="wellness-topics-cloud__card-icon-wrap" aria-hidden="true">
+                <span class="wellness-topics-cloud__card-icon-ring"></span>
+                <span class="wellness-topics-cloud__card-icon">
+                  {% render 'topic-benefit-icon', topic_title: topic_title %}
+                </span>
+              </span>
+              <span class="wellness-topics-cloud__card-title">{{ topic_title | escape }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="wellness-topics-cloud__nav wellness-topics-cloud__nav--next"
+        aria-label="Next health benefits"
+        data-topics-next
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .wellness-topics-cloud-section {
+    padding: clamp(1.65rem, 2.6vw, 2.4rem) 0 clamp(2.7rem, 4.4vw, 3.9rem);
+    background: #ffffff;
+  }
+
+  .wellness-topics-cloud__container {
+    max-width: 1320px;
+  }
+
+  .wellness-topics-cloud__heading-wrap {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.95rem, 2vw, 1.7rem);
+    margin-bottom: clamp(1.45rem, 2.6vw, 2.2rem);
+  }
+
+  .wellness-topics-cloud__heading-line {
+    flex: 1 1 0;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(10, 40, 44, 0), rgba(10, 40, 44, 0.86));
+  }
+
+  .wellness-topics-cloud__heading-line:last-child {
+    background: linear-gradient(90deg, rgba(10, 40, 44, 0.86), rgba(10, 40, 44, 0));
+  }
+
+  .wellness-topics-cloud__heading {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    background: var(--brand-title-gradient, linear-gradient(135deg, #0A282C 0%, #163E43 100%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.2rem, 1rem + 0.8vw, 2rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: 0.01em;
+    text-align: center;
+    text-wrap: balance;
+    white-space: nowrap;
+  }
+
+  .wellness-topics-cloud__carousel {
+    position: relative;
+  }
+
+  .wellness-topics-cloud__scroller {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0.25rem 0.15rem 0.7rem;
+    mask-image: linear-gradient(90deg, transparent 0, #000 2.3rem, #000 calc(100% - 2.3rem), transparent 100%);
+  }
+
+  .wellness-topics-cloud__scroller::-webkit-scrollbar {
+    display: none;
+  }
+
+  .wellness-topics-cloud__track {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 1rem;
+    width: max-content;
+    padding: 0 1.85rem;
+  }
+
+  .wellness-topics-cloud__card {
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    gap: 1rem;
+    width: 208px;
+    min-width: 208px;
+    min-height: 248px;
+    padding: 1.45rem 1rem 1.35rem;
+    border: 1px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.12);
+    border-radius: 1.1rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(249, 252, 252, 1));
+    box-shadow: 0 0.75rem 1.65rem rgba(var(--brand-primary-rgb, 10, 40, 44), 0.06);
+    color: var(--brand-primary, #0A282C);
+    text-decoration: none;
+    transition:
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      border-color 220ms ease;
+  }
+
+  .wellness-topics-cloud__card:hover,
+  .wellness-topics-cloud__card:focus-visible {
+    outline: none;
+    transform: translateY(-4px);
+    border-color: rgba(var(--brand-green-rgb, 250, 208, 84), 0.5);
+    box-shadow:
+      0 1.1rem 2.2rem rgba(var(--brand-primary-rgb, 10, 40, 44), 0.1),
+      0 0 0 1px rgba(var(--brand-green-rgb, 250, 208, 84), 0.16);
+  }
+
+  .wellness-topics-cloud__card-icon-wrap {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 92px;
+    height: 92px;
+    margin-top: 0.25rem;
+  }
+
+  .wellness-topics-cloud__card-icon-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.56);
+    box-shadow: inset 0 0 0 7px rgba(var(--brand-green-rgb, 250, 208, 84), 0.1);
+  }
+
+  .wellness-topics-cloud__card-icon {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    color: rgba(var(--brand-primary-rgb, 10, 40, 44), 0.66);
+  }
+
+  .wellness-topics-cloud__card-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .wellness-topics-cloud__card-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .wellness-topics-cloud__card-title {
+    display: block;
+    max-width: 11ch;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.04rem, 0.98rem + 0.15vw, 1.16rem);
+    font-weight: 800;
+    line-height: 1.28;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .wellness-topics-cloud__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--brand-primary, #0A282C);
+    cursor: pointer;
+    box-shadow: 0 0.55rem 1.1rem rgba(10, 40, 44, 0.08);
+    transform: translateY(-50%);
+    transition: all 0.2s ease;
+  }
+
+  .wellness-topics-cloud__nav:hover,
+  .wellness-topics-cloud__nav:focus-visible {
+    background: linear-gradient(135deg, var(--brand-purple-light, #163E43) 0%, var(--brand-purple, #0A282C) 100%);
+    border-color: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    outline: none;
+  }
+
+  .wellness-topics-cloud__nav:disabled {
+    opacity: 0.36;
+    cursor: not-allowed;
+  }
+
+  .wellness-topics-cloud__nav--prev {
+    left: -10px;
+  }
+
+  .wellness-topics-cloud__nav--next {
+    right: -10px;
+  }
+
+  @media (max-width: 749px) {
+    .wellness-topics-cloud__heading-wrap {
+      gap: 0.7rem;
+      margin-bottom: 1.35rem;
+    }
+
+    .wellness-topics-cloud__heading-line {
+      height: 1px;
+    }
+
+    .wellness-topics-cloud__heading {
+      font-size: 1rem;
+      white-space: normal;
+      max-width: 18ch;
+    }
+
+    .wellness-topics-cloud__scroller {
+      mask-image: none;
+      padding-bottom: 0.45rem;
+    }
+
+    .wellness-topics-cloud__track {
+      gap: 0.75rem;
+      padding: 0 0.2rem;
+    }
+
+    .wellness-topics-cloud__card {
+      width: 168px;
+      min-width: 168px;
+      min-height: 208px;
+      gap: 0.9rem;
+      padding: 1.15rem 0.82rem 1rem;
+    }
+
+    .wellness-topics-cloud__card-icon-wrap {
+      width: 82px;
+      height: 82px;
+    }
+
+    .wellness-topics-cloud__card-icon {
+      width: 60px;
+      height: 60px;
+    }
+
+    .wellness-topics-cloud__card-title {
+      font-size: 0.97rem;
+    }
+
+    .wellness-topics-cloud__nav {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var section = document.getElementById('WellnessTopicsCloud-{{ section.id }}');
+    if (!section) return;
+
+    var scroller = section.querySelector('[data-topics-scroller]');
+    var prevButton = section.querySelector('[data-topics-prev]');
+    var nextButton = section.querySelector('[data-topics-next]');
+
+    if (!scroller || !prevButton || !nextButton) return;
+
+    var updateNavState = function() {
+      var maxScrollLeft = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+      prevButton.disabled = scroller.scrollLeft <= 2;
+      nextButton.disabled = scroller.scrollLeft >= maxScrollLeft - 2;
+    };
+
+    var getScrollAmount = function() {
+      var firstCard = scroller.querySelector('.wellness-topics-cloud__card');
+      if (!firstCard) return Math.max(scroller.clientWidth * 0.82, 320);
+
+      var gap = parseFloat(window.getComputedStyle(scroller.querySelector('.wellness-topics-cloud__track')).gap || '0');
+      return firstCard.getBoundingClientRect().width + gap;
+    };
+
+    prevButton.addEventListener('click', function() {
+      scroller.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+    });
+
+    nextButton.addEventListener('click', function() {
+      scroller.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
+    });
+
+    var frame = null;
+    scroller.addEventListener('scroll', function() {
+      if (frame) window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(function() {
+        updateNavState();
+        frame = null;
+      });
+    }, { passive: true });
+
+    window.addEventListener('resize', updateNavState);
+    updateNavState();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Wellness Topics Cloud",
+  "tag": "section",
+  "class": "section-wellness-topics-cloud",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "WE'RE HERE TO HELP YOU WITH"
+    },
+    {
+      "type": "textarea",
+      "id": "topics_list",
+      "label": "Legacy topics",
+      "info": "Used only if no topic blocks are added.",
+      "default": "Acidity\nAcne Breakouts\nAnti-Aging\nAnxiety\nBlood Pressure\nBody Detox"
+    },
+    {
+      "type": "textarea",
+      "id": "featured_topics",
+      "label": "Legacy featured topics",
+      "info": "Kept for compatibility with older data.",
+      "default": "Anti-Aging\nBlood Pressure"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "topic",
+      "name": "Topic tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Anti-Aging"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Leave empty to open store search results for this topic."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Wellness Topics Cloud"
+    }
+  ]
+}
+{% endschema %}

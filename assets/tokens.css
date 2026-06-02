@@ -1,0 +1,74 @@
+/*
+  Boreal Vita canonical design tokens.
+  Source: Directions/BorealVita_AI_Agent_Design_Brief.md
+*/
+
+:root {
+  /* Brand palette */
+  --bv-teal-900: #0A272A;
+  --bv-teal-800: #114245;
+  --bv-teal-700: #163B43;
+  --bv-teal-600: #165258;
+  --bv-teal-500: #228191;
+  --bv-gold-500: #E9A526;
+  --bv-gold-200: #F5D988;
+  --bv-gold-600: #E9A256;
+  --bv-rust-600: #D44B2B;
+  --bv-brown-900: #563114;
+  --bv-white: #FFFFFF;
+  --bv-ink: #111111;
+
+  /* Canonical gradients */
+  --bv-grad-main: linear-gradient(135deg, #163B43 0%, #228191 50%, #163B43 100%);
+  --bv-grad-heading: linear-gradient(180deg, #0A272A 0%, #165258 100%);
+  --bv-grad-gold: linear-gradient(135deg, #E9A526 0%, #F5D988 50%, #E9A256 100%);
+
+  /* Documented derived tokens */
+  --bv-cream: #FBF8F1;
+  --bv-teal-tint: #EAF1F1;
+  --bv-success: #2E7D5B;
+  --bv-error: #B3261E;
+  --bv-focus: #228191;
+
+  /* Type system */
+  --font-display: "Moderniz", "Coolvetica", "Boreal Heading Fallback", "Montserrat", "Arial Narrow", system-ui, sans-serif;
+  --font-heading: "Coolvetica", "Boreal Heading Fallback", "Montserrat", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-accent: "Lemon Milk", "Boreal Accent Fallback", "Boreal Heading Fallback", "Montserrat", system-ui, sans-serif;
+
+  --fs-body: clamp(1.0625rem, 0.95rem + 0.45vw, 1.1875rem);
+  --fs-small: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  --fs-lead: clamp(1.1875rem, 1.05rem + 0.6vw, 1.375rem);
+  --fs-h3: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+  --fs-h2: clamp(1.75rem, 1.4rem + 1.8vw, 2.75rem);
+  --fs-h1: clamp(2.5rem, 1.9rem + 3.2vw, 4.5rem);
+  --fs-hero: clamp(3rem, 2rem + 5vw, 6rem);
+
+  --lh-tight: 1.08;
+  --lh-snug: 1.25;
+  --lh-body: 1.65;
+  --measure: 68ch;
+  --tracking: 0;
+
+  /* Spacing and geometry */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+  --space-x: var(--space-8);
+
+  --radius-sm: 0.5rem;
+  --radius: 0.875rem;
+  --radius-lg: 1.125rem;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 0.25rem 0.75rem rgba(10, 39, 42, 0.08);
+  --shadow: 0 0.75rem 1.75rem rgba(10, 39, 42, 0.12);
+  --shadow-lg: 0 1.25rem 3rem rgba(10, 39, 42, 0.16);
+}

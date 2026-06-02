@@ -1,0 +1,210 @@
+{%- comment -%}
+  FAQ Page - Matches React design with accordion
+{%- endcomment -%}
+
+<div class="main-faq">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">Frequently Asked <span class="text-primary">Questions</span></h1>
+      <p class="page-description">Find answers to common questions about our products, shipping, and more.</p>
+    </div>
+
+    {%- comment -%} Search FAQ {%- endcomment -%}
+    <div class="faq-search">
+      <div class="search-wrapper">
+        {% render 'icon-search' %}
+        <input type="text" id="faq-search" class="faq-search-input" placeholder="Search questions...">
+      </div>
+    </div>
+
+    {%- comment -%} FAQ Categories {%- endcomment -%}
+    <div class="faq-categories">
+      <button class="category-btn active" data-category="all">All</button>
+      <button class="category-btn" data-category="orders">Orders & Shipping</button>
+      <button class="category-btn" data-category="products">Products</button>
+      <button class="category-btn" data-category="returns">Returns & Refunds</button>
+      <button class="category-btn" data-category="account">Account</button>
+    </div>
+
+    {%- comment -%} FAQ Accordion {%- endcomment -%}
+    <div class="faq-list">
+      {%- comment -%} Orders & Shipping {%- endcomment -%}
+      <div class="faq-item" data-category="orders">
+        <button class="faq-question" aria-expanded="false">
+          <span>How long does shipping take?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Standard shipping typically takes 5-7 business days. Express shipping (2-3 business days) is available at checkout. Orders placed before 2 PM EST ship the same day. You'll receive a tracking number once your order ships.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="orders">
+        <button class="faq-question" aria-expanded="false">
+          <span>Do you offer free shipping?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Yes! We offer free standard shipping on all orders over $49. This applies to all 50 US states. International shipping rates vary by destination.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="orders">
+        <button class="faq-question" aria-expanded="false">
+          <span>How can I track my order?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Once your order ships, you'll receive an email with a tracking number. You can also track your order by logging into your account and viewing your order history. Click on any order to see its current status and tracking information.</p>
+        </div>
+      </div>
+
+      {%- comment -%} Products {%- endcomment -%}
+      <div class="faq-item" data-category="products">
+        <button class="faq-question" aria-expanded="false">
+          <span>Are your supplements vegan?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Many of our supplements are 100% vegan, including our vegetable capsules and plant-based formulas. Each product page indicates whether it's vegan-friendly. Look for the "Vegan" badge on product listings.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="products">
+        <button class="faq-question" aria-expanded="false">
+          <span>How should I store my supplements?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Store supplements in a cool, dry place away from direct sunlight. Keep the container tightly closed. Some products, like probiotics, may require refrigeration - check the label for specific instructions. Avoid storing in the bathroom due to humidity.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="products">
+        <button class="faq-question" aria-expanded="false">
+          <span>Are your products third-party tested?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Yes! All our products undergo rigorous third-party testing for purity, potency, and safety. Our facilities are GMP certified, and we test for heavy metals, contaminants, and accurate labeling. Certificates of Analysis are available upon request.</p>
+        </div>
+      </div>
+
+      {%- comment -%} Returns & Refunds {%- endcomment -%}
+      <div class="faq-item" data-category="returns">
+        <button class="faq-question" aria-expanded="false">
+          <span>What is your return policy?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>We offer a 30-day satisfaction guarantee. If you're not completely satisfied with your purchase, you can return unopened products for a full refund. Simply contact our customer service team to initiate a return.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="returns">
+        <button class="faq-question" aria-expanded="false">
+          <span>How do I request a refund?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Contact our support team at hello@paragonhealthfood.com or call us at +1 (555) 123-4567. Provide your order number and reason for the return. We'll send you a prepaid return label and process your refund within 5-7 business days of receiving the returned product.</p>
+        </div>
+      </div>
+
+      {%- comment -%} Account {%- endcomment -%}
+      <div class="faq-item" data-category="account">
+        <button class="faq-question" aria-expanded="false">
+          <span>How do I create an account?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Click the user icon in the top right corner and select "Create Account." Fill in your name, email, and password. You'll receive a confirmation email to verify your account. Having an account lets you track orders, save favorites, and checkout faster.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-category="account">
+        <button class="faq-question" aria-expanded="false">
+          <span>I forgot my password. What do I do?</span>
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="faq-answer">
+          <p>Click "Forgot Password" on the login page and enter your email address. You'll receive a link to reset your password within a few minutes. If you don't see the email, check your spam folder or contact our support team.</p>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} Still have questions? {%- endcomment -%}
+    <div class="faq-contact-cta">
+      <h2>Still have questions?</h2>
+      <p>Can't find the answer you're looking for? Our friendly team is here to help.</p>
+      <a href="/pages/contact" class="btn btn-primary">
+        Contact Support
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = button.parentElement;
+        const isOpen = item.classList.contains('is-open');
+        
+        // Close all others
+        document.querySelectorAll('.faq-item.is-open').forEach(openItem => {
+          openItem.classList.remove('is-open');
+          openItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+        });
+        
+        // Toggle current
+        if (!isOpen) {
+          item.classList.add('is-open');
+          button.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // Category Filter
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const category = btn.dataset.category;
+        
+        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        document.querySelectorAll('.faq-item').forEach(item => {
+          if (category === 'all' || item.dataset.category === category) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Search
+    const searchInput = document.getElementById('faq-search');
+    searchInput?.addEventListener('input', (e) => {
+      const query = e.target.value.toLowerCase();
+      
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const text = item.textContent.toLowerCase();
+        item.style.display = text.includes(query) ? 'block' : 'none';
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "settings": [],
+  "presets": [
+    {
+      "name": "FAQ"
+    }
+  ]
+}
+{% endschema %}

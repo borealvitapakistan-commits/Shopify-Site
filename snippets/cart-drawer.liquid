@@ -1,0 +1,598 @@
+{%- comment -%}
+  Cart Drawer - Slide-out cart panel
+  Features: free shipping bar, discount code, cart note, express checkout
+{%- endcomment -%}
+
+<div id="CartDrawer" class="cart-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Shopping cart">
+  <div class="drawer-backdrop" data-close-cart></div>
+  <div class="drawer-container">
+    <div class="drawer-header">
+      <h2 class="drawer-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        Your Cart
+        <span class="cart-count" id="drawerCartCount">(0)</span>
+      </h2>
+      <button class="drawer-close" data-close-cart aria-label="Close cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="drawer-content" id="drawerContent">
+      {%- comment -%} Loading State {%- endcomment -%}
+      <div class="drawer-loading" id="drawerLoading">
+        <div class="spinner"></div>
+      </div>
+
+      {%- comment -%} Empty State {%- endcomment -%}
+      <div class="drawer-empty" id="drawerEmpty" style="display: none;">
+        <div class="empty-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </div>
+        <h3>Your cart is empty</h3>
+        <p>Looks like you haven't added any items yet.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn-primary" data-close-cart>
+          Start Shopping
+        </a>
+      </div>
+
+      {%- comment -%} Cart Items {%- endcomment -%}
+      <div class="drawer-items" id="drawerItems"></div>
+    </div>
+
+    {%- comment -%} Cart Footer {%- endcomment -%}
+    <div class="drawer-footer" id="drawerFooter" style="display: none;">
+      {%- comment -%} Free Shipping Progress {%- endcomment -%}
+      <div class="free-shipping-bar" id="freeShippingBar">
+        <div class="shipping-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="shippingProgressFill"></div>
+          </div>
+        </div>
+        <p class="shipping-message" id="shippingMessage">
+          Add <span id="shippingRemaining"></span> more for <strong>FREE shipping!</strong>
+        </p>
+      </div>
+
+      {%- comment -%} Discount Code {%- endcomment -%}
+      <div class="drawer-discount">
+        <button type="button" class="drawer-discount__toggle" id="drawerDiscountToggle" aria-expanded="false" aria-controls="drawerDiscountForm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+          Discount code
+          <svg class="drawer-discount__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="drawer-discount__form" id="drawerDiscountForm" hidden>
+          <div class="drawer-discount__input-wrap">
+            <input
+              type="text"
+              id="drawerDiscountInput"
+              class="drawer-discount__input"
+              placeholder="Enter code"
+              aria-label="Discount code"
+              autocomplete="off"
+              spellcheck="false"
+            >
+            <button type="button" class="drawer-discount__apply" id="drawerApplyDiscount">Apply</button>
+          </div>
+          <div class="drawer-discount__message" id="drawerDiscountMessage" role="alert" aria-live="polite"></div>
+        </div>
+      </div>
+
+      {%- comment -%} Subtotal {%- endcomment -%}
+      <div class="cart-subtotal">
+        <span class="subtotal-label">Subtotal</span>
+        <span class="subtotal-value" id="drawerSubtotal"></span>
+      </div>
+
+      {%- comment -%} Savings callout {%- endcomment -%}
+      <div class="drawer-savings" id="drawerSavings" style="display: none;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+          <line x1="7" y1="7" x2="7.01" y2="7"></line>
+        </svg>
+        You saved <strong id="drawerSavingsAmount"></strong>!
+      </div>
+
+      {%- comment -%} Note {%- endcomment -%}
+      <div class="cart-note-wrapper">
+        <button type="button" class="add-note-btn" id="toggleNoteBtn">
+          Add a note
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="cart-note-form" id="cartNoteForm" style="display: none;">
+          <textarea id="cartNote" placeholder="Special instructions for your order..." aria-label="Order note"></textarea>
+          <button type="button" class="btn btn-sm btn-outline" id="saveNoteBtn">Save Note</button>
+        </div>
+      </div>
+
+      {%- comment -%} Actions {%- endcomment -%}
+      <div class="drawer-actions">
+        <a href="{{ routes.cart_url }}" class="btn btn-outline btn-full">
+          View Cart
+        </a>
+        <button type="button" class="btn btn-primary btn-full" id="drawerCheckout">
+          Checkout
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <p class="taxes-note">Taxes and shipping calculated at checkout</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  class CartDrawer {
+    constructor() {
+      this.drawer = document.getElementById('CartDrawer');
+      this.content = document.getElementById('drawerContent');
+      this.loading = document.getElementById('drawerLoading');
+      this.empty = document.getElementById('drawerEmpty');
+      this.items = document.getElementById('drawerItems');
+      this.footer = document.getElementById('drawerFooter');
+      this.freeShippingThreshold = 4900; // $49 in cents
+
+      this.bindEvents();
+    }
+
+    bindEvents() {
+      // Open cart drawer
+      document.querySelectorAll('[data-open-cart]').forEach(el => {
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.open();
+        });
+      });
+
+      // Close cart drawer
+      document.querySelectorAll('[data-close-cart]').forEach(el => {
+        el.addEventListener('click', () => this.close());
+      });
+
+      // Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.drawer.getAttribute('aria-hidden') === 'false') {
+          this.close();
+        }
+      });
+
+      // Cart note toggle
+      document.getElementById('toggleNoteBtn')?.addEventListener('click', () => {
+        const form = document.getElementById('cartNoteForm');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+      });
+
+      // Save note
+      document.getElementById('saveNoteBtn')?.addEventListener('click', () => this.saveNote());
+
+      // Checkout button
+      document.getElementById('drawerCheckout')?.addEventListener('click', () => {
+        window.location.href = '/checkout';
+      });
+
+      // Discount code toggle
+      const discountToggle = document.getElementById('drawerDiscountToggle');
+      const discountForm = document.getElementById('drawerDiscountForm');
+      if (discountToggle && discountForm) {
+        discountToggle.addEventListener('click', () => {
+          const isExpanded = discountToggle.getAttribute('aria-expanded') === 'true';
+          discountToggle.setAttribute('aria-expanded', String(!isExpanded));
+          discountForm.hidden = isExpanded;
+          if (!isExpanded) {
+            document.getElementById('drawerDiscountInput')?.focus();
+          }
+        });
+      }
+
+      // Apply discount
+      const applyBtn = document.getElementById('drawerApplyDiscount');
+      const discountInput = document.getElementById('drawerDiscountInput');
+      if (applyBtn && discountInput) {
+        const applyDiscount = () => {
+          const code = discountInput.value.trim();
+          if (!code) {
+            this.showDiscountMessage('Please enter a code.', 'error');
+            return;
+          }
+          applyBtn.disabled = true;
+          applyBtn.textContent = '...';
+          window.location.href = '/discount/' + encodeURIComponent(code) + '?redirect=/cart';
+        };
+
+        applyBtn.addEventListener('click', applyDiscount);
+        discountInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            applyDiscount();
+          }
+        });
+      }
+    }
+
+    showDiscountMessage(text, type) {
+      const el = document.getElementById('drawerDiscountMessage');
+      if (el) {
+        el.textContent = text;
+        el.className = 'drawer-discount__message drawer-discount__message--' + type;
+      }
+    }
+
+    async open() {
+      if (!this.drawer) return;
+      this.drawer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('drawer-open');
+      // Trap focus inside drawer
+      this.drawer.querySelector('.drawer-close')?.focus();
+      await this.refresh();
+    }
+
+    close() {
+      if (!this.drawer) return;
+      this.drawer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('drawer-open');
+    }
+
+    async refresh() {
+      this.loading.style.display = 'flex';
+      this.empty.style.display = 'none';
+      this.items.innerHTML = '';
+      this.footer.style.display = 'none';
+
+      try {
+        const response = await fetch('/cart.js', { credentials: 'same-origin' });
+        if (!response.ok) throw response;
+        const cart = await response.json();
+        this.renderCart(cart);
+      } catch (error) {
+        console.error('Failed to load cart:', error);
+        if (error && (error.status === 401 || error.status === 403)) {
+          window.location.href = '{{ routes.cart_url }}';
+        }
+      }
+    }
+
+    renderCart(cart) {
+      this.loading.style.display = 'none';
+      this.updateHeaderSummary(cart);
+
+      if (cart.item_count === 0) {
+        this.empty.style.display = 'flex';
+        this.footer.style.display = 'none';
+        return;
+      }
+
+      this.footer.style.display = 'block';
+      document.getElementById('drawerCartCount').textContent = `(${cart.item_count})`;
+      document.getElementById('drawerSubtotal').textContent = this.formatMoney(cart.total_price);
+      document.getElementById('cartNote').value = cart.note || '';
+
+      // Free shipping progress
+      this.updateShippingProgress(cart.total_price);
+
+      // Show savings if any discounts applied
+      const savingsEl = document.getElementById('drawerSavings');
+      const savingsAmountEl = document.getElementById('drawerSavingsAmount');
+      if (cart.total_discount > 0 && savingsEl && savingsAmountEl) {
+        savingsEl.style.display = 'flex';
+        savingsAmountEl.textContent = this.formatMoney(cart.total_discount);
+      } else if (savingsEl) {
+        savingsEl.style.display = 'none';
+      }
+
+      // Render items
+      this.items.innerHTML = cart.items.map(item => {
+        const discountHtml = item.line_level_discount_allocations && item.line_level_discount_allocations.length
+          ? item.line_level_discount_allocations.map(d =>
+              `<span class="item-discount-tag">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+                ${d.discount_application.title} (-${this.formatMoney(d.amount)})
+              </span>`
+            ).join('')
+          : '';
+
+        return `
+          <div class="cart-item" data-line="${item.key}">
+            <a href="${item.url}" class="item-image">
+              <img src="${item.featured_image && item.featured_image.url ? item.featured_image.url : '{{ 'Logo.svg' | asset_url }}'}" alt="${item.title}" loading="lazy">
+            </a>
+            <div class="item-details">
+              <a href="${item.url}" class="item-title">${item.product_title}</a>
+              ${item.variant_title && item.variant_title !== 'Default Title' ? `<p class="item-variant">${item.variant_title}</p>` : ''}
+              <div class="item-price">
+                ${item.original_line_price !== item.final_line_price
+                  ? `<span class="price-compare">${this.formatMoney(item.original_line_price)}</span>`
+                  : ''}
+                <span class="price-current">${this.formatMoney(item.final_line_price)}</span>
+              </div>
+              ${discountHtml ? `<div class="item-discounts">${discountHtml}</div>` : ''}
+              <div class="item-quantity">
+                <button type="button" class="qty-btn" data-action="decrease" data-key="${item.key}" aria-label="Decrease quantity">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <span class="qty-value">${item.quantity}</span>
+                <button type="button" class="qty-btn" data-action="increase" data-key="${item.key}" aria-label="Increase quantity">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="item-remove" data-remove="${item.key}" aria-label="Remove ${item.product_title}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Bind quantity buttons
+      this.items.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.key;
+          const action = btn.dataset.action;
+          const item = cart.items.find(i => i.key === key);
+          const newQty = action === 'increase' ? item.quantity + 1 : Math.max(0, item.quantity - 1);
+          this.updateQuantity(key, newQty);
+        });
+      });
+
+      // Bind remove buttons
+      this.items.querySelectorAll('.item-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.updateQuantity(btn.dataset.remove, 0);
+        });
+      });
+    }
+
+    updateShippingProgress(total) {
+      const remaining = Math.max(0, this.freeShippingThreshold - total);
+      const progress = Math.min(100, (total / this.freeShippingThreshold) * 100);
+
+      document.getElementById('shippingProgressFill').style.width = `${progress}%`;
+
+      const messageEl = document.getElementById('shippingMessage');
+      const remainingEl = document.getElementById('shippingRemaining');
+
+      if (remaining === 0) {
+        messageEl.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> You qualify for <strong>FREE shipping!</strong>';
+        messageEl.classList.add('qualified');
+      } else {
+        remainingEl.textContent = this.formatMoney(remaining);
+        messageEl.classList.remove('qualified');
+      }
+    }
+
+    async updateQuantity(key, quantity) {
+      try {
+        const response = await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ id: key, quantity })
+        });
+
+        if (response.ok) {
+          await this.refresh();
+          this.updateHeaderCount();
+        } else if (response.status === 401 || response.status === 403) {
+          window.location.href = '{{ routes.cart_url }}';
+        }
+      } catch (error) {
+        console.error('Failed to update cart:', error);
+      }
+    }
+
+    async saveNote() {
+      const note = document.getElementById('cartNote').value;
+
+      try {
+        await fetch('/cart/update.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ note })
+        });
+
+        document.getElementById('cartNoteForm').style.display = 'none';
+      } catch (error) {
+        console.error('Failed to save note:', error);
+      }
+    }
+
+    updateHeaderSummary(cart) {
+      document.querySelectorAll('.cart-count-badge').forEach(el => {
+        el.textContent = cart.item_count;
+        el.style.display = cart.item_count > 0 ? 'flex' : 'none';
+      });
+
+      document.querySelectorAll('[data-cart-count]').forEach(el => {
+        el.textContent = cart.item_count;
+        if (cart.item_count > 0) {
+          el.classList.add('has-items');
+        } else {
+          el.classList.remove('has-items');
+        }
+      });
+
+      document.querySelectorAll('[data-cart-total]').forEach(el => {
+        el.textContent = this.formatMoney(cart.total_price);
+      });
+    }
+
+    async updateHeaderCount() {
+      const response = await fetch('/cart.js', { credentials: 'same-origin' });
+      const cart = await response.json();
+      this.updateHeaderSummary(cart);
+    }
+
+    formatMoney(cents) {
+      if (window.Shopify && Shopify.formatMoney) {
+        return Shopify.formatMoney(cents, {{ shop.money_format | json }});
+      }
+      return '$' + (cents / 100).toFixed(2);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const cartDrawerInstance = new CartDrawer();
+
+    // Register global open/close so global.js can trigger the drawer
+    window.openCartDrawer = function() {
+      cartDrawerInstance.open();
+    };
+    window.closeCartDrawer = function() {
+      cartDrawerInstance.close();
+    };
+    window.CartDrawer = {
+      open: function() {
+        return cartDrawerInstance.open();
+      },
+      close: function() {
+        return cartDrawerInstance.close();
+      },
+      refresh: function() {
+        return cartDrawerInstance.refresh();
+      }
+    };
+  });
+</script>
+
+<style>
+  /* Drawer Discount Code */
+  .drawer-discount {
+    border-top: 1px solid var(--color-border);
+    padding-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .drawer-discount__toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    padding: 0.5rem 0;
+    background: none;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    cursor: pointer;
+  }
+
+  .drawer-discount__chevron {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+  }
+
+  .drawer-discount__toggle[aria-expanded="true"] .drawer-discount__chevron {
+    transform: rotate(180deg);
+  }
+
+  .drawer-discount__form {
+    padding-bottom: 0.5rem;
+  }
+
+  .drawer-discount__input-wrap {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .drawer-discount__input {
+    flex: 1;
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm, 6px);
+    font-size: 0.8rem;
+  }
+
+  .drawer-discount__input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .drawer-discount__apply {
+    padding: 0.4rem 0.75rem;
+    background: var(--color-foreground);
+    color: var(--color-background);
+    border: none;
+    border-radius: var(--radius-sm, 6px);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .drawer-discount__apply:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .drawer-discount__message {
+    font-size: 0.75rem;
+    margin-top: 0.35rem;
+  }
+
+  .drawer-discount__message--error {
+    color: var(--color-destructive);
+  }
+
+  .drawer-discount__message--success {
+    color: var(--color-success, #163E43);
+  }
+
+  /* Savings callout */
+  .drawer-savings {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.5rem;
+    background: rgba(65, 88, 59, 0.06);
+    border-radius: var(--radius-sm, 6px);
+    color: var(--color-success, #163E43);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Discount tags on items */
+  .item-discounts {
+    margin-top: 0.25rem;
+  }
+
+  .item-discount-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-success, #163E43);
+    background: rgba(65, 88, 59, 0.08);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  /* Shipping message qualified state */
+  .shipping-message.qualified {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+</style>

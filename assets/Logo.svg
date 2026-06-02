@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1744 1478" role="img" aria-labelledby="logoTitle logoDesc">
+  <title id="logoTitle">Boreal Vita</title>
+  <desc id="logoDesc">Fallback Boreal Vita brand logo.</desc>
+  <defs>
+    <linearGradient id="panelGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#163E43"/>
+      <stop offset="100%" stop-color="#0A282C"/>
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FCE38A"/>
+      <stop offset="100%" stop-color="#FAD054"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <rect x="500" y="124" width="744" height="744" rx="210" fill="url(#panelGradient)"/>
+    <path d="M872 278c112 0 203 91 203 203 0 155-133 299-203 353-70-54-203-198-203-353 0-112 91-203 203-203Z" fill="url(#accentGradient)"/>
+    <path d="M936 402c72 22 114 76 114 145 0 99-89 192-178 259-17 13-38 13-55 0-26-20-51-41-75-64 65-24 119-58 162-102 66-67 97-148 90-238 0-1 0-2-1-3 0 0-25-4-57 3Z" fill="#0A282C" opacity=".15"/>
+    <path d="M936 391c-78 20-145 67-197 141-27 38-47 82-61 134 89-55 157-120 204-194 28-43 46-88 54-136Z" fill="#0A282C"/>
+    <path d="M816 479c58 0 102 44 102 102 0 34-15 63-41 87-27 25-55 39-83 50-8 3-17 1-22-5-20-26-34-54-34-92 0-80 49-142 78-142Z" fill="#FFFFFF" opacity=".14"/>
+    <text x="872" y="1066" text-anchor="middle" fill="#0A282C" font-family="'Trebuchet MS', 'Segoe UI', Arial, sans-serif" font-size="176" font-weight="700" letter-spacing="6">
+      Boreal Vita
+    </text>
+    <text x="872" y="1188" text-anchor="middle" fill="#586465" font-family="'Trebuchet MS', 'Segoe UI', Arial, sans-serif" font-size="58" font-weight="700" letter-spacing="22">
+      WELLNESS SUPPORT
+    </text>
+  </g>
+</svg>

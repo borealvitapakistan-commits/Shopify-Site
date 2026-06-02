@@ -1,0 +1,134 @@
+{%- comment -%}
+  Blog Listing Page - Matches React design
+{%- endcomment -%}
+
+{%- paginate blog.articles by section.settings.articles_per_page -%}
+<div class="main-blog">
+  <div class="container">
+    {%- comment -%} Blog Header {%- endcomment -%}
+    <div class="blog-header">
+      <h1 class="page-title">
+        Blogs
+      </h1>
+      {%- if blog.all_tags.size > 0 -%}
+        <p class="blog-description">Health tips, wellness guides, and supplement insights</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Tags Filter {%- endcomment -%}
+    {%- if blog.all_tags.size > 0 -%}
+      <div class="blog-tags">
+        <a href="{{ blog.url }}" class="tag-link {% unless current_tags %}active{% endunless %}">All</a>
+        {%- for tag in blog.all_tags -%}
+          <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="tag-link {% if current_tags contains tag %}active{% endif %}">
+            {{ tag }}
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if blog.articles.size > 0 -%}
+      {%- comment -%} Featured Article (First one) {%- endcomment -%}
+      {%- if paginate.current_page == 1 -%}
+        {%- assign featured_article = blog.articles.first -%}
+        <article class="featured-article">
+          {%- if featured_article.image -%}
+            <a href="{{ featured_article.url }}" class="featured-image">
+              <img
+                src="{{ featured_article.image | image_url: width: 1200 }}"
+                alt="{{ featured_article.title }}"
+                width="{{ featured_article.image.width }}"
+                height="{{ featured_article.image.height }}"
+                loading="lazy"
+              >
+            </a>
+          {%- endif -%}
+          <div class="featured-content">
+            <div class="article-meta">
+              <span class="article-date">{{ featured_article.published_at | date: format: 'date' }}</span>
+              {%- if featured_article.tags.size > 0 -%}
+                <span class="article-tag">{{ featured_article.tags.first }}</span>
+              {%- endif -%}
+            </div>
+            <h2 class="featured-title">
+              <a href="{{ featured_article.url }}">{{ featured_article.title }}</a>
+            </h2>
+            <p class="featured-excerpt">{{ featured_article.excerpt_or_content | strip_html | truncatewords: 40 }}</p>
+            <a href="{{ featured_article.url }}" class="read-more-link">
+              Read Article
+              {% render 'icon-chevron-right' %}
+            </a>
+          </div>
+        </article>
+      {%- endif -%}
+
+      {%- comment -%} Articles Grid {%- endcomment -%}
+      <div class="articles-grid">
+        {%- for article in blog.articles offset: 1 -%}
+          <article class="article-card">
+            {%- if article.image -%}
+              <a href="{{ article.url }}" class="article-image">
+                <img
+                  src="{{ article.image | image_url: width: 600 }}"
+                  alt="{{ article.title }}"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                  loading="lazy"
+                >
+              </a>
+            {%- endif -%}
+            <div class="article-content">
+              <div class="article-meta">
+                <span class="article-date">{{ article.published_at | date: format: 'date' }}</span>
+                {%- if article.tags.size > 0 -%}
+                  <span class="article-tag">{{ article.tags.first }}</span>
+                {%- endif -%}
+              </div>
+              <h3 class="article-title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h3>
+              <p class="article-excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</p>
+              <a href="{{ article.url }}" class="read-more-link">
+                Read More
+                {% render 'icon-chevron-right' %}
+              </a>
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+
+      {%- comment -%} Pagination {%- endcomment -%}
+      {%- if paginate.pages > 1 -%}
+        {% render 'pagination', paginate: paginate %}
+      {%- endif -%}
+    {%- else -%}
+      <div class="empty-state">
+        {% render 'icon-file-text' %}
+        <p>No articles found</p>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Blog",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "default": 12,
+      "label": "Articles per page"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog"
+    }
+  ]
+}
+{% endschema %}

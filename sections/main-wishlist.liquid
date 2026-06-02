@@ -1,0 +1,294 @@
+{%- comment -%}
+  Wishlist Page Section
+{%- endcomment -%}
+
+<div class="main-wishlist">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">
+        {% render 'icon-heart' %}
+        My Wishlist
+      </h1>
+      <p class="wishlist-count" id="wishlistCount">0 items</p>
+    </div>
+
+    {%- comment -%} Empty State {%- endcomment -%}
+    <div class="wishlist-empty" id="wishlistEmpty">
+      <div class="empty-icon">
+        {% render 'icon-heart' %}
+      </div>
+      <h2>Your wishlist is empty</h2>
+      <p>Save your favorite products to purchase later.</p>
+      <a href="{{ routes.all_products_collection_url }}" class="btn btn-primary">
+        Browse Products
+      </a>
+    </div>
+
+    {%- comment -%} Wishlist Grid {%- endcomment -%}
+    <div class="wishlist-grid" id="wishlistGrid"></div>
+
+    {%- comment -%} Actions {%- endcomment -%}
+    <div class="wishlist-actions" id="wishlistActions" style="display: none;">
+      <button type="button" class="btn btn-outline" id="clearWishlist">
+        Clear Wishlist
+      </button>
+      <button type="button" class="btn btn-primary" id="addAllToCart">
+        {% render 'icon-cart' %}
+        Add All to Cart
+      </button>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Wishlist Global Script {%- endcomment -%}
+<script>
+  class Wishlist {
+    constructor() {
+      this.storageKey = 'wishlist';
+      this.items = this.getItems();
+      
+      this.init();
+      this.bindEvents();
+    }
+    
+    init() {
+      this.updateUI();
+      this.updateButtonStates();
+      
+      // Render wishlist page if on wishlist page
+      if (document.getElementById('wishlistGrid')) {
+        this.renderWishlistPage();
+      }
+    }
+    
+    bindEvents() {
+      // Add/remove from wishlist
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-wishlist-add]');
+        if (btn) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.toggle(btn.dataset.wishlistAdd);
+        }
+      });
+      
+      // Clear wishlist
+      document.getElementById('clearWishlist')?.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear your wishlist?')) {
+          this.clear();
+        }
+      });
+      
+      // Add all to cart
+      document.getElementById('addAllToCart')?.addEventListener('click', () => {
+        this.addAllToCart();
+      });
+    }
+    
+    getItems() {
+      try {
+        return JSON.parse(localStorage.getItem(this.storageKey)) || [];
+      } catch {
+        return [];
+      }
+    }
+    
+    saveItems() {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.items));
+    }
+    
+    toggle(handle) {
+      const index = this.items.indexOf(handle);
+      
+      if (index === -1) {
+        this.items.push(handle);
+        this.showToast('Added to wishlist');
+      } else {
+        this.items.splice(index, 1);
+        this.showToast('Removed from wishlist');
+      }
+      
+      this.saveItems();
+      this.updateUI();
+      this.updateButtonStates();
+      
+      if (document.getElementById('wishlistGrid')) {
+        this.renderWishlistPage();
+      }
+    }
+    
+    has(handle) {
+      return this.items.includes(handle);
+    }
+    
+    clear() {
+      this.items = [];
+      this.saveItems();
+      this.updateUI();
+      this.updateButtonStates();
+      this.renderWishlistPage();
+    }
+    
+    updateUI() {
+      // Update header count
+      document.querySelectorAll('.wishlist-count-badge').forEach(el => {
+        el.textContent = this.items.length;
+        el.style.display = this.items.length > 0 ? 'flex' : 'none';
+      });
+    }
+    
+    updateButtonStates() {
+      document.querySelectorAll('[data-wishlist-add]').forEach(btn => {
+        const handle = btn.dataset.wishlistAdd;
+        const isInWishlist = this.has(handle);
+        
+        btn.classList.toggle('is-active', isInWishlist);
+        btn.setAttribute('aria-pressed', isInWishlist);
+        
+        const text = btn.querySelector('.wishlist-text');
+        if (text) {
+          text.textContent = isInWishlist ? 'In Wishlist' : 'Add to Wishlist';
+        }
+      });
+    }
+    
+    async renderWishlistPage() {
+      const grid = document.getElementById('wishlistGrid');
+      const empty = document.getElementById('wishlistEmpty');
+      const actions = document.getElementById('wishlistActions');
+      const count = document.getElementById('wishlistCount');
+      
+      if (!grid) return;
+      
+      count.textContent = `${this.items.length} ${this.items.length === 1 ? 'item' : 'items'}`;
+      
+      if (this.items.length === 0) {
+        empty.style.display = 'flex';
+        grid.innerHTML = '';
+        actions.style.display = 'none';
+        return;
+      }
+      
+      empty.style.display = 'none';
+      actions.style.display = 'flex';
+      
+      // Fetch product data
+      const productPromises = this.items.map(handle => 
+        fetch(`/products/${handle}.js`).then(r => r.ok ? r.json() : null)
+      );
+      
+      const products = await Promise.all(productPromises);
+      
+      grid.innerHTML = products
+        .filter(p => p !== null)
+        .map(product => `
+          <div class="wishlist-item">
+            <button type="button" class="remove-btn" data-wishlist-add="${product.handle}" aria-label="Remove">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <a href="/products/${product.handle}" class="item-image">
+              <img src="${product.featured_image || '{{ 'Logo.svg' | asset_url }}'}" alt="${product.title}" loading="lazy">
+            </a>
+            <div class="item-info">
+              <a href="/products/${product.handle}" class="item-title">${product.title}</a>
+              <div class="item-price">
+                ${product.compare_at_price > product.price 
+                  ? `<span class="compare-price">$${(product.compare_at_price / 100).toFixed(2)}</span>` 
+                  : ''}
+                <span class="current-price">$${(product.price / 100).toFixed(2)}</span>
+              </div>
+              <button type="button" class="btn btn-primary btn-sm add-to-cart-btn" data-variant-id="${product.variants[0].id}">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        `).join('');
+      
+      // Bind add to cart buttons
+      grid.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          await this.addToCart(btn.dataset.variantId);
+        });
+      });
+    }
+    
+    async addToCart(variantId, quantity = 1) {
+      try {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: parseInt(variantId), quantity })
+        });
+        
+        if (response.ok) {
+          this.showToast('Added to cart');
+          window.CartDrawer?.open();
+        }
+      } catch (error) {
+        console.error('Failed to add to cart:', error);
+      }
+    }
+    
+    async addAllToCart() {
+      const products = await Promise.all(
+        this.items.map(handle => 
+          fetch(`/products/${handle}.js`).then(r => r.ok ? r.json() : null)
+        )
+      );
+      
+      const items = products
+        .filter(p => p !== null)
+        .map(p => ({ id: p.variants[0].id, quantity: 1 }));
+      
+      try {
+        for (const item of items) {
+          await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item)
+          });
+        }
+        
+        this.showToast(`Added ${items.length} items to cart`);
+        window.CartDrawer?.open();
+      } catch (error) {
+        console.error('Failed to add items:', error);
+      }
+    }
+    
+    showToast(message) {
+      const existing = document.querySelector('.wishlist-toast');
+      if (existing) existing.remove();
+      
+      const toast = document.createElement('div');
+      toast.className = 'wishlist-toast';
+      toast.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        ${message}
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => toast.classList.add('is-visible'), 10);
+      setTimeout(() => {
+        toast.classList.remove('is-visible');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    window.Wishlist = new Wishlist();
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Wishlist Page",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Wishlist Page"
+    }
+  ]
+}
+{% endschema %}

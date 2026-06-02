@@ -1,0 +1,273 @@
+{%- comment -%}
+  Contact Page - Matches React design
+{%- endcomment -%}
+
+<div class="main-contact">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">Contact Us</h1>
+      <p class="page-description">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+    </div>
+
+    <div class="contact-grid">
+      {%- comment -%} Contact Form {%- endcomment -%}
+      <div class="contact-form-wrapper">
+        <h2 class="form-title">Send a Message</h2>
+        
+        {%- form 'contact', class: 'contact-form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="form-success">
+              <div class="success-icon">
+                {% render 'icon-check' %}
+              </div>
+              <h3>Thank you for your message!</h3>
+              <p>We'll get back to you as soon as possible.</p>
+            </div>
+          {%- else -%}
+            {%- if form.errors -%}
+              <div class="form-error">
+                {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="ContactName" class="form-label">Name</label>
+                <input type="text" name="contact[name]" id="ContactName" class="form-input" required placeholder="Your name">
+              </div>
+              <div class="form-group">
+                <label for="ContactEmail" class="form-label">Email</label>
+                <input type="email" name="contact[email]" id="ContactEmail" class="form-input" required placeholder="you@example.com">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ContactPhone" class="form-label">Phone (Optional)</label>
+              <input type="tel" name="contact[phone]" id="ContactPhone" class="form-input" placeholder="+1 (555) 000-0000">
+            </div>
+
+            <div class="form-group">
+              <label for="ContactSubject" class="form-label">Subject</label>
+              <select name="contact[subject]" id="ContactSubject" class="form-select">
+                <option value="">Select a subject</option>
+                <option value="General Inquiry">General Inquiry</option>
+                <option value="Order Support">Order Support</option>
+                <option value="Product Question">Product Question</option>
+                <option value="Wholesale Inquiry">Wholesale Inquiry</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="ContactMessage" class="form-label">Message</label>
+              <textarea name="contact[body]" id="ContactMessage" class="form-textarea" rows="5" required placeholder="How can we help you?"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">
+              Send Message
+            </button>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+
+      {%- comment -%} Contact Info {%- endcomment -%}
+      <div class="contact-info">
+        <div class="info-card">
+          <h2 class="info-title">Get in Touch</h2>
+          <p class="info-description">Have questions? We're here to help! Reach out to us through any of the channels below.</p>
+
+          <div class="contact-methods">
+            <div class="contact-method">
+              <div class="method-icon">
+                {% render 'icon-mail' %}
+              </div>
+              <div class="method-content">
+                <h3>Email</h3>
+                <a href="mailto:hello@paragonhealthfood.com">hello@paragonhealthfood.com</a>
+              </div>
+            </div>
+
+            <div class="contact-method">
+              <div class="method-icon">
+                {% render 'icon-phone' %}
+              </div>
+              <div class="method-content">
+                <h3>Phone</h3>
+                <a href="tel:+15551234567">+1 (555) 123-4567</a>
+                <span class="method-note">Mon-Fri, 9am-5pm EST</span>
+              </div>
+            </div>
+
+            <div class="contact-method">
+              <div class="method-icon">
+                {% render 'icon-map-pin' %}
+              </div>
+              <div class="method-content">
+                <h3>Address</h3>
+                <address>
+                  123 Health Street<br>
+                  Wellness City, WC 10001
+                </address>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {%- comment -%} Social Links {%- endcomment -%}
+        <div class="social-card">
+          <h3>Follow Us</h3>
+          <div class="social-links">
+            <a href="#" class="social-link" aria-label="Instagram">
+              {% render 'icon-instagram' %}
+            </a>
+            <a href="#" class="social-link" aria-label="Facebook">
+              {% render 'icon-facebook' %}
+            </a>
+            <a href="#" class="social-link" aria-label="Twitter">
+              {% render 'icon-twitter' %}
+            </a>
+          </div>
+        </div>
+
+        {%- comment -%} FAQ Teaser {%- endcomment -%}
+        <div class="faq-teaser">
+          <h3>Looking for answers?</h3>
+          <p>Check out our frequently asked questions.</p>
+          <a href="/pages/faq" class="btn btn-outline">
+            View FAQ
+            {% render 'icon-chevron-right' %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-office-section">
+      <div class="contact-office-heading">
+        <span class="contact-office-heading__line" aria-hidden="true"></span>
+        <h2>Head Office Details</h2>
+        <span class="contact-office-heading__line" aria-hidden="true"></span>
+      </div>
+
+      <div class="contact-office-grid">
+        {% if section.blocks.size > 0 %}
+          {% for block in section.blocks %}
+            <article class="contact-office-card" {{ block.shopify_attributes }}>
+              {% if block.settings.title != blank %}
+                <h3>{{ block.settings.title }}</h3>
+              {% endif %}
+
+              {% if block.settings.address != blank %}
+                <div class="contact-office-card__row">
+                  <span class="contact-office-card__icon" aria-hidden="true">{% render 'icon-map-pin' %}</span>
+                  <div>{{ block.settings.address | newline_to_br }}</div>
+                </div>
+              {% endif %}
+
+              {% if block.settings.phone != blank %}
+                <div class="contact-office-card__row">
+                  <span class="contact-office-card__icon" aria-hidden="true">{% render 'icon-phone' %}</span>
+                  <a href="tel:{{ block.settings.phone | remove: ' ' | remove: '(' | remove: ')' | remove: '-' }}">{{ block.settings.phone }}</a>
+                </div>
+              {% endif %}
+
+              {% if block.settings.email != blank %}
+                <div class="contact-office-card__row">
+                  <span class="contact-office-card__icon" aria-hidden="true">{% render 'icon-mail' %}</span>
+                  <a href="mailto:{{ block.settings.email }}">{{ block.settings.email }}</a>
+                </div>
+              {% endif %}
+
+              {% if block.settings.hours != blank %}
+                <div class="contact-office-card__hours">
+                  <strong>{{ block.settings.hours_label | default: 'Opening Hours' }}</strong>
+                  <span>{{ block.settings.hours }}</span>
+                </div>
+              {% endif %}
+            </article>
+          {% endfor %}
+        {% else %}
+          <article class="contact-office-card">
+            <h3>Boreal Vita Head Office</h3>
+            <div class="contact-office-card__row">
+              <span class="contact-office-card__icon" aria-hidden="true">{% render 'icon-map-pin' %}</span>
+              <div>123 Wellness Avenue<br>Suite 200, Health City</div>
+            </div>
+            <div class="contact-office-card__row">
+              <span class="contact-office-card__icon" aria-hidden="true">{% render 'icon-phone' %}</span>
+              <a href="tel:+1555019876">+1 (555) 019-8765</a>
+            </div>
+            <div class="contact-office-card__row">
+              <span class="contact-office-card__icon" aria-hidden="true">{% render 'icon-mail' %}</span>
+              <a href="mailto:support@borealvita.com">support@borealvita.com</a>
+            </div>
+            <div class="contact-office-card__hours">
+              <strong>Opening Hours</strong>
+              <span>Mon - Fri: 9am - 5pm</span>
+            </div>
+          </article>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Contact",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "office_card",
+      "name": "Office card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Card title",
+          "default": "Boreal Vita Head Office"
+        },
+        {
+          "type": "textarea",
+          "id": "address",
+          "label": "Address",
+          "default": "123 Wellness Avenue\nSuite 200, Health City"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone",
+          "default": "+1 (555) 019-8765"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email",
+          "default": "support@borealvita.com"
+        },
+        {
+          "type": "text",
+          "id": "hours_label",
+          "label": "Hours label",
+          "default": "Opening Hours"
+        },
+        {
+          "type": "text",
+          "id": "hours",
+          "label": "Hours",
+          "default": "Mon - Fri: 9am - 5pm"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact",
+      "blocks": [
+        {
+          "type": "office_card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

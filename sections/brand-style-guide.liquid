@@ -1,0 +1,620 @@
+{%- comment -%}
+  Boreal Vita living style guide for M1.
+{%- endcomment -%}
+
+<section class="bv-style-guide" id="BorealVitaStyleGuide-{{ section.id }}">
+  <div class="bv-sg__hero">
+    <div class="bv-sg__shell">
+      <p class="bv-sg__eyebrow">M1 Style Guide</p>
+      <h1>Boreal Vita brand system</h1>
+      <p class="bv-sg__lead">A browsable source of truth for the Shopify theme: canonical colors, gradients, type roles, accessible UI patterns, spacing, icons, and the Gold Rule.</p>
+      <div class="bv-sg__status-list" aria-label="Foundation status">
+        <span>Liquid theme</span>
+        <span>Self-hosted fonts</span>
+        <span>WCAG-first defaults</span>
+        <span>Halal detail in About only</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bv-sg__shell bv-sg__main">
+    <nav class="bv-sg__nav" aria-label="Style guide sections">
+      <a href="#BvSgColors-{{ section.id }}">Colors</a>
+      <a href="#BvSgType-{{ section.id }}">Type</a>
+      <a href="#BvSgComponents-{{ section.id }}">Components</a>
+      <a href="#BvSgSpacing-{{ section.id }}">Spacing</a>
+      <a href="#BvSgAccessibility-{{ section.id }}">Accessibility</a>
+    </nav>
+
+    <section class="bv-sg__section" id="BvSgColors-{{ section.id }}" aria-labelledby="BvSgColorsTitle-{{ section.id }}">
+      <div class="bv-sg__section-head">
+        <p class="bv-sg__eyebrow">Brand law</p>
+        <h2 id="BvSgColorsTitle-{{ section.id }}">Canonical color tokens</h2>
+        <p>These hex values are fixed. Components should reference the variables, not hard-code replacement colors.</p>
+      </div>
+
+      <div class="bv-sg__swatch-grid">
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-teal-900);"><span></span><strong>--bv-teal-900</strong><code>#0A272A</code><small>Deepest teal</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-teal-800);"><span></span><strong>--bv-teal-800</strong><code>#114245</code><small>Main brand</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-teal-700);"><span></span><strong>--bv-teal-700</strong><code>#163B43</code><small>Main gradient end</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-teal-600);"><span></span><strong>--bv-teal-600</strong><code>#165258</code><small>Heading gradient end</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-teal-500);"><span></span><strong>--bv-teal-500</strong><code>#228191</code><small>Bright accent teal</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-gold-500);"><span></span><strong>--bv-gold-500</strong><code>#E9A526</code><small>Core gold</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-gold-200);"><span></span><strong>--bv-gold-200</strong><code>#F5D988</code><small>Gold light center</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-gold-600);"><span></span><strong>--bv-gold-600</strong><code>#E9A256</code><small>Gold warm end</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-rust-600);"><span></span><strong>--bv-rust-600</strong><code>#D44B2B</code><small>Rust accent</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-brown-900);"><span></span><strong>--bv-brown-900</strong><code>#563114</code><small>Gold-on-light text</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-white);"><span></span><strong>--bv-white</strong><code>#FFFFFF</code><small>White</small></article>
+        <article class="bv-sg__swatch" style="--swatch: var(--bv-ink);"><span></span><strong>--bv-ink</strong><code>#111111</code><small>Body ink</small></article>
+      </div>
+
+      <div class="bv-sg__gradient-grid">
+        <article style="--grad: var(--bv-grad-main);"><span></span><strong>--bv-grad-main</strong><code>135deg teal / bright teal / teal</code></article>
+        <article style="--grad: var(--bv-grad-heading);"><span></span><strong>--bv-grad-heading</strong><code>180deg deepest teal to teal</code></article>
+        <article style="--grad: var(--bv-grad-gold);"><span></span><strong>--bv-grad-gold</strong><code>135deg gold / light / warm</code></article>
+      </div>
+
+      <div class="bv-sg__gold-rule" aria-labelledby="BvSgGoldTitle-{{ section.id }}">
+        <div>
+          <p class="bv-sg__eyebrow">Gold Rule</p>
+          <h3 id="BvSgGoldTitle-{{ section.id }}">Gold is light, not small text</h3>
+          <p>Use gold as a glow, divider, icon stroke, or premium accent on dark teal. On light surfaces, use <code>--bv-brown-900</code> for readable gold-adjacent text.</p>
+        </div>
+        <div class="bv-sg__gold-examples">
+          <div class="bv-sg__gold-pass"><strong>PASS</strong><span>Gold accent on deep teal</span></div>
+          <div class="bv-sg__gold-fail"><strong>FAIL</strong><span>Small gold text on white fails contrast.</span><span aria-hidden="true" class="bv-sg__gold-fail-sample"></span><small>Use brown instead.</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bv-sg__section" id="BvSgType-{{ section.id }}" aria-labelledby="BvSgTypeTitle-{{ section.id }}">
+      <div class="bv-sg__section-head">
+        <p class="bv-sg__eyebrow">Typography</p>
+        <h2 id="BvSgTypeTitle-{{ section.id }}">Type roles and scale</h2>
+        <p>Moderniz and Coolvetica are represented by licensed-name stacks with self-hosted fallbacks until final webfont assets are supplied.</p>
+      </div>
+
+      <div class="bv-sg__type-grid">
+        <article>
+          <small>Display / --font-display / --fs-hero</small>
+          <p class="bv-sg__type-display">Northern apothecary</p>
+        </article>
+        <article>
+          <small>Heading / --font-heading / --fs-h2</small>
+          <p class="bv-sg__type-heading">Product facts and UI headings</p>
+        </article>
+        <article>
+          <small>Body / --font-body / --fs-body</small>
+          <p class="bv-sg__type-body">Boreal Vita body copy uses generous line-height, plain language, and a readable measure for customers from 16 to 90.</p>
+        </article>
+        <article>
+          <small>Accent / --font-accent</small>
+          <p class="bv-sg__type-accent">Limited Offer</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="bv-sg__section" id="BvSgComponents-{{ section.id }}" aria-labelledby="BvSgComponentsTitle-{{ section.id }}">
+      <div class="bv-sg__section-head">
+        <p class="bv-sg__eyebrow">Component kit</p>
+        <h2 id="BvSgComponentsTitle-{{ section.id }}">Buttons, badges, forms, and icons</h2>
+        <p>Touch targets are at least 48px. Focus rings are visible and high contrast.</p>
+      </div>
+
+      <div class="bv-sg__component-grid">
+        <article>
+          <h3>Buttons</h3>
+          <div class="bv-sg__button-row">
+            <a class="bv-sg__button bv-sg__button--primary" href="{{ routes.all_products_collection_url }}">Shop formulas</a>
+            <a class="bv-sg__button bv-sg__button--secondary" href="/pages/about-us">About standards</a>
+            <a class="bv-sg__button bv-sg__button--gold" href="{{ routes.all_products_collection_url }}">Premium accent</a>
+          </div>
+        </article>
+
+        <article>
+          <h3>Form field</h3>
+          <form class="bv-sg__form" action="{{ routes.search_url }}" method="get" role="search">
+            <label for="BvStyleGuideSearch-{{ section.id }}">Search label</label>
+            <div>
+              <input id="BvStyleGuideSearch-{{ section.id }}" type="search" name="q" placeholder="Allergy Relief">
+              <button type="submit">Search</button>
+            </div>
+            <p>Labels stay visible; placeholders never carry the whole instruction.</p>
+          </form>
+        </article>
+
+        <article>
+          <h3>Badges and chips</h3>
+          <div class="bv-sg__chip-row">
+            <span class="bv-sg__chip">120 Capsules</span>
+            <span class="bv-sg__chip">405 mg</span>
+            <span class="bv-sg__chip bv-sg__chip--proof">NPN quality signal</span>
+            <span class="bv-sg__chip bv-sg__chip--soft">Made in Canada</span>
+          </div>
+        </article>
+
+        <article>
+          <h3>Icon treatment</h3>
+          <div class="bv-sg__icon-row" aria-label="Brand icon examples">
+            <span>{% render 'icon-check' %}<em>Checked</em></span>
+            <span>{% render 'icon-shield' %}<em>Protected</em></span>
+            <span>{% render 'icon-truck' %}<em>Delivery</em></span>
+            <span>{% render 'icon-file-text' %}<em>Facts</em></span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="bv-sg__section" id="BvSgSpacing-{{ section.id }}" aria-labelledby="BvSgSpacingTitle-{{ section.id }}">
+      <div class="bv-sg__section-head">
+        <p class="bv-sg__eyebrow">Spacing</p>
+        <h2 id="BvSgSpacingTitle-{{ section.id }}">8px-based spacing scale</h2>
+        <p>Major brand blocks use at least <code>--space-x</code> clearance.</p>
+      </div>
+
+      <div class="bv-sg__spacing-list">
+        <span style="--w: var(--space-1);"><i></i><code>4px</code></span>
+        <span style="--w: var(--space-2);"><i></i><code>8px</code></span>
+        <span style="--w: var(--space-3);"><i></i><code>12px</code></span>
+        <span style="--w: var(--space-4);"><i></i><code>16px</code></span>
+        <span style="--w: var(--space-6);"><i></i><code>24px</code></span>
+        <span style="--w: var(--space-8);"><i></i><code>32px</code></span>
+        <span style="--w: var(--space-12);"><i></i><code>48px</code></span>
+        <span style="--w: var(--space-16);"><i></i><code>64px</code></span>
+        <span style="--w: var(--space-24);"><i></i><code>96px</code></span>
+      </div>
+    </section>
+
+    <section class="bv-sg__section" id="BvSgAccessibility-{{ section.id }}" aria-labelledby="BvSgAccessibilityTitle-{{ section.id }}">
+      <div class="bv-sg__section-head">
+        <p class="bv-sg__eyebrow">Universal access</p>
+        <h2 id="BvSgAccessibilityTitle-{{ section.id }}">M1 acceptance guardrails</h2>
+        <p>This page must stay readable, keyboard-operable, reduced-motion friendly, and useful to a customer who needs larger targets and plain language.</p>
+      </div>
+
+      <div class="bv-sg__check-grid">
+        <p><strong>Contrast:</strong> body text uses ink on light surfaces; gold text on white is forbidden.</p>
+        <p><strong>Targets:</strong> controls are at least 48px high and keyboard-visible.</p>
+        <p><strong>Motion:</strong> transitions are decorative and respect reduced motion globally.</p>
+        <p><strong>Landmarks:</strong> content is sectioned with real headings and labelled navigation.</p>
+      </div>
+    </section>
+  </div>
+</section>
+
+<style>
+  #BorealVitaStyleGuide-{{ section.id }} {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(34, 129, 145, 0.14), transparent 28rem),
+      radial-gradient(circle at 88% 6%, rgba(233, 165, 38, 0.13), transparent 24rem),
+      var(--bv-cream);
+    color: var(--bv-ink);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__shell {
+    width: min(1180px, calc(100% - 2rem));
+    margin-inline: auto;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__hero {
+    padding: clamp(4rem, 8vw, 7rem) 0 clamp(3rem, 6vw, 5rem);
+    background:
+      linear-gradient(135deg, rgba(10, 39, 42, 0.9), rgba(17, 66, 69, 0.86)),
+      var(--bv-grad-main);
+    color: var(--bv-white);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__eyebrow {
+    margin: 0 0 0.75rem;
+    color: var(--bv-brown-900);
+    font-family: var(--font-heading);
+    font-size: var(--fs-small);
+    font-weight: 800;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__hero .bv-sg__eyebrow {
+    color: var(--bv-gold-200);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} h1,
+  #BorealVitaStyleGuide-{{ section.id }} h2,
+  #BorealVitaStyleGuide-{{ section.id }} h3 {
+    margin: 0;
+    letter-spacing: 0;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} h1 {
+    max-width: 12ch;
+    color: var(--bv-white);
+    font-family: var(--font-display);
+    font-size: var(--fs-hero);
+    line-height: var(--lh-tight);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} h2 {
+    color: var(--bv-teal-900);
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    line-height: var(--lh-tight);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} h3 {
+    color: var(--bv-teal-800);
+    font-family: var(--font-heading);
+    font-size: var(--fs-h3);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} p {
+    max-width: var(--measure);
+    margin: 0;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} code {
+    font: 700 0.92em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__lead {
+    max-width: 55rem;
+    margin-top: 1.35rem;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: var(--fs-lead);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__status-list,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__nav,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__button-row,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__chip-row,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__icon-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__status-list {
+    margin-top: 2rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__status-list span,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--bv-white);
+    font-family: var(--font-heading);
+    font-weight: 800;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__main {
+    display: grid;
+    gap: clamp(2rem, 4vw, 4rem);
+    padding-block: clamp(2rem, 5vw, 5rem);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__nav {
+    position: sticky;
+    top: var(--header-height, 64px);
+    z-index: 2;
+    padding: 0.75rem;
+    border: 1px solid rgba(17, 66, 69, 0.12);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(14px);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius-pill);
+    color: var(--bv-teal-800);
+    font-family: var(--font-heading);
+    font-weight: 800;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__nav a:hover,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__nav a:focus-visible {
+    background: var(--bv-teal-tint);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__section {
+    display: grid;
+    gap: 1.5rem;
+    padding-block: clamp(1rem, 2.5vw, 2rem);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__section-head {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__swatch-grid,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gradient-grid,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__type-grid,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__component-grid,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__check-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__swatch,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gradient-grid article,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__type-grid article,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__component-grid article,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__check-grid p {
+    display: grid;
+    gap: 0.65rem;
+    padding: 1rem;
+    border: 1px solid rgba(17, 66, 69, 0.12);
+    border-radius: var(--radius);
+    background: var(--bv-white);
+    box-shadow: var(--shadow-sm);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__swatch > span {
+    min-height: 7rem;
+    border: 1px solid rgba(17, 66, 69, 0.16);
+    border-radius: calc(var(--radius) - 0.25rem);
+    background: var(--swatch);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gradient-grid span {
+    min-height: 8rem;
+    border-radius: calc(var(--radius) - 0.25rem);
+    background: var(--grad);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__swatch strong,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gradient-grid strong {
+    color: var(--bv-teal-900);
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__swatch small,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__type-grid small {
+    color: #344B4D;
+    font-size: var(--fs-small);
+    line-height: 1.45;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-rule {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.75fr);
+    gap: 1rem;
+    align-items: stretch;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    border-radius: var(--radius-lg);
+    background: var(--bv-white);
+    box-shadow: var(--shadow);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-examples {
+    display: grid;
+    gap: 1rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-pass,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-fail {
+    display: grid;
+    gap: 0.35rem;
+    min-height: 7rem;
+    padding: 1rem;
+    border-radius: var(--radius);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-pass {
+    background: var(--bv-grad-main);
+    color: var(--bv-white);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-pass strong {
+    color: var(--bv-gold-200);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-fail {
+    border: 1px dashed var(--bv-rust-600);
+    background: var(--bv-white);
+    color: var(--bv-brown-900);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-fail-sample {
+    display: block;
+    width: min(11rem, 100%);
+    min-height: 0.85rem;
+    border: 1px solid rgba(233, 165, 38, 0.42);
+    border-radius: 999px;
+    background: repeating-linear-gradient(90deg, var(--bv-gold-500) 0 1.25rem, var(--bv-white) 1.25rem 1.65rem);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__type-display {
+    max-width: none;
+    color: var(--bv-teal-900);
+    font-family: var(--font-display);
+    font-size: var(--fs-hero);
+    line-height: var(--lh-tight);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__type-heading {
+    max-width: none;
+    color: var(--bv-teal-800);
+    font-family: var(--font-heading);
+    font-size: var(--fs-h2);
+    line-height: var(--lh-snug);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__type-body {
+    font-family: var(--font-body);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__type-accent {
+    max-width: none;
+    color: var(--bv-brown-900);
+    font-family: var(--font-accent);
+    font-size: var(--fs-h2);
+    line-height: var(--lh-snug);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-heading);
+    font-weight: 800;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__button--primary {
+    background: var(--bv-teal-800);
+    color: var(--bv-white);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__button--secondary {
+    border: 1px solid var(--bv-teal-800);
+    color: var(--bv-teal-800);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__button--gold {
+    background: var(--bv-grad-gold);
+    color: var(--bv-teal-900);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__form {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__form label {
+    color: var(--bv-teal-900);
+    font-family: var(--font-heading);
+    font-weight: 800;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__form div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__form input,
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__form button {
+    min-height: 48px;
+    border-radius: var(--radius-pill);
+    font: inherit;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__form input {
+    width: 100%;
+    border: 1px solid rgba(17, 66, 69, 0.24);
+    padding: 0.75rem 1rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__form button {
+    border: 0;
+    padding: 0.75rem 1rem;
+    background: var(--bv-teal-800);
+    color: var(--bv-white);
+    font-family: var(--font-heading);
+    font-weight: 800;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__component-grid .bv-sg__chip {
+    background: var(--bv-teal-tint);
+    color: var(--bv-teal-900);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__component-grid .bv-sg__chip--proof {
+    background: var(--bv-grad-main);
+    color: var(--bv-white);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__component-grid .bv-sg__chip--soft {
+    background: color-mix(in srgb, var(--bv-gold-500) 18%, white);
+    color: var(--bv-brown-900);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__icon-row span {
+    display: inline-grid;
+    place-items: center;
+    gap: 0.35rem;
+    min-width: 5.5rem;
+    min-height: 5.5rem;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    background: var(--bv-teal-tint);
+    color: var(--bv-teal-800);
+    text-align: center;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__icon-row svg {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__icon-row em {
+    color: var(--bv-teal-900);
+    font-style: normal;
+    font-size: var(--fs-small);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__spacing-list {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: var(--radius);
+    background: var(--bv-white);
+    box-shadow: var(--shadow-sm);
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__spacing-list span {
+    display: grid;
+    grid-template-columns: minmax(8rem, 1fr) 5rem;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  #BorealVitaStyleGuide-{{ section.id }} .bv-sg__spacing-list i {
+    display: block;
+    width: var(--w);
+    max-width: 100%;
+    height: 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--bv-grad-main);
+  }
+
+  @media (max-width: 760px) {
+    #BorealVitaStyleGuide-{{ section.id }} .bv-sg__gold-rule,
+    #BorealVitaStyleGuide-{{ section.id }} .bv-sg__form div {
+      grid-template-columns: 1fr;
+    }
+
+    #BorealVitaStyleGuide-{{ section.id }} .bv-sg__nav {
+      position: static;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Boreal style guide",
+  "tag": "section",
+  "class": "section-boreal-style-guide",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Boreal style guide"
+    }
+  ]
+}
+{% endschema %}

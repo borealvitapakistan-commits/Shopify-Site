@@ -1,0 +1,316 @@
+{%- comment -%}
+  Product Hero (image-only)
+  - Uses product.images only
+  - Optional slider
+{%- endcomment -%}
+
+{% assign hero_images_count = 0 %}
+{% assign use_positions = false %}
+{% assign slider_enabled = section.settings.enable_slider %}
+{% if section.settings.image_positions != blank %}
+  {% assign use_positions = true %}
+{% endif %}
+
+{% capture hero_slides %}
+  {% if use_positions %}
+    {% assign positions = section.settings.image_positions | split: ',' %}
+    {% for pos in positions %}
+      {% assign index = pos | strip | plus: 0 %}
+      {% if index > 0 %}
+        {% assign index_zero = index | minus: 1 %}
+        {% assign image = product.images[index_zero] %}
+        {% if image != blank %}
+          {% assign hero_images_count = hero_images_count | plus: 1 %}
+          <div class="product-hero__slide" data-hero-slide>
+            <img
+              class="product-hero__image"
+              src="{{ image | image_url: width: 2000 }}"
+              alt="{{ product.title | escape }}"
+              width="{{ image.width }}"
+              height="{{ image.height }}"
+              loading="{% if hero_images_count == 1 %}eager{% else %}lazy{% endif %}"
+            >
+          </div>
+          {% if slider_enabled == false %}
+            {% break %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    {% if section.settings.use_featured_first and product.featured_image != blank %}
+      {% assign hero_images_count = hero_images_count | plus: 1 %}
+      <div class="product-hero__slide" data-hero-slide>
+        <img
+          class="product-hero__image"
+          src="{{ product.featured_image | image_url: width: 2000 }}"
+          alt="{{ product.title | escape }}"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+          loading="eager"
+        >
+      </div>
+    {% endif %}
+
+    {% for image in product.images %}
+      {% if section.settings.use_featured_first and product.featured_image != blank and image.id == product.featured_image.id %}
+        {% continue %}
+      {% endif %}
+      {% if section.settings.image_limit > 0 and hero_images_count >= section.settings.image_limit %}
+        {% break %}
+      {% endif %}
+      {% if slider_enabled == false and hero_images_count >= 1 %}
+        {% break %}
+      {% endif %}
+      {% assign hero_images_count = hero_images_count | plus: 1 %}
+      <div class="product-hero__slide" data-hero-slide>
+        <img
+          class="product-hero__image"
+          src="{{ image | image_url: width: 2000 }}"
+          alt="{{ product.title | escape }}"
+          width="{{ image.width }}"
+          height="{{ image.height }}"
+          loading="{% if hero_images_count == 1 %}eager{% else %}lazy{% endif %}"
+        >
+      </div>
+      {% if slider_enabled == false %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endcapture %}
+
+{% if hero_images_count > 0 %}
+  <section class="product-hero" id="ProductHero-{{ section.id }}" style="--hero-ratio: {{ section.settings.aspect_ratio }}; --hero-mobile-ratio: {{ section.settings.mobile_aspect_ratio }};">
+    <div class="product-hero__viewport" data-hero-viewport>
+      <div class="product-hero__track" data-hero-track>
+        {{ hero_slides }}
+      </div>
+    </div>
+
+  {% if section.settings.enable_slider and hero_images_count > 1 %}
+    <button class="product-hero__nav product-hero__nav--prev" type="button" aria-label="Previous" data-hero-prev>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="product-hero__nav product-hero__nav--next" type="button" aria-label="Next" data-hero-next>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+
+    <div class="product-hero__dots" role="tablist">
+      {% for i in (1..hero_images_count) %}
+        <button class="product-hero__dot {% if forloop.first %}is-active{% endif %}" type="button" data-hero-dot="{{ forloop.index0 }}" aria-label="Go to image {{ forloop.index }}"></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+  </section>
+{% endif %}
+
+<style>
+  .product-hero {
+    position: relative;
+    width: 100%;
+    background: #fff;
+  }
+
+  .product-hero__viewport {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .product-hero__track {
+    display: flex;
+    width: 100%;
+    transform: translateX(0%);
+    transition: transform 0.6s ease;
+  }
+
+  .product-hero__slide {
+    min-width: 100%;
+    aspect-ratio: var(--hero-ratio, 16/9);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .product-hero__slide {
+      aspect-ratio: var(--hero-mobile-ratio, 4/5);
+    }
+  }
+
+  .product-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
+    background: #fff;
+  }
+
+  .product-hero__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.8);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .product-hero__nav--prev { left: 16px; }
+  .product-hero__nav--next { right: 16px; }
+
+  .product-hero__dots {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  .product-hero__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.2);
+  }
+
+  .product-hero__dot.is-active {
+    background: rgba(0,0,0,0.6);
+  }
+</style>
+
+<script>
+  (function() {
+    const section = document.getElementById('ProductHero-{{ section.id }}');
+    if (!section) return;
+    const enableSlider = {{ section.settings.enable_slider | json }};
+    if (!enableSlider) return;
+
+    const track = section.querySelector('[data-hero-track]');
+    const slides = Array.from(section.querySelectorAll('[data-hero-slide]'));
+    if (!track || slides.length < 2) return;
+
+    const prevBtn = section.querySelector('[data-hero-prev]');
+    const nextBtn = section.querySelector('[data-hero-next]');
+    const dots = Array.from(section.querySelectorAll('[data-hero-dot]'));
+    let index = 0;
+    let timer;
+
+    const goTo = (i) => {
+      index = (i + slides.length) % slides.length;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === index));
+    };
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { goTo(index - 1); reset(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { goTo(index + 1); reset(); });
+    dots.forEach(dot => dot.addEventListener('click', () => { goTo(Number(dot.dataset.heroDot)); reset(); }));
+
+    const autoplay = {{ section.settings.autoplay | json }};
+    const interval = {{ section.settings.autoplay_interval | times: 1000 | json }};
+    const start = () => {
+      if (!autoplay) return;
+      timer = setInterval(() => goTo(index + 1), interval);
+    };
+    const reset = () => {
+      if (!autoplay) return;
+      clearInterval(timer);
+      start();
+    };
+
+    start();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product hero",
+  "tag": "section",
+  "class": "section-product-hero",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_slider",
+      "label": "Enable slider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Autoplay interval (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "default": "contain",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover", "label": "Cover" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "Desktop aspect ratio",
+      "default": "16/9",
+      "options": [
+        { "value": "16/9", "label": "16:9" },
+        { "value": "3/2", "label": "3:2" },
+        { "value": "4/3", "label": "4:3" },
+        { "value": "1/1", "label": "1:1" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_aspect_ratio",
+      "label": "Mobile aspect ratio",
+      "default": "4/5",
+      "options": [
+        { "value": "4/5", "label": "4:5" },
+        { "value": "1/1", "label": "1:1" },
+        { "value": "3/4", "label": "3:4" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "use_featured_first",
+      "label": "Use featured image first",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "image_limit",
+      "label": "Max images",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "text",
+      "id": "image_positions",
+      "label": "Specific image positions (comma-separated)",
+      "info": "Example: 1,3,4. Leave blank to use all product images."
+    }
+  ]
+}
+{% endschema %}

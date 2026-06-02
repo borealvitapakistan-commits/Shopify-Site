@@ -1,0 +1,1876 @@
+{%- comment -%}
+  Product information tabs
+  - Reference-style tabbed card for features, ingredients, and directions
+{%- endcomment -%}
+
+{% assign ingredients_value = product.metafields.custom.ingredients %}
+{% if ingredients_value == blank %}
+  {% assign ingredients_value = product.metafields.health.ingredients %}
+{% endif %}
+
+{% assign supplement_value = product.metafields.custom.supplement_facts_image %}
+{% if supplement_value == blank %}
+  {% assign supplement_value = product.metafields.health.supplement_facts_image %}
+{% endif %}
+
+{% assign directions_value = product.metafields.custom.directions %}
+{% if directions_value == blank %}
+  {% assign directions_value = product.metafields.health.directions %}
+{% endif %}
+
+{% assign recommended_use = product.metafields.custom.recommended_use %}
+{% if recommended_use == blank %}
+  {% assign recommended_use = product.metafields.health.recommended_use %}
+{% endif %}
+
+{% assign warnings_value = product.metafields.custom.warnings %}
+{% if warnings_value == blank %}
+  {% assign warnings_value = product.metafields.health.warnings %}
+{% endif %}
+{% if warnings_value == blank %}
+  {% assign warnings_value = product.metafields.custom.legal_disclaimer %}
+{% endif %}
+
+{% assign storage_value = product.metafields.custom.storage %}
+{% if storage_value == blank %}
+  {% assign storage_value = product.metafields.health.storage %}
+{% endif %}
+
+{% assign benefits_value = product.metafields.custom.benefits %}
+{% if benefits_value == blank %}
+  {% assign benefits_value = product.metafields.health.benefits %}
+{% endif %}
+
+{% assign bullet_points = product.metafields.custom.bullet_points.value %}
+{% assign is_allergy_relief = false %}
+{% if product.handle == 'allergy-relief-capsule-120-vegetarian-capsules' or product.title contains 'Allergy Relief' %}
+  {% assign is_allergy_relief = true %}
+{% endif %}
+
+{% capture ingredient_search_source %}
+  {{ product.title }}
+  {{ product.description | strip_html }}
+  {% if ingredients_value != blank %}
+    {% if ingredients_value.value != blank %}
+      {{ ingredients_value | metafield_tag | strip_html }}
+    {% else %}
+      {{ ingredients_value | strip_html }}
+    {% endif %}
+  {% endif %}
+{% endcapture %}
+{% assign ingredient_search_source = ingredient_search_source | downcase %}
+
+{% capture detected_ingredient_cards %}
+  {% if ingredient_search_source contains 'punarnava' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="P"><span aria-hidden="true"></span></div>
+      <h4>Punarnava</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Punarnava:</strong> Traditionally used to support healthy fluid balance, kidney comfort, and the body's natural detoxification process.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'gokhru' or ingredient_search_source contains 'gokshura' or ingredient_search_source contains 'tribulus terrestris' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="G"><span aria-hidden="true"></span></div>
+      <h4>Gokhru</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Gokhru:</strong> A valued herbal ingredient used to support urinary wellness, vitality, and normal kidney function.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'varuna' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="V"><span aria-hidden="true"></span></div>
+      <h4>Varuna</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Varuna:</strong> Traditionally used in herbal wellness to support urinary tract comfort and the body's natural cleansing pathways.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'juglans nigra' or ingredient_search_source contains 'black walnut' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="BW"><span aria-hidden="true"></span></div>
+      <h4>Black Walnut</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Black Walnut:</strong> Supports seasonal wellness with naturally occurring plant compounds traditionally associated with immune and digestive support.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'matricaria chamomilla' or ingredient_search_source contains 'chamomile' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="C"><span aria-hidden="true"></span></div>
+      <h4>Chamomile</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Chamomile:</strong> Known for its calming profile, chamomile helps support comfort during seasonal sensitivity and general wellness routines.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'sambucus nigra' or ingredient_search_source contains 'black elderberry' or ingredient_search_source contains 'elderberry' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="E"><span aria-hidden="true"></span></div>
+      <h4>Black Elderberry</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Black Elderberry:</strong> A botanical ingredient often used to support immune resilience and respiratory-season wellness.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'scutellaria baicalensis' or ingredient_search_source contains 'baical skullcap' or ingredient_search_source contains 'skullcap' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="S"><span aria-hidden="true"></span></div>
+      <h4>Baical Skullcap</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Baical Skullcap:</strong> Traditionally used for antioxidant support and comfort during seasonal or environmental sensitivity.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'urtica dioica' or ingredient_search_source contains 'nettle' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="N"><span aria-hidden="true"></span></div>
+      <h4>Nettle</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Nettle:</strong> A mineral-rich herb commonly used to support respiratory comfort and balanced seasonal response.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'vitamin c' or ingredient_search_source contains 'ascorbic' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="C"><span aria-hidden="true"></span></div>
+      <h4>Vitamin C</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Vitamin C:</strong> An essential antioxidant that supports immune function and helps protect cells from oxidative stress.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'boswellia' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="B"><span aria-hidden="true"></span></div>
+      <h4>Boswellia</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Boswellia:</strong> A resin-based botanical traditionally used to support joint comfort, mobility, and inflammatory balance.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'curcumin' or ingredient_search_source contains 'turmeric' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="T"><span aria-hidden="true"></span></div>
+      <h4>Turmeric</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Turmeric:</strong> Provides curcuminoids that support antioxidant activity, joint comfort, and everyday wellness.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'ashwagandha' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="A"><span aria-hidden="true"></span></div>
+      <h4>Ashwagandha</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Ashwagandha:</strong> An adaptogenic herb used to support stress balance, calm energy, and overall vitality.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'shilajit' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="S"><span aria-hidden="true"></span></div>
+      <h4>Shilajit</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Shilajit:</strong> A mineral-rich resin traditionally used to support stamina, energy, and daily performance.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'milk thistle' or ingredient_search_source contains 'silybum' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="M"><span aria-hidden="true"></span></div>
+      <h4>Milk Thistle</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Milk Thistle:</strong> Known for silymarin, milk thistle is commonly used to support liver health and antioxidant protection.
+      </div>
+    </article>
+  {% endif %}
+  {% if ingredient_search_source contains 'dandelion' %}
+    <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+      <div class="pdp-ingredient-card__visual" data-initials="D"><span aria-hidden="true"></span></div>
+      <h4>Dandelion</h4>
+      <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+      <div class="pdp-ingredient-card__description" hidden>
+        <strong>Dandelion:</strong> Traditionally used to support digestion, fluid balance, and natural detoxification.
+      </div>
+    </article>
+  {% endif %}
+{% endcapture %}
+{% assign detected_ingredient_cards_clean = detected_ingredient_cards | strip %}
+
+{% if section.settings.ingredients_metafield != blank %}
+  {% assign parts = section.settings.ingredients_metafield | split: '.' %}
+  {% assign ns = parts[0] %}
+  {% assign key = parts[1] %}
+  {% if ns != blank and key != blank and product.metafields[ns][key] != blank %}
+    {% assign ingredients_value = product.metafields[ns][key] %}
+  {% endif %}
+{% endif %}
+
+{% if section.settings.supplement_facts_metafield != blank %}
+  {% assign parts = section.settings.supplement_facts_metafield | split: '.' %}
+  {% assign ns = parts[0] %}
+  {% assign key = parts[1] %}
+  {% if ns != blank and key != blank and product.metafields[ns][key] != blank %}
+    {% assign supplement_value = product.metafields[ns][key] %}
+  {% endif %}
+{% endif %}
+
+{% if section.settings.directions_metafield != blank %}
+  {% assign parts = section.settings.directions_metafield | split: '.' %}
+  {% assign ns = parts[0] %}
+  {% assign key = parts[1] %}
+  {% if ns != blank and key != blank and product.metafields[ns][key] != blank %}
+    {% assign directions_value = product.metafields[ns][key] %}
+  {% endif %}
+{% endif %}
+
+{% if section.settings.warnings_metafield != blank %}
+  {% assign parts = section.settings.warnings_metafield | split: '.' %}
+  {% assign ns = parts[0] %}
+  {% assign key = parts[1] %}
+  {% if ns != blank and key != blank and product.metafields[ns][key] != blank %}
+    {% assign warnings_value = product.metafields[ns][key] %}
+  {% endif %}
+{% endif %}
+
+<section class="product-information-layout" id="ProductInfoTabs-{{ section.id }}" data-product-info-tabs>
+  <div class="container">
+    {% if is_allergy_relief %}
+      <article class="product-facts-panel" aria-labelledby="ProductFactsHeading-{{ section.id }}">
+        <div class="product-facts-panel__header">
+          <p>Product Facts</p>
+          <h2 id="ProductFactsHeading-{{ section.id }}">Allergy Relief label, rebuilt for the web</h2>
+          <p>
+            The physical bottle information is carried into a readable web panel with a semantic ingredient table,
+            clear label claims, cautions, and Health Canada NPN context.
+          </p>
+        </div>
+
+        <dl class="product-facts-panel__meta" aria-label="Label summary">
+          <div>
+            <dt>NPN</dt>
+            <dd>80134953</dd>
+          </div>
+          <div>
+            <dt>Format</dt>
+            <dd>120 Vegetarian Capsules</dd>
+          </div>
+          <div>
+            <dt>Strength</dt>
+            <dd>405 mg per capsule</dd>
+          </div>
+          <div>
+            <dt>Origin</dt>
+            <dd>Made in Canada</dd>
+          </div>
+        </dl>
+
+        <div class="product-facts-panel__table-wrap">
+          <table class="product-facts-panel__table">
+            <caption>Medicinal ingredients per capsule</caption>
+            <thead>
+              <tr>
+                <th scope="col">Medicinal ingredient</th>
+                <th scope="col">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Nettle</th>
+                <td>150 mg</td>
+              </tr>
+              <tr>
+                <th scope="row">Black elder</th>
+                <td>90 mg</td>
+              </tr>
+              <tr>
+                <th scope="row">Black Walnut</th>
+                <td>45 mg</td>
+              </tr>
+              <tr>
+                <th scope="row">Blue chamomile</th>
+                <td>45 mg</td>
+              </tr>
+              <tr>
+                <th scope="row">Huang qin</th>
+                <td>45 mg</td>
+              </tr>
+              <tr>
+                <th scope="row">Vitamin C</th>
+                <td>30 mg</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="product-facts-panel__detail-grid">
+          <section class="product-facts-panel__detail" aria-labelledby="ProductFactsClaims-{{ section.id }}">
+            <h3 id="ProductFactsClaims-{{ section.id }}">Label claims</h3>
+            <ul>
+              <li>Used in herbal medicine to relieve seasonal allergy symptoms.</li>
+              <li>Supports immune function.</li>
+              <li>Helps reduce oxidative damage caused by free radicals.</li>
+              <li>Provides antioxidants that protect cells.</li>
+            </ul>
+          </section>
+
+          <section class="product-facts-panel__detail" aria-labelledby="ProductFactsNonMedicinal-{{ section.id }}">
+            <h3 id="ProductFactsNonMedicinal-{{ section.id }}">Non-medicinal ingredients</h3>
+            <p>Vegetarian capsule shell.</p>
+          </section>
+
+          <section class="product-facts-panel__detail product-facts-panel__detail--caution" aria-labelledby="ProductFactsCautions-{{ section.id }}">
+            <h3 id="ProductFactsCautions-{{ section.id }}">Cautions and warnings</h3>
+            <ul>
+              <li>Consult a healthcare practitioner before use if you are pregnant, nursing, taking medication, or managing a medical condition.</li>
+              <li>Stop use if hypersensitivity or an allergic reaction occurs.</li>
+              <li>Keep out of reach of children.</li>
+              <li>Store sealed in a cool, dry place.</li>
+            </ul>
+          </section>
+
+          <section class="product-facts-panel__detail" aria-labelledby="ProductFactsCredibility-{{ section.id }}">
+            <h3 id="ProductFactsCredibility-{{ section.id }}">Credibility</h3>
+            <ul>
+              <li>Health Canada NPN 80134953.</li>
+              <li>Made in Canada credibility carried from bottle to screen.</li>
+              <li>Teal and gold label cues match the physical Boreal Vita pack.</li>
+            </ul>
+          </section>
+        </div>
+      </article>
+    {% endif %}
+
+    <div class="product-information-layout__shell">
+      <div class="product-information-layout__tabs" role="tablist" aria-label="{{ product.title | escape }} information">
+        <button
+          class="product-information-layout__tab is-active"
+          type="button"
+          id="ProductInfoTab-{{ section.id }}-ingredients"
+          role="tab"
+          aria-selected="true"
+          aria-controls="ProductInfoPanel-{{ section.id }}-ingredients"
+          data-product-info-tab="ingredients"
+        >
+          Ingredients
+        </button>
+        <button
+          class="product-information-layout__tab"
+          type="button"
+          id="ProductInfoTab-{{ section.id }}-features"
+          role="tab"
+          aria-selected="false"
+          aria-controls="ProductInfoPanel-{{ section.id }}-features"
+          data-product-info-tab="features"
+        >
+          Features &amp; Benefits
+        </button>
+        <button
+          class="product-information-layout__tab"
+          type="button"
+          id="ProductInfoTab-{{ section.id }}-directions"
+          role="tab"
+          aria-selected="false"
+          aria-controls="ProductInfoPanel-{{ section.id }}-directions"
+          data-product-info-tab="directions"
+        >
+          Directions
+        </button>
+      </div>
+
+      <div class="product-information-layout__content">
+        <div
+          class="product-information-layout__panel product-information-layout__panel--ingredients is-active"
+          id="ProductInfoPanel-{{ section.id }}-ingredients"
+          role="tabpanel"
+          aria-labelledby="ProductInfoTab-{{ section.id }}-ingredients"
+          data-product-info-panel="ingredients"
+        >
+          <div class="product-ingredients-showcase" data-pdp-ingredients-showcase>
+            <div class="product-ingredients-showcase__header">
+              <h3>Nature's Best for {{ product.title | escape }}</h3>
+              <p>
+                Each ingredient is selected to support your wellness routine with clean, purposeful herbal nutrition.
+                Tap any ingredient to learn how it helps.
+              </p>
+            </div>
+
+            <div class="product-ingredients-showcase__viewport">
+              <button type="button" class="product-ingredients-showcase__arrow product-ingredients-showcase__arrow--prev" aria-label="Previous ingredients" data-pdp-ingredients-prev>
+                <span aria-hidden="true">&#8249;</span>
+              </button>
+              <div class="product-ingredients-showcase__grid" data-pdp-ingredient-track>
+                {% if detected_ingredient_cards_clean != blank %}
+                  {{ detected_ingredient_cards }}
+                {% else %}
+                  <article class="pdp-ingredient-card" data-pdp-ingredient-card>
+                    <div class="pdp-ingredient-card__visual" data-initials="BV"><span aria-hidden="true"></span></div>
+                    <h4>Herbal Blend</h4>
+                    <button type="button" class="pdp-ingredient-card__more" data-pdp-ingredient-toggle>Read More for Ingredients</button>
+                    <div class="pdp-ingredient-card__description" hidden>
+                      <strong>Herbal Blend:</strong> This product uses a purposeful herbal blend selected to support everyday wellness.
+                    </div>
+                  </article>
+                {% endif %}
+              </div>
+              <button type="button" class="product-ingredients-showcase__arrow product-ingredients-showcase__arrow--next" aria-label="Next ingredients" data-pdp-ingredients-next>
+                <span aria-hidden="true">&#8250;</span>
+              </button>
+            </div>
+
+            <div class="product-ingredients-showcase__controls" data-pdp-ingredients-controls>
+              <button type="button" class="product-ingredients-showcase__control" aria-label="Previous ingredients" data-pdp-ingredients-prev>Prev</button>
+              <div class="product-ingredients-showcase__dots" aria-label="Ingredient carousel pages" data-pdp-ingredients-dots></div>
+              <button type="button" class="product-ingredients-showcase__control" aria-label="More ingredients" data-pdp-ingredients-more>More</button>
+            </div>
+
+            <div class="product-ingredients-showcase__detail" data-pdp-ingredient-detail hidden>
+              <button type="button" class="product-ingredients-showcase__detail-close" aria-label="Close ingredient details" data-pdp-ingredient-close>X</button>
+              <div data-pdp-ingredient-detail-content></div>
+            </div>
+          </div>
+
+          {% if ingredients_value != blank %}
+            <div class="product-information-layout__block product-information-layout__block--ingredients rte">
+              <h3>Full Ingredient Details</h3>
+              {% if ingredients_value.value != blank %}
+                {{ ingredients_value | metafield_tag }}
+              {% else %}
+                {{ ingredients_value }}
+              {% endif %}
+            </div>
+          {% else %}
+          {% endif %}
+
+          {% if supplement_value != blank %}
+            <div class="product-information-layout__block">
+              <h3>Supplement Facts</h3>
+              <div class="product-information-layout__image">
+                <img
+                  src="{{ supplement_value | image_url: width: 1200 }}"
+                  alt="{{ product.title | escape }} supplement facts"
+                  width="{{ supplement_value.width | default: 1200 }}"
+                  height="{{ supplement_value.height | default: 1200 }}"
+                  loading="lazy"
+                >
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div
+          class="product-information-layout__panel"
+          id="ProductInfoPanel-{{ section.id }}-features"
+          role="tabpanel"
+          aria-labelledby="ProductInfoTab-{{ section.id }}-features"
+          hidden
+          data-product-info-panel="features"
+        >
+          {% if benefits_value != blank %}
+            <div class="product-information-layout__block rte">
+              <h3>Features &amp; Benefits</h3>
+              {% if benefits_value.value != blank %}
+                {{ benefits_value | metafield_tag }}
+              {% else %}
+                {{ benefits_value }}
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if bullet_points != blank %}
+            <div class="product-information-layout__block">
+              <h3>Key Benefits</h3>
+              <ul class="product-information-layout__bullets">
+                {% for item in bullet_points %}
+                  <li>{{ item }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% elsif product.description != blank %}
+            <div class="product-information-layout__block rte">
+              <h3>Product Details</h3>
+              {{ product.description }}
+            </div>
+          {% elsif benefits_value == blank %}
+            <div class="product-information-layout__block">
+              <h3>Product Details</h3>
+              <p>Product benefits and details are listed on the product label.</p>
+            </div>
+          {% endif %}
+        </div>
+
+        <div
+          class="product-information-layout__panel"
+          id="ProductInfoPanel-{{ section.id }}-directions"
+          role="tabpanel"
+          aria-labelledby="ProductInfoTab-{{ section.id }}-directions"
+          hidden
+          data-product-info-panel="directions"
+        >
+          <div class="product-directions-guide">
+            <div class="product-directions-guide__header">
+              <span>How To Use</span>
+              <h3>Achieve Better Wellness in <em>3 Steps</em></h3>
+            </div>
+
+            <div class="product-directions-guide__steps">
+              <article class="product-directions-guide__step">
+                <div class="product-directions-guide__visual" aria-hidden="true">
+                  <span class="product-directions-guide__number">1</span>
+                  <svg viewBox="0 0 120 120" fill="none">
+                    <rect x="28" y="55" width="64" height="22" rx="11" transform="rotate(-18 28 55)" fill="currentColor" opacity="0.16"></rect>
+                    <rect x="37" y="45" width="46" height="18" rx="9" transform="rotate(18 37 45)" fill="currentColor" opacity="0.25"></rect>
+                    <path d="M32 84c18-12 38-16 58-8" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity="0.55"></path>
+                  </svg>
+                </div>
+                <h4>Dosage</h4>
+                <p>Follow the serving size on the product label or your healthcare practitioner's advice.</p>
+              </article>
+
+              <article class="product-directions-guide__step">
+                <div class="product-directions-guide__visual" aria-hidden="true">
+                  <span class="product-directions-guide__number">2</span>
+                  <svg viewBox="0 0 120 120" fill="none">
+                    <path d="M43 34h34l-4 48a13 13 0 0 1-26 0L43 34Z" fill="currentColor" opacity="0.16"></path>
+                    <path d="M45 55h30" stroke="currentColor" stroke-width="5" stroke-linecap="round" opacity="0.5"></path>
+                    <path d="M34 89c12-8 25-11 39-8 7 2 13 1 19-3" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity="0.48"></path>
+                  </svg>
+                </div>
+                <h4>Consumption</h4>
+                <p>Take with water and keep your timing consistent for a simple daily routine.</p>
+              </article>
+
+              <article class="product-directions-guide__step">
+                <div class="product-directions-guide__visual" aria-hidden="true">
+                  <span class="product-directions-guide__number">3</span>
+                  <svg viewBox="0 0 120 120" fill="none">
+                    <circle cx="60" cy="60" r="26" fill="currentColor" opacity="0.14"></circle>
+                    <path d="M45 62l10 10 22-26" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.62"></path>
+                    <path d="M32 86c16 9 39 11 58 0" stroke="currentColor" stroke-width="4" stroke-linecap="round" opacity="0.42"></path>
+                  </svg>
+                </div>
+                <h4>Results</h4>
+                <p>Use daily as recommended and pair with balanced wellness habits for best results.</p>
+              </article>
+            </div>
+
+            <div class="product-directions-guide__note rte">
+              {% if recommended_use != blank %}
+                {% if recommended_use.value != blank %}
+                  {{ recommended_use | metafield_tag }}
+                {% else %}
+                  {{ recommended_use }}
+                {% endif %}
+              {% endif %}
+
+              {% if directions_value != blank %}
+                {% if directions_value.value != blank %}
+                  {{ directions_value | metafield_tag }}
+                {% else %}
+                  {{ directions_value }}
+                {% endif %}
+              {% endif %}
+
+              {% if recommended_use == blank and directions_value == blank %}
+                <p>Use as directed on the product label, or as recommended by your healthcare practitioner.</p>
+              {% endif %}
+            </div>
+          </div>
+
+          {% if warnings_value != blank %}
+            <div class="product-information-layout__block rte">
+              <h3>Cautions</h3>
+              {% if warnings_value.value != blank %}
+                {{ warnings_value | metafield_tag }}
+              {% else %}
+                {{ warnings_value }}
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if storage_value != blank %}
+            <div class="product-information-layout__block rte">
+              <h3>Other Information</h3>
+              {% if storage_value.value != blank %}
+                {{ storage_value | metafield_tag }}
+              {% else %}
+                {{ storage_value }}
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-information-layout {
+    --pi-font: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    --pi-heading: var(--font-heading, "DM Sans", "Segoe UI", sans-serif);
+    --pi-text: var(--brand-primary, #0A282C);
+    --pi-body: #11181b;
+    --pi-muted: var(--color-muted-foreground, #33585D);
+    --pi-border: rgba(var(--color-primary-rgb, 10, 40, 44), 0.16);
+    --pi-tab-bg: color-mix(in srgb, var(--brand-accent, #FAD054) 30%, white);
+    --pi-tab-hover: color-mix(in srgb, var(--brand-accent, #FAD054) 40%, white);
+    --pi-active: var(--brand-primary, #0A282C);
+    --pi-active-shadow: rgba(var(--color-primary-rgb, 10, 40, 44), 0.16);
+    --pi-card-bg: color-mix(in srgb, var(--brand-primary, #0A282C) 8%, #ffffff);
+    --pi-cta: var(--brand-primary, #0A282C);
+    font-family: var(--pi-font);
+    color: var(--pi-body);
+    padding: clamp(2rem, 4vw, 3.1rem) 0;
+    background: #ffffff;
+  }
+
+  .product-information-layout__shell {
+    max-width: min(1220px, calc(100vw - 1.25rem));
+    margin: 0 auto;
+    overflow: visible;
+    border: 1px solid color-mix(in srgb, var(--brand-accent, #FAD054) 44%, var(--pi-border));
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 2px 12px var(--pi-active-shadow);
+  }
+
+  .product-facts-panel {
+    display: grid;
+    gap: clamp(1.1rem, 2.3vw, 1.65rem);
+    max-width: min(1220px, calc(100vw - 1.25rem));
+    margin: 0 auto clamp(1.4rem, 3vw, 2.2rem);
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.16);
+    border-radius: 14px;
+    padding: clamp(1.15rem, 3vw, 2rem);
+    background:
+      linear-gradient(135deg, rgba(var(--brand-accent-rgb, 250, 208, 84), 0.16), transparent 34%),
+      color-mix(in srgb, var(--brand-soft, #F4F8F7) 72%, #ffffff);
+    box-shadow: 0 1rem 2.5rem rgba(var(--color-primary-rgb, 10, 40, 44), 0.08);
+  }
+
+  .product-facts-panel__header {
+    max-width: 54rem;
+  }
+
+  .product-facts-panel__header p:first-child {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0 0 0.45rem;
+    color: #5f4f45;
+    font-family: var(--pi-heading) !important;
+    font-size: 0.9rem;
+    font-weight: 900;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .product-facts-panel__header p:first-child::before {
+    content: "";
+    width: 2.5rem;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--brand-accent, #FAD054);
+  }
+
+  .product-facts-panel__header h2 {
+    margin: 0;
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.85rem, 3.2vw, 2.8rem);
+    font-weight: 800 !important;
+    letter-spacing: 0;
+    line-height: 1.08;
+  }
+
+  .product-facts-panel__header p:last-child {
+    margin: 0.7rem 0 0;
+    color: var(--pi-body);
+    font-size: clamp(1rem, 1.2vw, 1.14rem);
+    line-height: 1.55;
+  }
+
+  .product-facts-panel__meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.65rem;
+    margin: 0;
+  }
+
+  .product-facts-panel__meta div {
+    display: grid;
+    gap: 0.18rem;
+    min-height: 4.7rem;
+    align-content: center;
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.14);
+    border-radius: 10px;
+    padding: 0.8rem;
+    background: #ffffff;
+  }
+
+  .product-facts-panel__meta dt {
+    color: #5f4f45;
+    font-family: var(--pi-heading) !important;
+    font-size: 0.76rem;
+    font-weight: 900;
+    line-height: 1.1;
+    text-transform: uppercase;
+  }
+
+  .product-facts-panel__meta dd {
+    margin: 0;
+    color: var(--pi-text);
+    font-size: clamp(1rem, 1.2vw, 1.12rem);
+    font-weight: 900;
+    line-height: 1.2;
+  }
+
+  .product-facts-panel__table-wrap {
+    overflow-x: auto;
+  }
+
+  .product-facts-panel__table {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    overflow: hidden;
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.18);
+    border-radius: 10px;
+    background: #ffffff;
+  }
+
+  .product-facts-panel__table caption {
+    padding: 0.85rem 1rem;
+    background: var(--pi-active);
+    color: #ffffff;
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    font-weight: 900;
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .product-facts-panel__table th,
+  .product-facts-panel__table td {
+    border-top: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.12);
+    padding: 0.85rem 1rem;
+    color: var(--pi-body);
+    font-size: clamp(1rem, 1.08vw, 1.12rem);
+    line-height: 1.4;
+    text-align: left;
+  }
+
+  .product-facts-panel__table thead th {
+    background: color-mix(in srgb, var(--brand-accent, #FAD054) 24%, #ffffff);
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-weight: 900 !important;
+  }
+
+  .product-facts-panel__table tbody th {
+    width: 65%;
+    font-weight: 900;
+  }
+
+  .product-facts-panel__table tbody td {
+    font-weight: 800;
+  }
+
+  .product-facts-panel__detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .product-facts-panel__detail {
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.14);
+    border-radius: 10px;
+    padding: clamp(1rem, 2vw, 1.25rem);
+    background: #ffffff;
+    color: var(--pi-body);
+    font-size: clamp(1rem, 1.12vw, 1.1rem);
+    line-height: 1.55;
+  }
+
+  .product-facts-panel__detail--caution {
+    border-color: rgba(var(--brand-accent-rgb, 250, 208, 84), 0.66);
+    background: color-mix(in srgb, var(--brand-accent, #FAD054) 15%, #ffffff);
+  }
+
+  .product-facts-panel__detail h3 {
+    margin: 0 0 0.55rem;
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.14rem, 1.45vw, 1.35rem);
+    font-weight: 900 !important;
+    line-height: 1.2;
+  }
+
+  .product-facts-panel__detail p,
+  .product-facts-panel__detail ul {
+    margin: 0;
+  }
+
+  .product-facts-panel__detail ul {
+    display: grid;
+    gap: 0.42rem;
+    padding-left: 1.15rem;
+  }
+
+  .product-information-layout__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    overflow: hidden;
+    border-radius: 14px 14px 0 0;
+    background: var(--pi-tab-bg);
+  }
+
+  .product-information-layout__tab {
+    position: relative;
+    min-height: 64px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1rem, 1.4vw, 1.38rem);
+    font-weight: 700 !important;
+    letter-spacing: 0;
+    line-height: 1.25;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+
+  .product-information-layout__tab:hover,
+  .product-information-layout__tab:focus-visible {
+    background: var(--pi-tab-hover);
+    color: var(--pi-text);
+    outline: none;
+  }
+
+  .product-information-layout__tab.is-active {
+    background: var(--pi-active);
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(var(--color-primary-rgb, 10, 40, 44), 0.18);
+  }
+
+  .product-information-layout__tab.is-active::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    width: 0;
+    height: 0;
+    border-left: 11px solid transparent;
+    border-right: 11px solid transparent;
+    border-top: 11px solid var(--pi-active);
+    transform: translateX(-50%);
+    z-index: 2;
+  }
+
+  .product-information-layout__content {
+    min-height: clamp(22rem, 34vw, 34rem);
+    overflow: visible;
+    padding: clamp(2.2rem, 4vw, 3.8rem) max(0.5in, clamp(1.35rem, 5vw, 3.75rem));
+  }
+
+  .product-ingredients-showcase {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.6vw, 2rem);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .product-ingredients-showcase__header {
+    width: min(980px, 100%);
+    min-width: 0;
+    max-width: 100%;
+    margin: 0 auto clamp(0.75rem, 1.5vw, 1.2rem);
+    text-align: center;
+  }
+
+  .product-ingredients-showcase__header h3 {
+    margin: 0;
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.8rem, 3vw, 2.45rem);
+    font-weight: 500 !important;
+    letter-spacing: 0;
+    line-height: 1.12;
+  }
+
+  .product-ingredients-showcase__header p {
+    width: min(940px, 100%);
+    margin: 0.85rem auto 0;
+    color: rgba(var(--color-primary-rgb, 10, 40, 44), 0.72);
+    font-size: clamp(1rem, 1.25vw, 1.2rem);
+    line-height: 1.55;
+  }
+
+  .product-ingredients-showcase__viewport {
+    --ingredient-arrow-edge-space: 0.5in;
+    --ingredient-card-gap: clamp(1rem, 2vw, 1.65rem);
+    display: grid;
+    grid-template-columns: 2.65rem minmax(0, 1fr) 2.65rem;
+    column-gap: clamp(0.9rem, 1.6vw, 1.25rem);
+    align-items: center;
+    box-sizing: border-box;
+    overflow: visible;
+    width: min(100%, 1210px);
+    min-width: 0;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 var(--ingredient-arrow-edge-space);
+  }
+
+  .product-ingredients-showcase__grid {
+    display: flex;
+    grid-column: 2;
+    align-items: stretch;
+    gap: var(--ingredient-card-gap);
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.25rem 0.25rem 0.9rem;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0.25rem;
+    scrollbar-width: none;
+  }
+
+  .product-ingredients-showcase__grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  html.bv-comfort-mode .product-information-layout__content,
+  html.bv-comfort-mode .product-information-layout__panel,
+  html.bv-comfort-mode .product-ingredients-showcase {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase__header,
+  html.bv-comfort-mode .product-ingredients-showcase__viewport,
+  html.bv-comfort-mode .product-ingredients-showcase__controls,
+  html.bv-comfort-mode .product-ingredients-showcase__grid {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase__viewport {
+    overflow: hidden;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase__controls,
+  html.bv-comfort-mode .product-ingredients-showcase__dots {
+    flex-wrap: wrap;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase__dots {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .pdp-ingredient-card {
+    display: flex;
+    flex: 0 0 calc((100% - (var(--ingredient-card-gap) * 2)) / 3);
+    min-width: 0;
+    min-height: 15.2rem;
+    flex-direction: column;
+    align-content: start;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.72rem;
+    padding: clamp(1rem, 2vw, 1.25rem);
+    border-radius: 10px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(var(--brand-accent-rgb, 250, 208, 84), 0.16), transparent 8rem),
+      var(--pi-card-bg);
+    text-align: center;
+    scroll-snap-align: start;
+  }
+
+  .pdp-ingredient-card__visual {
+    position: relative;
+    display: grid;
+    width: 5.9rem;
+    height: 5.9rem;
+    aspect-ratio: 1;
+    min-height: 0;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.1);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.68);
+    color: rgba(var(--color-primary-rgb, 10, 40, 44), 0.58);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.45rem, 2.4vw, 2rem);
+    font-weight: 800;
+  }
+
+  .pdp-ingredient-card__visual::before {
+    content: attr(data-initials);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .pdp-ingredient-card__visual span {
+    display: none;
+  }
+
+  .pdp-ingredient-card h4 {
+    margin: 0;
+    width: 100%;
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.25rem, 1.75vw, 1.68rem);
+    font-weight: 500 !important;
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+
+  .pdp-ingredient-card__more,
+  .product-ingredients-showcase__more {
+    border: 0;
+    border-radius: 999px;
+    background: var(--pi-cta);
+    color: #ffffff;
+    font-family: var(--pi-font) !important;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .pdp-ingredient-card__more {
+    width: min(14.4rem, 100%);
+    padding: 0.75rem 0.8rem;
+  }
+
+  .pdp-ingredient-card__more.is-active {
+    background: var(--pi-active);
+  }
+
+  .pdp-ingredient-card__more:hover,
+  .pdp-ingredient-card__more:focus-visible,
+  .product-ingredients-showcase__more:hover,
+  .product-ingredients-showcase__more:focus-visible {
+    background: var(--pi-active);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  .product-ingredients-showcase__arrow {
+    z-index: 4;
+    display: grid;
+    width: 2.65rem;
+    height: 2.65rem;
+    justify-self: center;
+    place-items: center;
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.16);
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--pi-active);
+    box-shadow: 0 0.7rem 1.5rem rgba(var(--color-primary-rgb, 10, 40, 44), 0.12);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+
+  .product-ingredients-showcase__arrow:hover,
+  .product-ingredients-showcase__arrow:focus-visible {
+    background: var(--pi-active);
+    color: #ffffff;
+    outline: none;
+    transform: scale(1.04);
+  }
+
+  .product-ingredients-showcase__arrow[disabled],
+  .product-ingredients-showcase__control[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .product-ingredients-showcase__arrow[disabled] {
+    transform: none;
+  }
+
+  .product-ingredients-showcase__arrow span {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .product-ingredients-showcase__arrow--prev {
+    grid-column: 1;
+  }
+
+  .product-ingredients-showcase__arrow--next {
+    grid-column: 3;
+  }
+
+  .product-ingredients-showcase__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    min-width: 0;
+    max-width: 100%;
+    margin-top: -0.4rem;
+  }
+
+  .product-ingredients-showcase__control {
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.14);
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--pi-active);
+    font-family: var(--pi-font) !important;
+    font-size: 0.88rem;
+    font-weight: 800;
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .product-ingredients-showcase__control:hover,
+  .product-ingredients-showcase__control:focus-visible {
+    background: var(--pi-active);
+    color: #ffffff;
+    outline: none;
+  }
+
+  .product-ingredients-showcase__dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.48rem;
+    min-width: 3rem;
+  }
+
+  .product-ingredients-showcase__dot {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .product-ingredients-showcase__dot::before {
+    content: "";
+    display: block;
+    width: 0.62rem;
+    height: 0.62rem;
+    border-radius: 999px;
+    background: #d1d1d1;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .product-ingredients-showcase__dot.is-active {
+    background: transparent;
+  }
+
+  .product-ingredients-showcase__dot.is-active::before {
+    background: var(--brand-accent, #FAD054);
+    transform: scale(1.18);
+  }
+
+  .product-ingredients-showcase__dot:focus-visible {
+    outline: 2px solid var(--pi-active);
+    outline-offset: 2px;
+  }
+
+  .product-ingredients-showcase__controls[hidden],
+  .product-ingredients-showcase__arrow[hidden] {
+    display: none;
+  }
+
+  .product-ingredients-showcase__detail {
+    position: relative;
+    width: min(1090px, 100%);
+    margin: 0 auto;
+    padding: clamp(1.25rem, 2vw, 1.7rem) clamp(2.8rem, 4vw, 3.4rem) clamp(1.25rem, 2vw, 1.7rem) clamp(1.25rem, 2vw, 1.7rem);
+    border: 2px solid rgba(var(--brand-accent-rgb, 250, 208, 84), 0.78);
+    border-radius: 1.5rem;
+    background: linear-gradient(135deg, var(--brand-primary-light, #163E43), var(--brand-primary-dark, #06181B));
+    color: #ffffff;
+    font-size: clamp(1rem, 1.25vw, 1.18rem);
+    font-weight: 600;
+    line-height: 1.55;
+    text-align: left;
+  }
+
+  .product-ingredients-showcase__detail strong {
+    color: var(--brand-accent, #FAD054);
+  }
+
+  .product-ingredients-showcase__detail-close {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.9rem;
+    display: grid;
+    width: 1.85rem;
+    height: 1.85rem;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .product-information-layout__block table,
+  .product-information-layout__block .metafield-rich_text_field table {
+    width: 100%;
+    margin: 0.95rem 0 0;
+    border-collapse: collapse;
+    border: 1px solid var(--pi-border);
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: var(--pi-font);
+  }
+
+  .product-information-layout__block th,
+  .product-information-layout__block td {
+    padding: 0.72rem 0.85rem;
+    border: 1px solid var(--pi-border);
+    color: var(--pi-body);
+    font-size: 0.98rem;
+    line-height: 1.45;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .product-information-layout__block th {
+    background: var(--pi-active);
+    color: #ffffff;
+    font-family: var(--pi-heading) !important;
+    font-weight: 700 !important;
+  }
+
+  .product-information-layout__block tr:nth-child(even) td {
+    background: rgba(var(--brand-green-rgb, 250, 208, 84), 0.12);
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients table,
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients .metafield-rich_text_field table {
+    display: block;
+    width: 100%;
+    margin-top: 1.1rem;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients thead {
+    display: none;
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients tbody {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients tr {
+    display: flex;
+    min-width: 0;
+    min-height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--pi-border);
+    border-radius: 12px;
+    background: #ffffff;
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients th,
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients td {
+    display: block;
+    width: 100%;
+    border: 0;
+    padding: 0.72rem 0.8rem;
+    background: transparent;
+    font-size: 0.94rem;
+    line-height: 1.42;
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients th:first-child,
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients td:first-child {
+    background: color-mix(in srgb, var(--brand-accent, #FAD054) 28%, white);
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-weight: 800 !important;
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients th:not(:first-child),
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients td:not(:first-child) {
+    border-top: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.1);
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients tr:nth-child(even) td {
+    background: transparent;
+  }
+
+  .product-information-layout__panel--ingredients .product-information-layout__block--ingredients tr:nth-child(even) td:first-child {
+    background: color-mix(in srgb, var(--brand-accent, #FAD054) 28%, white);
+  }
+
+  .product-information-layout__panel[hidden] {
+    display: none;
+  }
+
+  .product-information-layout__block + .product-information-layout__block {
+    margin-top: clamp(1.45rem, 2.6vw, 2rem);
+  }
+
+  .product-information-layout__block h3 {
+    margin: 0 0 0.34rem;
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+    font-weight: 500 !important;
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+
+  .product-information-layout__block,
+  .product-information-layout__block .rte {
+    color: var(--pi-body);
+    font-size: clamp(0.98rem, 1.14vw, 1.08rem);
+    line-height: 1.58;
+  }
+
+  .product-information-layout__block p {
+    margin: 0;
+  }
+
+  .product-information-layout__block p + p,
+  .product-information-layout__block ul + p,
+  .product-information-layout__block p + ul {
+    margin-top: 0.7rem;
+  }
+
+  .product-information-layout__block strong {
+    color: var(--pi-text);
+  }
+
+  .product-information-layout__bullets {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.48rem;
+  }
+
+  .product-information-layout__image {
+    max-width: 640px;
+    margin-top: 0.75rem;
+  }
+
+  .product-information-layout__image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--pi-border);
+    border-radius: 10px;
+    background: #fff;
+    object-fit: contain;
+  }
+
+  .product-directions-guide {
+    display: grid;
+    gap: clamp(1.4rem, 3vw, 2.35rem);
+    color: var(--pi-text);
+    text-align: center;
+  }
+
+  .product-directions-guide__header {
+    width: min(780px, 100%);
+    margin: 0 auto;
+  }
+
+  .product-directions-guide__header span {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--brand-accent-dark, #C89F27);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(0.82rem, 1vw, 0.96rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .product-directions-guide__header h3 {
+    margin: 0;
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.85rem, 3.2vw, 2.7rem);
+    font-weight: 500 !important;
+    letter-spacing: 0;
+    line-height: 1.12;
+  }
+
+  .product-directions-guide__header em {
+    color: var(--brand-accent-dark, #C89F27);
+    font-style: italic;
+  }
+
+  .product-directions-guide__steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: start;
+  }
+
+  .product-directions-guide__step {
+    display: grid;
+    gap: 0.72rem;
+    justify-items: center;
+  }
+
+  .product-directions-guide__visual {
+    position: relative;
+    display: grid;
+    width: min(100%, 15.5rem);
+    aspect-ratio: 1;
+    place-items: center;
+    overflow: visible;
+    border: 2px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.16);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 32% 22%, rgba(var(--brand-green-rgb, 250, 208, 84), 0.22), transparent 42%),
+      color-mix(in srgb, var(--brand-soft, #F4F8F7) 72%, white);
+    color: var(--pi-text);
+    box-shadow: inset 0 0 0 8px #ffffff;
+  }
+
+  .product-directions-guide__visual svg {
+    width: 66%;
+    height: 66%;
+  }
+
+  .product-directions-guide__number {
+    position: absolute;
+    top: 0.15rem;
+    right: 0.45rem;
+    display: grid;
+    min-width: 4.8rem;
+    height: 3.55rem;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--pi-active);
+    color: #ffffff;
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.75rem, 3vw, 2.45rem);
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 0.75rem 1.7rem rgba(var(--color-primary-rgb, 10, 40, 44), 0.16);
+  }
+
+  .product-directions-guide__step h4 {
+    margin: 0.25rem 0 0;
+    color: var(--pi-text);
+    font-family: var(--pi-heading) !important;
+    font-size: clamp(1.24rem, 2vw, 1.72rem);
+    font-weight: 700 !important;
+    line-height: 1.12;
+  }
+
+  .product-directions-guide__step p {
+    width: min(18rem, 100%);
+    margin: 0;
+    color: var(--pi-body);
+    font-size: clamp(0.98rem, 1.16vw, 1.08rem);
+    line-height: 1.45;
+  }
+
+  .product-directions-guide__note {
+    width: min(920px, 100%);
+    margin: 0 auto;
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.12);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--brand-accent, #FAD054) 12%, white);
+    padding: clamp(1rem, 2vw, 1.35rem);
+    color: var(--pi-body);
+    font-size: clamp(0.98rem, 1.12vw, 1.05rem);
+    line-height: 1.55;
+    text-align: left;
+  }
+
+  .product-directions-guide__note > :first-child {
+    margin-top: 0;
+  }
+
+  .product-directions-guide__note > :last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 990px) {
+    .product-information-layout__panel--ingredients .product-information-layout__block--ingredients tbody {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 749px) {
+    .product-information-layout {
+      padding: 1.5rem 0 2.3rem;
+    }
+
+    .product-information-layout__shell {
+      border-radius: 10px;
+    }
+
+    .product-facts-panel {
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .product-facts-panel__meta,
+    .product-facts-panel__detail-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .product-facts-panel__table {
+      min-width: 0;
+    }
+
+    .product-facts-panel__table th,
+    .product-facts-panel__table td {
+      padding: 0.72rem;
+    }
+
+    .product-information-layout__tabs {
+      grid-template-columns: 1fr;
+    }
+
+    .product-information-layout__tab {
+      min-height: 50px;
+      font-size: 1rem;
+    }
+
+    .product-information-layout__block {
+      overflow-x: auto;
+    }
+
+    .product-information-layout__panel--ingredients .product-information-layout__block--ingredients tbody {
+      grid-template-columns: 1fr;
+    }
+
+    .product-information-layout__tab.is-active::after {
+      display: none;
+    }
+
+    .product-information-layout__content {
+      min-height: 0;
+      padding: 1.45rem 1.05rem 1.7rem;
+    }
+
+    .product-ingredients-showcase__header {
+      text-align: left;
+    }
+
+    .product-ingredients-showcase__grid {
+      gap: 1rem;
+    }
+
+    .product-ingredients-showcase__viewport {
+      --ingredient-arrow-edge-space: 0.45rem;
+      grid-template-columns: 2.65rem minmax(0, 1fr) 2.65rem;
+      column-gap: 0.55rem;
+      padding: 0 var(--ingredient-arrow-edge-space);
+    }
+
+    .product-ingredients-showcase__arrow--prev {
+      grid-column: 1;
+    }
+
+    .product-ingredients-showcase__arrow--next {
+      grid-column: 3;
+    }
+
+    .pdp-ingredient-card {
+      flex-basis: 82%;
+    }
+
+    .product-ingredients-showcase__detail {
+      border-radius: 1rem;
+    }
+
+    .product-directions-guide {
+      text-align: left;
+    }
+
+    .product-directions-guide__header {
+      margin: 0;
+    }
+
+    .product-directions-guide__steps {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .product-directions-guide__step {
+      grid-template-columns: 7.5rem minmax(0, 1fr);
+      align-items: center;
+      justify-items: start;
+      gap: 0.9rem 1rem;
+      text-align: left;
+    }
+
+    .product-directions-guide__visual {
+      width: 7.5rem;
+    }
+
+    .product-directions-guide__number {
+      top: -0.15rem;
+      right: -0.15rem;
+      min-width: 2.8rem;
+      height: 2.25rem;
+      font-size: 1.25rem;
+    }
+
+    .product-directions-guide__step h4 {
+      margin: 0;
+    }
+
+    .product-directions-guide__step p {
+      grid-column: 2;
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var tabSections = document.querySelectorAll('[data-product-info-tabs]');
+
+    tabSections.forEach(function(section) {
+      var tabs = Array.prototype.slice.call(section.querySelectorAll('[data-product-info-tab]'));
+      var panels = Array.prototype.slice.call(section.querySelectorAll('[data-product-info-panel]'));
+
+      tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          var target = tab.getAttribute('data-product-info-tab');
+
+          tabs.forEach(function(item) {
+            var isActive = item === tab;
+            item.classList.toggle('is-active', isActive);
+            item.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+
+          panels.forEach(function(panel) {
+            var isActive = panel.getAttribute('data-product-info-panel') === target;
+            panel.classList.toggle('is-active', isActive);
+            panel.hidden = !isActive;
+          });
+        });
+      });
+
+      var showcases = Array.prototype.slice.call(section.querySelectorAll('[data-pdp-ingredients-showcase]'));
+
+      showcases.forEach(function(showcase) {
+        var track = showcase.querySelector('[data-pdp-ingredient-track]');
+        var prevButtons = Array.prototype.slice.call(showcase.querySelectorAll('[data-pdp-ingredients-prev]'));
+        var nextButtons = Array.prototype.slice.call(showcase.querySelectorAll('[data-pdp-ingredients-next], [data-pdp-ingredients-more]'));
+        var controls = showcase.querySelector('[data-pdp-ingredients-controls]');
+        var dotsWrap = showcase.querySelector('[data-pdp-ingredients-dots]');
+        var detailBox = showcase.querySelector('[data-pdp-ingredient-detail]');
+        var detailContent = showcase.querySelector('[data-pdp-ingredient-detail-content]');
+        var closeDetail = showcase.querySelector('[data-pdp-ingredient-close]');
+        var ingredientButtons = Array.prototype.slice.call(showcase.querySelectorAll('[data-pdp-ingredient-toggle]'));
+        var cards = Array.prototype.slice.call(showcase.querySelectorAll('[data-pdp-ingredient-card]'));
+        var dots = [];
+
+        var getStep = function() {
+          var card = cards[0];
+          var gap = track ? parseFloat(window.getComputedStyle(track).gap || '0') : 0;
+          return card ? (card.getBoundingClientRect().width + gap) : (track ? track.clientWidth : 0);
+        };
+
+        var getPageCount = function() {
+          if (!track) return 1;
+          var step = getStep();
+          if (!step) return 1;
+          return Math.max(1, Math.ceil((track.scrollWidth - track.clientWidth) / step) + 1);
+        };
+
+        var renderDots = function() {
+          if (!dotsWrap || !track) return;
+          var pageCount = getPageCount();
+          dotsWrap.innerHTML = '';
+          dots = [];
+          for (var index = 0; index < pageCount; index += 1) {
+            var dot = document.createElement('button');
+            dot.type = 'button';
+            dot.className = 'product-ingredients-showcase__dot';
+            dot.setAttribute('aria-label', 'Go to ingredient page ' + (index + 1));
+            dot.dataset.index = String(index);
+            dot.addEventListener('click', function() {
+              track.scrollTo({ left: Number(this.dataset.index) * getStep(), behavior: 'smooth' });
+            });
+            dotsWrap.appendChild(dot);
+            dots.push(dot);
+          }
+        };
+
+        var updateControls = function() {
+          if (!track) return;
+          var hasOverflow = track.scrollWidth > track.clientWidth + 8;
+          if (controls) controls.hidden = !hasOverflow;
+          prevButtons.concat(nextButtons).forEach(function(button) {
+            button.hidden = !hasOverflow;
+          });
+
+          var maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+          var atStart = track.scrollLeft <= 2;
+          var atEnd = track.scrollLeft >= maxScroll - 2;
+          prevButtons.forEach(function(button) { button.disabled = atStart; });
+          nextButtons.forEach(function(button) { button.disabled = atEnd; });
+
+          var step = getStep();
+          var activeIndex = step ? Math.round(track.scrollLeft / step) : 0;
+          dots.forEach(function(dot, index) {
+            dot.classList.toggle('is-active', index === activeIndex);
+          });
+        };
+
+        var refreshCarousel = function() {
+          renderDots();
+          updateControls();
+        };
+
+        prevButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+            if (!track) return;
+            track.scrollBy({ left: -getStep(), behavior: 'smooth' });
+          });
+        });
+
+        nextButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+            if (!track) return;
+            track.scrollBy({ left: getStep(), behavior: 'smooth' });
+          });
+        });
+
+        if (track) {
+          track.addEventListener('scroll', updateControls);
+        }
+
+        var hideDetail = function() {
+          if (!detailBox) return;
+          detailBox.hidden = true;
+          if (detailContent) detailContent.innerHTML = '';
+          ingredientButtons.forEach(function(item) {
+            item.classList.remove('is-active');
+          });
+        };
+
+        ingredientButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+            var card = button.closest('[data-pdp-ingredient-card]');
+            var description = card ? card.querySelector('.pdp-ingredient-card__description') : null;
+            if (!description || !detailBox || !detailContent) return;
+
+            if (!detailBox.hidden && button.classList.contains('is-active')) {
+              hideDetail();
+              return;
+            }
+
+            detailContent.innerHTML = description.innerHTML;
+            detailBox.hidden = false;
+            ingredientButtons.forEach(function(item) {
+              item.classList.toggle('is-active', item === button);
+            });
+          });
+        });
+
+        if (closeDetail) {
+          closeDetail.addEventListener('click', hideDetail);
+        }
+
+        refreshCarousel();
+        window.addEventListener('resize', refreshCarousel);
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product info tabs",
+  "tag": "section",
+  "class": "section-product-info-accordions",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Product information"
+    },
+    {
+      "type": "text",
+      "id": "ingredients_metafield",
+      "label": "Ingredients metafield (namespace.key)",
+      "info": "Example: health.ingredients"
+    },
+    {
+      "type": "text",
+      "id": "supplement_facts_metafield",
+      "label": "Supplement facts image metafield (namespace.key)",
+      "info": "Example: health.supplement_facts_image"
+    },
+    {
+      "type": "text",
+      "id": "directions_metafield",
+      "label": "Directions metafield (namespace.key)",
+      "info": "Example: health.directions"
+    },
+    {
+      "type": "text",
+      "id": "warnings_metafield",
+      "label": "Warnings / disclaimer metafield (namespace.key)",
+      "info": "Example: health.warnings"
+    },
+    {
+      "type": "text",
+      "id": "shipping_metafield",
+      "label": "Shipping / returns metafield (namespace.key)",
+      "info": "Kept for existing templates; not shown in the tab design by default."
+    }
+  ]
+}
+{% endschema %}

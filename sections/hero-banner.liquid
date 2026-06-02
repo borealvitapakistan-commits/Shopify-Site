@@ -1,0 +1,2224 @@
+{%- comment -%}
+  Hero Banner Slider
+{%- endcomment -%}
+
+{%- assign mobile_ratio = '4 / 5' -%}
+{%- assign mobile_image_fit_mode = 'ratio' -%}
+{%- case section.settings.mobile_ratio -%}
+  {%- when 'auto' -%}
+    {%- assign mobile_image_fit_mode = 'auto' -%}
+  {%- when 'match' -%}
+    {%- assign mobile_ratio = '16 / 5' -%}
+  {%- when '16-9' -%}
+    {%- assign mobile_ratio = '16 / 9' -%}
+  {%- when '4-3' -%}
+    {%- assign mobile_ratio = '4 / 3' -%}
+  {%- when '1-1' -%}
+    {%- assign mobile_ratio = '1 / 1' -%}
+  {%- when '3-4' -%}
+    {%- assign mobile_ratio = '3 / 4' -%}
+  {%- when '4-5' -%}
+    {%- assign mobile_ratio = '4 / 5' -%}
+{%- endcase -%}
+
+{%- assign promo_top_image = section.settings.promo_top_image -%}
+{%- assign promo_top_link = section.settings.promo_top_link -%}
+{%- assign promo_bottom_image = section.settings.promo_bottom_image -%}
+{%- assign promo_bottom_link = section.settings.promo_bottom_link -%}
+
+{%- for block in section.blocks offset: 1 limit: 2 -%}
+  {%- if forloop.index == 1 -%}
+    {%- if promo_top_image == blank -%}
+      {%- assign promo_top_image = block.settings.image -%}
+    {%- endif -%}
+    {%- if promo_top_link == blank -%}
+      {%- assign promo_top_link = block.settings.link -%}
+    {%- endif -%}
+  {%- elsif forloop.index == 2 -%}
+    {%- if promo_bottom_image == blank -%}
+      {%- assign promo_bottom_image = block.settings.image -%}
+    {%- endif -%}
+    {%- if promo_bottom_link == blank -%}
+      {%- assign promo_bottom_link = block.settings.link -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign show_promos = false -%}
+{%- if promo_top_image != blank or promo_bottom_image != blank -%}
+  {%- assign show_promos = true -%}
+{%- endif -%}
+
+{%- assign show_bottom_strip = false -%}
+{%- if section.settings.show_bottom_strip and section.blocks.size > 0 -%}
+  {%- assign show_bottom_strip = true -%}
+{%- endif -%}
+
+{%- assign show_view_all_button = false -%}
+{%- if show_bottom_strip and section.blocks.size > 1 and section.settings.view_all_label != blank -%}
+  {%- assign show_view_all_button = true -%}
+{%- endif -%}
+
+{%- assign hero_tab_count = section.blocks.size -%}
+{%- if hero_tab_count < 1 -%}
+  {%- assign hero_tab_count = 1 -%}
+{%- endif -%}
+
+{%- assign view_all_heading = section.settings.view_all_heading | default: 'Explore all featured banners' -%}
+{%- assign hero_eyebrow = section.settings.hero_eyebrow | default: 'Northern apothecary meets modern science' -%}
+{%- assign hero_lead = section.settings.hero_lead | default: 'Canadian-made herbal supplements with clear labels, NPN-registered formulas, and delivery for Pakistan.' -%}
+{%- assign hero_cta_label = section.settings.hero_cta_label | default: 'Shop wellness formulas' -%}
+{%- assign hero_cta_link = section.settings.hero_cta_link | default: routes.all_products_collection_url -%}
+{%- assign hero_proof_1 = section.settings.hero_proof_1 | default: 'Made in Canada' -%}
+{%- assign hero_proof_2 = section.settings.hero_proof_2 | default: 'NPN registered' -%}
+{%- assign hero_proof_3 = section.settings.hero_proof_3 | default: 'Readable product facts' -%}
+{%- assign bv_region = localization.country.iso_code | default: 'CA' | upcase -%}
+{%- assign bv_market_handle = localization.market.handle | default: '' | downcase -%}
+{%- if bv_market_handle == 'united-states' or bv_market_handle == 'us' or bv_region == 'US' -%}
+  {%- assign bv_region = 'US' -%}
+{%- elsif bv_market_handle == 'pakistan' or bv_market_handle == 'pk' or bv_region == 'PK' -%}
+  {%- assign bv_region = 'PK' -%}
+{%- else -%}
+  {%- assign bv_region = 'CA' -%}
+{%- endif -%}
+{%- assign seo_h1_ca = section.settings.seo_h1 | default: 'Herbal By Nature, Backed by Modern Science' -%}
+{%- assign seo_h1_us = 'Herbal Wellness Supplements You Can Trust' -%}
+{%- assign seo_h1_pk = "Boreal Vita Herbal Wellness for Pakistan" -%}
+{%- assign seo_h1 = seo_h1_ca -%}
+{%- if bv_region == 'US' -%}
+  {%- assign seo_h1 = seo_h1_us -%}
+{%- elsif bv_region == 'PK' -%}
+  {%- assign seo_h1 = seo_h1_pk -%}
+{%- endif -%}
+
+<section
+  class="hero-banner{% unless show_promos %} hero-banner--no-promos{% endunless %}{% if show_bottom_strip %} hero-banner--has-category-strip{% endif %}"
+  style="--hero-tab-count: {{ hero_tab_count }};"
+  data-hero-slider="{{ section.id }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-interval="{{ section.settings.autoplay_interval | times: 1000 }}"
+  data-mobile-fit="{{ mobile_image_fit_mode }}"
+>
+  <div class="hero-banner__atmosphere" aria-hidden="true">
+    <span class="hero-banner__glow hero-banner__glow--gold"></span>
+    <span class="hero-banner__glow hero-banner__glow--teal"></span>
+  </div>
+
+  <div class="hero-banner__inner">
+    <div class="hero-banner__copy">
+      {% if hero_eyebrow != blank %}
+        <p class="hero-banner__eyebrow"><span class="hero-banner__eyebrow-text">{{ hero_eyebrow }}</span></p>
+      {% endif %}
+
+      {% if request.page_type == 'index' and seo_h1 != blank %}
+        <h1
+          class="hero-banner__seo-headline"
+          data-region-text
+          data-region-ca="{{ seo_h1_ca | escape }}"
+          data-region-us="{{ seo_h1_us | escape }}"
+          data-region-pk="{{ seo_h1_pk | escape }}"
+        >{{ seo_h1 }}</h1>
+      {% elsif seo_h1 != blank %}
+        <h2 class="hero-banner__seo-headline">{{ seo_h1 }}</h2>
+      {% endif %}
+
+      {% if hero_lead != blank %}
+        <p class="hero-banner__lead">{{ hero_lead }}</p>
+      {% endif %}
+
+      {% if hero_cta_label != blank %}
+        <a class="hero-banner__cta" href="{{ hero_cta_link }}">{{ hero_cta_label }}</a>
+      {% endif %}
+
+      <div class="hero-banner__proof-list" role="group" aria-label="Boreal Vita proof points">
+        {% if hero_proof_1 != blank %}<span>{{ hero_proof_1 }}</span>{% endif %}
+        {% if hero_proof_2 != blank %}<span>{{ hero_proof_2 }}</span>{% endif %}
+        {% if hero_proof_3 != blank %}<span>{{ hero_proof_3 }}</span>{% endif %}
+      </div>
+    </div>
+
+    <div class="hero-banner__stage">
+      <div class="hero-banner__slider">
+        <div class="hero-banner__viewport">
+          <div class="hero-banner__track" data-hero-track>
+            {% for block in section.blocks %}
+              {% assign slide_image = block.settings.image | default: block.settings.mobile_image %}
+              {% assign slide_link = block.settings.link | default: routes.all_products_collection_url %}
+              {% assign slide_title = block.settings.nav_title | default: slide_image.alt %}
+              {% if slide_title == blank %}
+                {% assign slide_title = 'Featured category ' | append: forloop.index %}
+              {% endif %}
+              <div class="hero-banner__slide{% if forloop.first %} is-active{% endif %}" data-hero-slide {{ block.shopify_attributes }}>
+                <div class="hero-banner__media">
+                  <a class="hero-banner__slide-link" href="{{ slide_link }}" aria-label="{{ slide_title | escape }}">
+                    {% if slide_image != blank %}
+                      <picture class="hero-banner__picture">
+                        {% if block.settings.mobile_image != blank and block.settings.image != blank %}
+                          <source
+                            media="(max-width: 767px)"
+                            srcset="
+                              {{ block.settings.mobile_image | image_url: width: 420 }} 420w,
+                              {{ block.settings.mobile_image | image_url: width: 640 }} 640w,
+                              {{ block.settings.mobile_image | image_url: width: 900 }} 900w,
+                              {{ block.settings.mobile_image | image_url: width: 1200 }} 1200w
+                            "
+                            sizes="100vw"
+                          >
+                        {% endif %}
+                        <img
+                          class="hero-banner__image"
+                          src="{{ slide_image | image_url: width: 1600 }}"
+                          srcset="
+                            {{ slide_image | image_url: width: 720 }} 720w,
+                            {{ slide_image | image_url: width: 1100 }} 1100w,
+                            {{ slide_image | image_url: width: 1400 }} 1400w,
+                            {{ slide_image | image_url: width: 1600 }} 1600w
+                          "
+                          sizes="(min-width: 1180px) 52vw, (min-width: 768px) 90vw, 100vw"
+                          alt="{{ slide_image.alt | default: slide_title | escape }}"
+                          width="{{ slide_image.width }}"
+                          height="{{ slide_image.height }}"
+                          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                          fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
+                          decoding="async"
+                        >
+                      </picture>
+                    {% else %}
+                      <img
+                        class="hero-banner__image hero-banner__image--fallback"
+                        src="{{ 'bv-hero-northern-apothecary.jpg' | asset_url }}"
+                        alt="Boreal Vita supplement bottles with botanical apothecary ingredients"
+                        width="1586"
+                        height="992"
+                        loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                        fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}"
+                        decoding="async"
+                      >
+                    {% endif %}
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        {% if section.blocks.size > 1 %}
+          <button class="hero-banner__nav hero-banner__nav--prev" type="button" aria-label="Previous slide" data-hero-prev>
+            <svg width="28" height="44" viewBox="0 0 28 44" fill="none" aria-hidden="true">
+              <path d="M22 4L6 22L22 40" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+          <button class="hero-banner__nav hero-banner__nav--next" type="button" aria-label="Next slide" data-hero-next>
+            <svg width="28" height="44" viewBox="0 0 28 44" fill="none" aria-hidden="true">
+              <path d="M6 4L22 22L6 40" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+        {% endif %}
+
+        <div class="hero-banner__fact-card" role="group" aria-label="Product clarity promise">
+          <span>Product Facts</span>
+          <strong>Clear dosage. Large labels.</strong>
+          <small>Built for calm decisions, not tiny print.</small>
+        </div>
+
+        {% if show_bottom_strip %}
+          <div class="hero-banner__category-strip" aria-label="Hero slide categories">
+            <div class="hero-banner__category-shell">
+              {% for block in section.blocks %}
+                {% assign nav_image = block.settings.image | default: block.settings.mobile_image %}
+                {% assign nav_title = block.settings.nav_title | default: nav_image.alt %}
+                {% assign nav_action = block.settings.nav_caption | default: 'Shop Now' %}
+                {% if nav_title == blank %}
+                  {% assign nav_title = 'Featured category ' | append: forloop.index %}
+                {% endif %}
+                <button
+                  class="hero-banner__category-card{% if forloop.first %} is-active{% endif %}"
+                  type="button"
+                  data-hero-tab
+                  data-hero-index="{{ forloop.index0 }}"
+                  aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}"
+                >
+                  <span class="hero-banner__category-title">{{ nav_title }}</span>
+                  <span class="hero-banner__category-action">{{ nav_action }}</span>
+                </button>
+              {% endfor %}
+
+              {% if show_view_all_button %}
+                <button
+                  class="hero-banner__view-all"
+                  type="button"
+                  data-hero-view-all
+                  aria-haspopup="dialog"
+                  aria-controls="HeroBannerOverlay-{{ section.id }}"
+                  aria-expanded="false"
+                >
+                  <span>{{ section.settings.view_all_label }}</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+                    <path d="M8 5l8 7-8 7"></path>
+                  </svg>
+                </button>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if show_promos %}
+      <div class="hero-banner__promos" aria-label="Featured promotions">
+        {% if promo_top_image != blank %}
+          <a class="hero-banner__promo" href="{{ promo_top_link | default: routes.all_products_collection_url }}">
+            <img
+              class="hero-banner__promo-image"
+              src="{{ promo_top_image | image_url: width: 900 }}"
+              srcset="
+                {{ promo_top_image | image_url: width: 420 }} 420w,
+                {{ promo_top_image | image_url: width: 640 }} 640w,
+                {{ promo_top_image | image_url: width: 900 }} 900w
+              "
+              sizes="(min-width: 990px) 28vw, 50vw"
+              alt="{{ promo_top_image.alt | default: shop.name | escape }}"
+              width="{{ promo_top_image.width }}"
+              height="{{ promo_top_image.height }}"
+              loading="eager"
+            >
+          </a>
+        {% endif %}
+
+        {% if promo_bottom_image != blank %}
+          <a class="hero-banner__promo" href="{{ promo_bottom_link | default: routes.all_products_collection_url }}">
+            <img
+              class="hero-banner__promo-image"
+              src="{{ promo_bottom_image | image_url: width: 900 }}"
+              srcset="
+                {{ promo_bottom_image | image_url: width: 420 }} 420w,
+                {{ promo_bottom_image | image_url: width: 640 }} 640w,
+                {{ promo_bottom_image | image_url: width: 900 }} 900w
+              "
+              sizes="(min-width: 990px) 28vw, 50vw"
+              alt="{{ promo_bottom_image.alt | default: shop.name | escape }}"
+              width="{{ promo_bottom_image.width }}"
+              height="{{ promo_bottom_image.height }}"
+              loading="lazy"
+            >
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if show_view_all_button %}
+    <div class="hero-banner__overlay" id="HeroBannerOverlay-{{ section.id }}" hidden data-hero-overlay>
+      <button class="hero-banner__overlay-backdrop" type="button" data-hero-close aria-label="Close all banners"></button>
+      <div class="hero-banner__overlay-panel" role="dialog" aria-modal="true" aria-labelledby="HeroBannerOverlayTitle-{{ section.id }}">
+        <div class="hero-banner__overlay-header">
+          <div class="hero-banner__overlay-copy">
+            <p class="hero-banner__overlay-eyebrow">Featured categories</p>
+            <p class="hero-banner__overlay-title" id="HeroBannerOverlayTitle-{{ section.id }}">{{ view_all_heading }}</p>
+          </div>
+          <button class="hero-banner__overlay-close" type="button" data-hero-close aria-label="Close all banners">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" aria-hidden="true">
+              <path d="M18 6L6 18"></path>
+              <path d="M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="hero-banner__overlay-grid">
+          {% for block in section.blocks %}
+            {% assign grid_image = block.settings.image | default: block.settings.mobile_image %}
+            {% assign grid_link = block.settings.link | default: routes.all_products_collection_url %}
+            {% assign grid_title = block.settings.grid_title | default: block.settings.nav_title | default: grid_image.alt %}
+            {% assign grid_text = block.settings.grid_text | default: block.settings.nav_caption %}
+            {% if grid_title == blank %}
+              {% assign grid_title = 'Featured category ' | append: forloop.index %}
+            {% endif %}
+            <a class="hero-banner__overlay-card" href="{{ grid_link }}" aria-label="{{ grid_title | escape }}">
+              {% if grid_image != blank %}
+                <img
+                  class="hero-banner__overlay-image"
+                  src="{{ grid_image | image_url: width: 1600 }}"
+                  srcset="
+                    {{ grid_image | image_url: width: 720 }} 720w,
+                    {{ grid_image | image_url: width: 1100 }} 1100w,
+                    {{ grid_image | image_url: width: 1600 }} 1600w
+                  "
+                  sizes="(min-width: 990px) 900px, 100vw"
+                  alt="{{ grid_image.alt | default: grid_title | escape }}"
+                  width="{{ grid_image.width }}"
+                  height="{{ grid_image.height }}"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="hero-banner__overlay-placeholder"></div>
+              {% endif %}
+              <span class="hero-banner__overlay-card-copy">
+                <span class="hero-banner__overlay-card-title">{{ grid_title }}</span>
+                {% if grid_text != blank %}
+                  <span class="hero-banner__overlay-card-text">{{ grid_text }}</span>
+                {% endif %}
+              </span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+<style>
+  .hero-banner {
+    --hero-desktop-ratio: 2.24 / 1;
+    --hero-mobile-ratio: {{ mobile_ratio }};
+    --hero-desktop-height: clamp(250px, calc(28vw - 1in), 380px);
+    position: relative;
+    width: 100%;
+    background: #fff;
+  }
+
+  .hero-banner--has-category-strip {
+    padding-bottom: clamp(1.35rem, 3.2vw, 2.1rem);
+  }
+
+  .hero-banner__seo-headline {
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: clamp(1.15rem, 2.4vw, 2.4rem) var(--slideshow-edge-gutter, clamp(0.75rem, 1.45vw, 1.75rem)) 0;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(2.2rem, 4vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .hero-banner__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 2.25fr) minmax(320px, 0.95fr);
+    align-items: stretch;
+    gap: clamp(1rem, 1.7vw, 1.5rem);
+    width: 100%;
+    max-width: 1920px;
+    margin-inline: auto;
+    padding: clamp(0.9rem, 1.6vw, 1.75rem) var(--slideshow-edge-gutter, clamp(0.75rem, 1.45vw, 1.75rem));
+  }
+
+  .hero-banner--no-promos {
+    --hero-desktop-ratio: 16 / 5;
+    --hero-desktop-height: clamp(235px, calc(31vw - 1in), 420px);
+  }
+
+  .hero-banner--no-promos .hero-banner__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-banner__slider {
+    position: relative;
+    min-width: 0;
+    isolation: isolate;
+  }
+
+  .hero-banner--has-category-strip .hero-banner__slider {
+    padding-bottom: clamp(2.35rem, 4.1vw, 3.05rem);
+  }
+
+  .hero-banner__viewport {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--color-muted);
+    transition: box-shadow 0.24s ease, transform 0.24s ease;
+  }
+
+  .hero-banner__slider:hover .hero-banner__viewport {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.22);
+  }
+
+  .hero-banner__track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.6s ease;
+    will-change: transform;
+  }
+
+  .hero-banner__slide {
+    min-width: 100%;
+    position: relative;
+  }
+
+  .hero-banner__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--hero-desktop-ratio);
+    height: var(--hero-desktop-height);
+  }
+
+  .hero-banner__slide-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-banner__picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-banner__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero-banner__image--placeholder,
+  .hero-banner__overlay-placeholder {
+    background: var(--brand-yellow-gradient, linear-gradient(135deg, #FAD054 0%, #FFF8E7 100%));
+  }
+
+  .hero-banner__controls {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(0.7rem, 1.4vw, 1rem);
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.36rem;
+    padding: 0.22rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: 0 8px 22px rgba(31, 23, 38, 0.16);
+    transform: translateX(-50%);
+  }
+
+  .hero-banner--has-category-strip .hero-banner__controls {
+    bottom: clamp(3rem, 6vw, 4rem);
+  }
+
+  .hero-banner__control,
+  .hero-banner__dot,
+  .hero-banner__category-card,
+  .hero-banner__view-all,
+  .hero-banner__overlay-backdrop,
+  .hero-banner__overlay-close {
+    appearance: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  .hero-banner__control {
+    display: inline-grid;
+    place-items: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    padding: 0;
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--brand-primary, #0A282C);
+    box-shadow: 0 0 0 1px rgba(10, 40, 44, 0.14) inset;
+    transition: background-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  }
+
+  .hero-banner__control:hover,
+  .hero-banner__control:focus-visible {
+    background: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  .hero-banner__dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    padding: 0 0.08rem;
+  }
+
+  .hero-banner__dot {
+    width: 0.42rem;
+    height: 0.42rem;
+    padding: 0;
+    border-radius: 999px;
+    background: rgba(10, 40, 44, 0.28);
+    transition: background-color 0.18s ease, transform 0.18s ease, width 0.18s ease;
+  }
+
+  .hero-banner__dot.is-active {
+    width: 0.92rem;
+    background: var(--brand-accent, #FAD054);
+  }
+
+  .hero-banner__dot:hover,
+  .hero-banner__dot:focus-visible {
+    background: var(--brand-primary, #0A282C);
+    outline: none;
+    transform: scale(1.12);
+  }
+
+  .hero-banner__category-strip {
+    position: absolute;
+    right: clamp(0.7rem, 1.5vw, 1.05rem);
+    bottom: 0;
+    left: clamp(0.7rem, 1.5vw, 1.05rem);
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    transform: translateY(18%);
+  }
+
+  .hero-banner__category-shell {
+    display: grid;
+    grid-template-columns: repeat(var(--hero-tab-count), minmax(0, 1fr)) auto;
+    align-items: stretch;
+    width: min(100%, 920px);
+    padding: 0.22rem;
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(10, 40, 44, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 14px 28px rgba(10, 40, 44, 0.12);
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+  }
+
+  .hero-banner__category-card,
+  .hero-banner__view-all {
+    position: relative;
+    min-width: 0;
+    background: transparent;
+    font: inherit;
+  }
+
+  .hero-banner__category-card {
+    display: grid;
+    justify-items: center;
+    gap: 0.16rem;
+    padding: 0.58rem 0.78rem 0.54rem;
+    text-align: center;
+    color: var(--brand-text, #22343A);
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .hero-banner__category-card + .hero-banner__category-card,
+  .hero-banner__view-all {
+    box-shadow: inset 1px 0 0 rgba(10, 40, 44, 0.08);
+  }
+
+  .hero-banner__category-card::after {
+    display: none;
+  }
+
+  .hero-banner__category-card:hover,
+  .hero-banner__category-card:focus-visible {
+    background: rgba(10, 40, 44, 0.028);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  .hero-banner__category-card.is-active {
+    margin: 0.08rem;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(10, 40, 44, 0.14);
+  }
+
+  .hero-banner__category-title {
+    display: block;
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(0.82rem, 0.88vw, 0.97rem);
+    font-weight: 600;
+    line-height: 1.16;
+    color: inherit;
+  }
+
+  .hero-banner__category-action {
+    display: block;
+    font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    font-size: clamp(0.8rem, 0.86vw, 0.94rem);
+    font-weight: 600;
+    line-height: 1.16;
+    color: var(--brand-text-soft, #3F595E);
+    transition: color 180ms ease;
+  }
+
+  .hero-banner__category-card:hover .hero-banner__category-action,
+  .hero-banner__category-card:focus-visible .hero-banner__category-action,
+  .hero-banner__category-card.is-active .hero-banner__category-action {
+    color: var(--brand-accent-dark, #C89F27);
+  }
+
+  .hero-banner__view-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.72rem 1rem;
+    color: #0E5EB5;
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: 0.96rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  }
+
+  .hero-banner__view-all:hover,
+  .hero-banner__view-all:focus-visible {
+    background: rgba(14, 94, 181, 0.06);
+    color: #0A4B92;
+    outline: none;
+    transform: translateX(2px);
+  }
+
+  .hero-banner__promos {
+    align-self: stretch;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1rem, 1.7vw, 1.5rem);
+    min-width: 0;
+  }
+
+  .hero-banner__promo {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--color-muted);
+    min-height: 0;
+    transition: box-shadow 0.24s ease, transform 0.24s ease;
+  }
+
+  .hero-banner__promo-image,
+  .hero-banner__promo-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-banner__promo-image {
+    object-fit: cover;
+    transition: transform 0.24s ease;
+  }
+
+  .hero-banner__promo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.22);
+  }
+
+  .hero-banner__promo:hover .hero-banner__promo-image {
+    transform: scale(1.025);
+  }
+
+  .hero-banner__promo-placeholder {
+    background: var(--brand-yellow-gradient, linear-gradient(135deg, #FAD054 0%, #FFF8E7 100%));
+  }
+
+  .hero-banner__overlay[hidden] {
+    display: none !important;
+  }
+
+  .hero-banner__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: grid;
+    place-items: center;
+    padding: clamp(1rem, 2vw, 1.75rem);
+    opacity: 0;
+    transition: opacity 180ms ease;
+  }
+
+  .hero-banner__overlay.is-open {
+    opacity: 1;
+  }
+
+  .hero-banner__overlay-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 12, 20, 0.52);
+    backdrop-filter: blur(4px);
+  }
+
+  .hero-banner__overlay-panel {
+    position: relative;
+    width: min(100%, 980px);
+    max-height: min(86vh, 920px);
+    overflow: auto;
+    border-radius: 28px;
+    background: #ffffff;
+    box-shadow: 0 34px 72px rgba(7, 12, 20, 0.34);
+    padding: clamp(1rem, 2vw, 1.45rem);
+    transform: translateY(20px) scale(0.985);
+    opacity: 0;
+    transition: transform 220ms ease, opacity 220ms ease;
+  }
+
+  .hero-banner__overlay.is-open .hero-banner__overlay-panel {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+
+  .hero-banner__overlay-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-banner__overlay-eyebrow {
+    margin: 0 0 0.22rem;
+    font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-primary-light, #2E5B61);
+  }
+
+  .hero-banner__overlay-title {
+    margin: 0;
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--brand-primary, #0A282C);
+  }
+
+  .hero-banner__overlay-close {
+    display: inline-grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 999px;
+    background: rgba(10, 40, 44, 0.06);
+    color: var(--brand-primary, #0A282C);
+    transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  }
+
+  .hero-banner__overlay-close:hover,
+  .hero-banner__overlay-close:focus-visible {
+    background: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  .hero-banner__overlay-grid {
+    display: grid;
+    gap: 0.95rem;
+  }
+
+  .hero-banner__overlay-card {
+    position: relative;
+    display: block;
+    min-height: clamp(132px, 16vw, 176px);
+    border-radius: 22px;
+    overflow: hidden;
+    color: #ffffff;
+    text-decoration: none;
+    background: #d9e5e7;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  .hero-banner__overlay-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(10, 40, 44, 0.62) 0%, rgba(10, 40, 44, 0.28) 36%, rgba(10, 40, 44, 0.06) 100%);
+  }
+
+  .hero-banner__overlay-image,
+  .hero-banner__overlay-placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-banner__overlay-image {
+    object-fit: cover;
+  }
+
+  .hero-banner__overlay-card-copy {
+    position: absolute;
+    z-index: 1;
+    left: clamp(1rem, 2vw, 1.6rem);
+    bottom: clamp(0.95rem, 1.8vw, 1.3rem);
+    display: grid;
+    gap: 0.25rem;
+    max-width: min(58%, 28rem);
+  }
+
+  .hero-banner__overlay-card-title {
+    display: block;
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.15rem, 2vw, 1.85rem);
+    font-weight: 700;
+    line-height: 1.05;
+  }
+
+  .hero-banner__overlay-card-text {
+    display: block;
+    font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .hero-banner__overlay-card:hover,
+  .hero-banner__overlay-card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 36px rgba(10, 40, 44, 0.18);
+    outline: none;
+  }
+
+  body.hero-banner-overlay-open {
+    overflow: hidden;
+  }
+
+  @media (max-width: 989px) {
+    .hero-banner__inner {
+      grid-template-columns: 1fr;
+      padding: 0.75rem var(--slideshow-edge-gutter, 0.75rem);
+    }
+
+    .hero-banner__seo-headline {
+      padding: 1rem var(--slideshow-edge-gutter, 0.75rem) 0;
+      font-size: clamp(1.85rem, 8vw, 3rem);
+    }
+
+    .hero-banner--has-category-strip {
+      padding-bottom: 0;
+    }
+
+    .hero-banner--has-category-strip .hero-banner__slider {
+      padding-bottom: 0;
+    }
+
+    .hero-banner__media {
+      height: auto;
+    }
+
+    .hero-banner__promos {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      height: auto;
+      gap: 0.75rem;
+    }
+
+    .hero-banner__promo {
+      aspect-ratio: 2.12 / 1;
+    }
+
+    .hero-banner__controls,
+    .hero-banner--has-category-strip .hero-banner__controls {
+      bottom: 0.7rem;
+    }
+
+    .hero-banner__category-strip {
+      position: relative;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      transform: none;
+      margin-top: 0.72rem;
+    }
+
+    .hero-banner__category-shell {
+      display: flex;
+      gap: 0.45rem;
+      width: 100%;
+      padding: 0.4rem;
+      border-radius: 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .hero-banner__category-shell::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-banner__category-card,
+    .hero-banner__view-all {
+      flex: 0 0 auto;
+      border-radius: 15px;
+      box-shadow: none;
+    }
+
+    .hero-banner__category-card {
+      min-width: 156px;
+      padding: 0.7rem 0.82rem;
+      border: 1px solid rgba(10, 40, 44, 0.08);
+      background: #ffffff;
+    }
+
+    .hero-banner__category-card.is-active {
+      margin: 0;
+    }
+
+    .hero-banner__view-all {
+      min-width: max-content;
+      padding: 0.72rem 0.95rem;
+      border: 1px solid rgba(10, 40, 44, 0.08);
+      background: #ffffff;
+    }
+
+    .hero-banner[data-mobile-fit="ratio"] .hero-banner__media {
+      aspect-ratio: var(--hero-mobile-ratio);
+    }
+
+    .hero-banner[data-mobile-fit="auto"] .hero-banner__media {
+      aspect-ratio: auto;
+      height: auto;
+    }
+
+    .hero-banner[data-mobile-fit="auto"] .hero-banner__slide-link,
+    .hero-banner[data-mobile-fit="auto"] .hero-banner__picture {
+      height: auto;
+    }
+
+    .hero-banner[data-mobile-fit="auto"] .hero-banner__image {
+      height: auto;
+      object-fit: contain;
+    }
+
+    .hero-banner__overlay {
+      padding: 0.8rem;
+    }
+
+    .hero-banner__overlay-panel {
+      border-radius: 22px;
+      max-height: 90vh;
+    }
+
+    .hero-banner__overlay-card {
+      min-height: 146px;
+    }
+
+    .hero-banner__overlay-card-copy {
+      max-width: 72%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero-banner__promos {
+      aspect-ratio: auto;
+    }
+
+    .hero-banner__promo {
+      aspect-ratio: 1.5 / 1;
+    }
+
+    .hero-banner__overlay-header {
+      align-items: center;
+    }
+
+    .hero-banner__overlay-card-copy {
+      max-width: 82%;
+    }
+
+    .hero-banner__overlay-card-title {
+      font-size: 1.08rem;
+    }
+
+    .hero-banner__overlay-card-text {
+      font-size: 0.86rem;
+    }
+  }
+
+  @media (max-width: 1180px) {
+    .hero-banner {
+      --hero-desktop-height: clamp(240px, 36vw, 330px);
+    }
+
+    .hero-banner__inner {
+      grid-template-columns: 1fr;
+      gap: 0.95rem;
+    }
+
+    .hero-banner__promos {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: auto;
+      gap: 0.85rem;
+    }
+
+    .hero-banner--has-category-strip {
+      padding-bottom: 0;
+    }
+
+    .hero-banner--has-category-strip .hero-banner__slider {
+      padding-bottom: 0;
+    }
+
+    .hero-banner__category-strip {
+      position: relative;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      transform: none;
+      margin-top: 0.85rem;
+    }
+
+    .hero-banner__category-shell {
+      display: flex;
+      gap: 0.45rem;
+      width: 100%;
+      padding: 0.4rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .hero-banner__category-shell::-webkit-scrollbar {
+      display: none;
+    }
+
+    .hero-banner__category-card,
+    .hero-banner__view-all {
+      flex: 0 0 auto;
+      box-shadow: none;
+    }
+
+    .hero-banner__category-card {
+      min-width: 150px;
+    }
+  }
+
+  .hero-banner {
+    --hero-desktop-ratio: 1.18 / 1;
+    --hero-desktop-height: clamp(420px, 45vw, 650px);
+    overflow: hidden;
+    padding: clamp(2rem, 4vw, 4.25rem) 0 clamp(2rem, 4vw, 4.5rem);
+    background:
+      radial-gradient(circle at 82% 16%, rgba(245, 217, 136, 0.28), transparent 18rem),
+      radial-gradient(circle at 8% 20%, rgba(34, 129, 145, 0.28), transparent 22rem),
+      var(--bv-grad-heading);
+    color: var(--bv-white);
+    isolation: isolate;
+  }
+
+  .hero-banner::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    z-index: -1;
+    height: clamp(5rem, 12vw, 10rem);
+    background: linear-gradient(180deg, transparent, rgba(10, 39, 42, 0.5));
+    pointer-events: none;
+  }
+
+  .hero-banner__atmosphere,
+  .hero-banner__glow {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .hero-banner__atmosphere {
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .hero-banner__atmosphere::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.18;
+    background-image:
+      linear-gradient(115deg, transparent 0 46%, rgba(255, 255, 255, 0.24) 46% 46.35%, transparent 46.35%),
+      linear-gradient(105deg, transparent 0 60%, rgba(245, 217, 136, 0.18) 60% 60.28%, transparent 60.28%);
+  }
+
+  .hero-banner__glow {
+    display: block;
+    border-radius: 999px;
+    filter: blur(8px);
+  }
+
+  .hero-banner__glow--gold {
+    top: clamp(1rem, 4vw, 4rem);
+    right: clamp(1rem, 7vw, 8rem);
+    width: clamp(10rem, 24vw, 23rem);
+    aspect-ratio: 1;
+    background: rgba(233, 165, 38, 0.22);
+  }
+
+  .hero-banner__glow--teal {
+    right: clamp(10rem, 28vw, 36rem);
+    bottom: -8rem;
+    width: clamp(14rem, 32vw, 30rem);
+    aspect-ratio: 1;
+    background: rgba(34, 129, 145, 0.26);
+  }
+
+  .hero-banner__inner,
+  .hero-banner.hero-banner--no-promos .hero-banner__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(19rem, 0.86fr) minmax(0, 1.14fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 4.5rem);
+    width: min(1220px, calc(100% - 2rem));
+    max-width: none;
+    padding: 0;
+  }
+
+  .hero-banner__copy {
+    display: grid;
+    align-content: center;
+    justify-items: start;
+    gap: clamp(1rem, 2vw, 1.35rem);
+    min-width: 0;
+  }
+
+  .hero-banner__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0;
+    color: var(--bv-gold-200);
+    font-family: var(--font-heading);
+    font-size: var(--fs-small);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  .hero-banner__eyebrow::before {
+    content: "";
+    display: inline-block;
+    flex: 0 0 auto;
+    width: clamp(2rem, 4vw, 3.75rem);
+    height: 2px;
+    border-radius: var(--radius-pill);
+    background: var(--bv-grad-gold);
+  }
+
+  .hero-banner__eyebrow-text {
+    min-width: 0;
+  }
+
+  .hero-banner__seo-headline {
+    max-width: 9.6ch;
+    margin: 0;
+    padding: 0;
+    color: var(--bv-white);
+    font-family: var(--font-display);
+    font-size: clamp(2.85rem, 6vw, 6.4rem);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .hero-banner__lead {
+    max-width: 42rem;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: var(--font-body);
+    font-size: var(--fs-lead);
+    font-weight: 600;
+    line-height: var(--lh-body);
+    text-wrap: pretty;
+  }
+
+  .hero-banner__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: min(100%, 16rem);
+    min-height: 56px;
+    padding: 0.85rem 1.45rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-pill);
+    background: var(--bv-white);
+    color: var(--bv-teal-900);
+    font-family: var(--font-heading);
+    font-size: clamp(1rem, 1.3vw, 1.12rem);
+    font-weight: 800;
+    line-height: 1.15;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 1rem 2.25rem rgba(10, 39, 42, 0.28);
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  }
+
+  .hero-banner__cta:hover,
+  .hero-banner__cta:focus-visible {
+    background: var(--bv-cream);
+    color: var(--bv-teal-900);
+    transform: translateY(-2px);
+    box-shadow: 0 1.25rem 2.5rem rgba(10, 39, 42, 0.34);
+  }
+
+  .hero-banner__proof-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 0.1rem;
+  }
+
+  .hero-banner__proof-list span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.55rem 0.82rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--bv-white);
+    font-size: var(--fs-small);
+    font-weight: 800;
+    line-height: 1.2;
+    backdrop-filter: blur(10px);
+  }
+
+  .hero-banner__stage {
+    position: relative;
+    min-width: 0;
+  }
+
+  .hero-banner__slider {
+    min-width: 0;
+  }
+
+  .hero-banner--has-category-strip .hero-banner__slider {
+    padding-bottom: clamp(4.4rem, 7vw, 5.75rem);
+  }
+
+  .hero-banner__viewport {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: clamp(1rem, 2vw, 1.5rem);
+    background:
+      radial-gradient(circle at 28% 20%, rgba(245, 217, 136, 0.22), transparent 13rem),
+      var(--bv-teal-700);
+    box-shadow:
+      0 2rem 4.5rem rgba(10, 39, 42, 0.42),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .hero-banner__slider:hover .hero-banner__viewport {
+    transform: none;
+    box-shadow:
+      0 2rem 4.5rem rgba(10, 39, 42, 0.42),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+
+  .hero-banner__media {
+    min-height: var(--hero-desktop-height);
+    height: auto;
+    aspect-ratio: var(--hero-desktop-ratio);
+  }
+
+  .hero-banner__slide-link {
+    position: relative;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
+  .hero-banner__slide-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(10, 39, 42, 0.26), transparent 42%),
+      radial-gradient(circle at 78% 18%, rgba(245, 217, 136, 0.2), transparent 14rem);
+    pointer-events: none;
+  }
+
+  .hero-banner__image {
+    object-fit: cover;
+    transform: scale(1.01);
+  }
+
+  .hero-banner__image--placeholder,
+  .hero-banner__overlay-placeholder {
+    background:
+      radial-gradient(circle at 68% 20%, rgba(245, 217, 136, 0.26), transparent 12rem),
+      var(--bv-grad-main);
+  }
+
+  .hero-banner__fact-card {
+    position: absolute;
+    right: clamp(0.8rem, 2vw, 1.25rem);
+    bottom: clamp(5.3rem, 8vw, 6.9rem);
+    z-index: 5;
+    display: grid;
+    gap: 0.18rem;
+    width: min(18.5rem, calc(100% - 2rem));
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--bv-teal-900);
+    box-shadow: 0 1rem 2.2rem rgba(10, 39, 42, 0.2);
+    backdrop-filter: blur(14px);
+  }
+
+  .hero-banner__fact-card span {
+    color: var(--bv-brown-900);
+    font-family: var(--font-heading);
+    font-size: var(--fs-small);
+    font-weight: 900;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .hero-banner__fact-card strong {
+    color: var(--bv-teal-900);
+    font-family: var(--font-heading);
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    line-height: 1.15;
+  }
+
+  .hero-banner__fact-card small {
+    color: var(--bv-ink);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .hero-banner__category-strip {
+    right: clamp(0.6rem, 1.4vw, 1rem);
+    left: clamp(0.6rem, 1.4vw, 1rem);
+    transform: none;
+  }
+
+  .hero-banner__category-shell {
+    width: min(100%, 840px);
+    padding: 0.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 1.25rem 2.75rem rgba(10, 39, 42, 0.2);
+  }
+
+  .hero-banner__category-card {
+    min-height: 56px;
+    border-radius: calc(var(--radius-lg) - 0.25rem);
+    color: var(--bv-teal-900);
+  }
+
+  .hero-banner__category-card:hover,
+  .hero-banner__category-card:focus-visible {
+    background: var(--bv-teal-tint);
+    transform: none;
+  }
+
+  .hero-banner__category-card.is-active {
+    background: var(--bv-teal-900);
+    color: var(--bv-white);
+    box-shadow: none;
+  }
+
+  .hero-banner__category-action {
+    color: var(--bv-brown-900);
+  }
+
+  .hero-banner__category-card.is-active .hero-banner__category-action {
+    color: var(--bv-gold-200);
+  }
+
+  .hero-banner__view-all {
+    min-height: 56px;
+    color: var(--bv-teal-800);
+  }
+
+  .hero-banner__view-all:hover,
+  .hero-banner__view-all:focus-visible {
+    background: var(--bv-teal-tint);
+    color: var(--bv-teal-900);
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-banner__copy > *,
+    .hero-banner__stage {
+      animation: bvHeroArrive 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    }
+
+    .hero-banner__copy > :nth-child(2) {
+      animation-delay: 80ms;
+    }
+
+    .hero-banner__copy > :nth-child(3) {
+      animation-delay: 150ms;
+    }
+
+    .hero-banner__copy > :nth-child(4) {
+      animation-delay: 220ms;
+    }
+
+    .hero-banner__copy > :nth-child(5) {
+      animation-delay: 280ms;
+    }
+
+    .hero-banner__stage {
+      animation-delay: 180ms;
+    }
+
+    .hero-banner__glow--gold {
+      animation: bvHeroGlow 6s ease-in-out infinite alternate;
+    }
+  }
+
+  @keyframes bvHeroArrive {
+    from {
+      opacity: 1;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes bvHeroGlow {
+    from {
+      transform: translate3d(0, 0, 0) scale(0.96);
+      opacity: 0.7;
+    }
+    to {
+      transform: translate3d(-1rem, 0.8rem, 0) scale(1.04);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 1180px) {
+    .hero-banner {
+      --hero-desktop-ratio: 16 / 10;
+      --hero-desktop-height: clamp(350px, 56vw, 520px);
+      padding-top: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .hero-banner__inner,
+    .hero-banner.hero-banner--no-promos .hero-banner__inner {
+      grid-template-columns: 1fr;
+      gap: clamp(1.5rem, 4vw, 2.25rem);
+      width: min(960px, calc(100% - 1.5rem));
+    }
+
+    .hero-banner__copy {
+      max-width: 46rem;
+    }
+
+    .hero-banner__seo-headline {
+      max-width: 12ch;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .hero-banner {
+      --hero-desktop-ratio: var(--hero-mobile-ratio);
+      --hero-desktop-height: auto;
+      padding: 1.35rem 0 1.75rem;
+    }
+
+    .hero-banner__inner,
+    .hero-banner.hero-banner--no-promos .hero-banner__inner {
+      width: min(44rem, calc(100% - 2rem));
+    }
+
+    .hero-banner__copy {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .hero-banner__seo-headline {
+      max-width: 11ch;
+      font-size: clamp(2.45rem, 13vw, 4rem);
+    }
+
+    .hero-banner__eyebrow {
+      width: 100%;
+      font-size: clamp(0.72rem, 3.1vw, 0.82rem);
+      line-height: 1.2;
+    }
+
+    .hero-banner__eyebrow::before {
+      width: 2rem;
+    }
+
+    .hero-banner__lead {
+      width: min(28ch, 100%);
+      max-width: 100%;
+      font-size: clamp(1.08rem, 4.5vw, 1.22rem);
+    }
+
+    .hero-banner__cta {
+      width: 100%;
+    }
+
+    .hero-banner__proof-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      width: 100%;
+    }
+
+    .hero-banner__proof-list span {
+      justify-content: center;
+    }
+
+    .hero-banner--has-category-strip .hero-banner__slider {
+      padding-bottom: 0;
+    }
+
+    .hero-banner__media,
+    .hero-banner[data-mobile-fit="auto"] .hero-banner__media,
+    .hero-banner[data-mobile-fit="ratio"] .hero-banner__media {
+      aspect-ratio: var(--hero-mobile-ratio);
+      min-height: 0;
+      height: auto;
+    }
+
+    .hero-banner[data-mobile-fit="auto"] .hero-banner__slide-link,
+    .hero-banner[data-mobile-fit="auto"] .hero-banner__picture {
+      height: 100%;
+    }
+
+    .hero-banner__fact-card {
+      position: relative;
+      right: auto;
+      bottom: auto;
+      width: 100%;
+      margin-top: 0.75rem;
+      background: var(--bv-white);
+    }
+
+    .hero-banner__category-strip {
+      margin-top: 0.75rem;
+    }
+
+    .hero-banner__category-shell {
+      background: rgba(255, 255, 255, 0.98);
+      scroll-snap-type: x proximity;
+    }
+
+    .hero-banner__category-card,
+	    .hero-banner__view-all {
+	      min-width: min(78vw, 16rem);
+	      scroll-snap-align: start;
+	    }
+	  }
+
+  .hero-banner__nav {
+    display: none;
+  }
+
+  @media (min-width: 990px) {
+    .hero-banner {
+      --hero-desktop-ratio: 5.35 / 1;
+      --hero-desktop-height: clamp(220px, 15.1vw, 288px);
+      overflow: visible;
+      padding: clamp(1rem, 1.6vw, 1.35rem) 0 clamp(3rem, 4.8vw, 4.75rem);
+      background: #ffffff;
+      color: var(--bv-teal-900);
+      isolation: isolate;
+    }
+
+    .hero-banner::after,
+    .hero-banner__atmosphere,
+    .hero-banner__copy,
+    .hero-banner__promos,
+    .hero-banner__fact-card {
+      display: none !important;
+    }
+
+    .hero-banner__inner,
+    .hero-banner.hero-banner--no-promos .hero-banner__inner {
+      display: block;
+      width: min(1530px, calc(100% - clamp(2.5rem, 19vw, 22rem)));
+      max-width: 1530px;
+      margin-inline: auto;
+      padding: 0;
+    }
+
+    .hero-banner__stage,
+    .hero-banner__slider {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .hero-banner__slider {
+      position: relative;
+    }
+
+    .hero-banner--has-category-strip .hero-banner__slider {
+      padding-bottom: clamp(2.5rem, 3.7vw, 3.05rem);
+    }
+
+    .hero-banner__viewport {
+      overflow: hidden;
+      border: 0;
+      border-radius: clamp(1.15rem, 1.8vw, 1.5rem);
+      background: #0f5ea8;
+      box-shadow: none;
+    }
+
+    .hero-banner__slider:hover .hero-banner__viewport {
+      box-shadow: none;
+      transform: none;
+    }
+
+    .hero-banner__media,
+    .hero-banner[data-mobile-fit="auto"] .hero-banner__media,
+    .hero-banner[data-mobile-fit="ratio"] .hero-banner__media {
+      height: var(--hero-desktop-height);
+      min-height: 0;
+      aspect-ratio: var(--hero-desktop-ratio);
+    }
+
+    .hero-banner__slide-link,
+    .hero-banner__picture {
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-banner__slide-link::after {
+      display: none;
+    }
+
+    .hero-banner__image {
+      height: 100%;
+      object-fit: cover;
+      transform: none;
+    }
+
+    .hero-banner__nav {
+      position: absolute;
+      top: calc(var(--hero-desktop-height) / 2);
+      z-index: 8;
+      display: grid;
+      place-items: center;
+      width: clamp(44px, 4.4vw, 64px);
+      height: clamp(64px, 6vw, 82px);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #ffffff;
+      cursor: pointer;
+      transform: translateY(-50%);
+      transition: opacity 160ms ease, transform 160ms ease;
+    }
+
+    .hero-banner__nav:hover,
+    .hero-banner__nav:focus-visible {
+      opacity: 0.86;
+      transform: translateY(-50%) scale(1.04);
+    }
+
+    .hero-banner__nav:focus-visible {
+      outline: 2px solid #ffffff;
+      outline-offset: -0.3rem;
+    }
+
+    .hero-banner__nav--prev {
+      left: clamp(0.85rem, 1.4vw, 1.35rem);
+    }
+
+    .hero-banner__nav--next {
+      right: clamp(0.85rem, 1.4vw, 1.35rem);
+    }
+
+    .hero-banner__category-strip {
+      position: absolute;
+      right: auto;
+      bottom: clamp(2.5rem, 3.7vw, 3.05rem);
+      left: 50%;
+      z-index: 9;
+      width: min(715px, calc(100% - 4rem));
+      margin: 0;
+      transform: translate(-50%, 78%);
+    }
+
+    .hero-banner__category-shell {
+      width: 100%;
+      min-height: 55px;
+      padding: 0;
+      overflow: hidden;
+      border: 0;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 10px 24px rgba(10, 39, 42, 0.14);
+    }
+
+	    .hero-banner__category-card,
+	    .hero-banner__view-all {
+	      min-height: 55px;
+	      padding: 0.42rem 0.78rem;
+	      border-radius: 0;
+	      color: var(--brand-primary, #0A282C);
+	      font-family: "DM Sans", var(--font-body-family), sans-serif;
+	      letter-spacing: 0;
+	      transform: none;
+    }
+
+	    .hero-banner__category-card:hover,
+	    .hero-banner__category-card:focus-visible,
+	    .hero-banner__view-all:hover,
+	    .hero-banner__view-all:focus-visible {
+	      background: color-mix(in srgb, var(--brand-accent, #FAD054) 12%, white);
+	      color: var(--brand-primary, #0A282C);
+	      transform: none;
+	    }
+
+    .hero-banner__category-card.is-active {
+	      margin: 0;
+	      border-radius: 6px;
+	      background: #ffffff;
+	      color: var(--brand-primary, #0A282C);
+	      box-shadow: inset 0 0 0 1px rgba(var(--brand-accent-rgb, 250, 208, 84), 0.75);
+    }
+
+    .hero-banner__category-title {
+      font-family: "DM Sans", var(--font-body-family), sans-serif;
+      font-size: 0.84rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+	    .hero-banner__category-action {
+	      color: var(--brand-accent-dark, #C89F27);
+	      font-size: 0.79rem;
+	      font-weight: 900;
+	      line-height: 1.15;
+	      letter-spacing: 0;
+	    }
+	
+	    .hero-banner__view-all {
+	      color: var(--brand-primary, #0A282C);
+	      font-size: 0.84rem;
+	      font-weight: 900;
+	      text-decoration: underline;
+	      text-underline-offset: 0.14em;
+	    }
+
+	    .hero-banner__overlay {
+	      z-index: 260;
+	      align-items: start;
+	      padding: clamp(6.2rem, 8vw, 8rem) clamp(1rem, 3vw, 2rem) 2rem;
+	    }
+
+	    .hero-banner__overlay-panel {
+	      width: min(760px, calc(100vw - 2rem));
+	      max-height: min(72vh, 640px);
+	      border-radius: 18px;
+	      padding: 0.95rem;
+	    }
+
+	    .hero-banner__overlay-header {
+	      margin-bottom: 0.72rem;
+	    }
+
+	    .hero-banner__overlay-title {
+	      font-size: clamp(1.15rem, 1.55vw, 1.45rem);
+	    }
+
+	    .hero-banner__overlay-grid {
+	      grid-template-columns: repeat(2, minmax(0, 1fr));
+	      gap: 0.72rem;
+	    }
+
+	    .hero-banner__overlay-card {
+	      min-height: clamp(112px, 10vw, 136px);
+	      border-radius: 14px;
+	    }
+
+	    .hero-banner__overlay-card-copy {
+	      left: 1rem;
+	      bottom: 0.82rem;
+	      max-width: min(74%, 18rem);
+	    }
+
+	    .hero-banner__overlay-card-title {
+	      font-size: clamp(1rem, 1.65vw, 1.32rem);
+	    }
+
+	    .hero-banner__overlay-card-text {
+	      font-size: 0.86rem;
+	    }
+	  }
+</style>
+
+<script>
+  (function () {
+    const section = document.querySelector('[data-hero-slider="{{ section.id }}"]');
+    if (!section) return;
+
+    const track = section.querySelector('[data-hero-track]');
+    const slides = Array.from(section.querySelectorAll('[data-hero-slide]'));
+    const dots = Array.from(section.querySelectorAll('[data-hero-dot]'));
+    const tabs = Array.from(section.querySelectorAll('[data-hero-tab]'));
+    const prevButton = section.querySelector('[data-hero-prev]');
+    const nextButton = section.querySelector('[data-hero-next]');
+    const viewAllButton = section.querySelector('[data-hero-view-all]');
+    const overlay = section.querySelector('[data-hero-overlay]');
+    const closeButtons = overlay ? Array.from(overlay.querySelectorAll('[data-hero-close]')) : [];
+
+    if (!track || slides.length === 0) return;
+
+    let activeIndex = 0;
+    let autoplayTimer = null;
+    let overlayHideTimer = null;
+
+    const isOverlayOpen = () => overlay && !overlay.hidden;
+
+    const stopAutoplay = () => {
+      window.clearInterval(autoplayTimer);
+      autoplayTimer = null;
+    };
+
+    const update = () => {
+      track.style.transform = `translateX(-${activeIndex * 100}%)`;
+
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('is-active', index === activeIndex);
+      });
+
+      dots.forEach((dot, index) => {
+        const isActive = index === activeIndex;
+        dot.classList.toggle('is-active', isActive);
+        if (isActive) {
+          dot.setAttribute('aria-current', 'true');
+        } else {
+          dot.removeAttribute('aria-current');
+        }
+      });
+
+      tabs.forEach((tab, index) => {
+        const isActive = index === activeIndex;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    };
+
+    const setActive = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+      update();
+    };
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const autoplay = section.dataset.autoplay === 'true' && !reduceMotion;
+    const interval = Number(section.dataset.interval) || 5000;
+
+    const startAutoplay = () => {
+      if (!autoplay || slides.length < 2 || isOverlayOpen()) return;
+      stopAutoplay();
+      autoplayTimer = window.setInterval(() => {
+        setActive(activeIndex + 1);
+      }, interval);
+    };
+
+    const restartAutoplay = () => {
+      if (!autoplay) return;
+      startAutoplay();
+    };
+
+    const setOverlayOpen = (isOpen) => {
+      if (!overlay) return;
+
+      if (overlayHideTimer) {
+        window.clearTimeout(overlayHideTimer);
+        overlayHideTimer = null;
+      }
+
+      if (isOpen) {
+        overlay.hidden = false;
+        document.body.classList.add('hero-banner-overlay-open');
+        stopAutoplay();
+        if (viewAllButton) {
+          viewAllButton.setAttribute('aria-expanded', 'true');
+        }
+        window.requestAnimationFrame(() => {
+          overlay.classList.add('is-open');
+        });
+        return;
+      }
+
+      overlay.classList.remove('is-open');
+      document.body.classList.remove('hero-banner-overlay-open');
+      if (viewAllButton) {
+        viewAllButton.setAttribute('aria-expanded', 'false');
+      }
+      overlayHideTimer = window.setTimeout(() => {
+        overlay.hidden = true;
+        overlayHideTimer = null;
+      }, 220);
+      startAutoplay();
+    };
+
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        setActive(activeIndex - 1);
+        restartAutoplay();
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        setActive(activeIndex + 1);
+        restartAutoplay();
+      });
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        setActive(Number(dot.dataset.heroIndex) || 0);
+        restartAutoplay();
+      });
+    });
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        setActive(Number(tab.dataset.heroIndex) || 0);
+        restartAutoplay();
+      });
+    });
+
+    if (viewAllButton && overlay) {
+      viewAllButton.addEventListener('click', () => {
+        setOverlayOpen(true);
+      });
+    }
+
+    closeButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        setOverlayOpen(false);
+      });
+    });
+
+    if (overlay) {
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) {
+          setOverlayOpen(false);
+        }
+      });
+    }
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && isOverlayOpen()) {
+        setOverlayOpen(false);
+      }
+    });
+
+    update();
+    startAutoplay();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "tag": "section",
+  "class": "section-hero-banner",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Autoplay interval (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "mobile_ratio",
+      "label": "Mobile slide ratio",
+      "default": "auto",
+      "options": [
+        {
+          "value": "auto",
+          "label": "Auto fit image (responsive)"
+        },
+        {
+          "value": "match",
+          "label": "Match desktop (2400:750)"
+        },
+        {
+          "value": "16-9",
+          "label": "16:9"
+        },
+        {
+          "value": "4-3",
+          "label": "4:3"
+        },
+        {
+          "value": "1-1",
+          "label": "1:1"
+        },
+        {
+          "value": "3-4",
+          "label": "3:4"
+        },
+        {
+          "value": "4-5",
+          "label": "4:5"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Hero content"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Eyebrow",
+      "default": "Northern apothecary meets modern science"
+    },
+    {
+      "type": "text",
+      "id": "seo_h1",
+      "label": "Homepage SEO H1",
+      "default": "Herbal By Nature. Antioxidants that protect cells."
+    },
+    {
+      "type": "textarea",
+      "id": "hero_lead",
+      "label": "Lead text",
+      "default": "Canadian-made herbal supplements with clear labels, NPN-registered formulas, and delivery for Pakistan."
+    },
+    {
+      "type": "text",
+      "id": "hero_cta_label",
+      "label": "CTA label",
+      "default": "Shop wellness formulas"
+    },
+    {
+      "type": "url",
+      "id": "hero_cta_link",
+      "label": "CTA link"
+    },
+    {
+      "type": "text",
+      "id": "hero_proof_1",
+      "label": "Proof point 1",
+      "default": "Made in Canada"
+    },
+    {
+      "type": "text",
+      "id": "hero_proof_2",
+      "label": "Proof point 2",
+      "default": "NPN registered"
+    },
+    {
+      "type": "text",
+      "id": "hero_proof_3",
+      "label": "Proof point 3",
+      "default": "Readable product facts"
+    },
+    {
+      "type": "header",
+      "content": "Bottom category strip"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_strip",
+      "label": "Show slide categories",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all button label",
+      "default": "View all"
+    },
+    {
+      "type": "text",
+      "id": "view_all_heading",
+      "label": "View all overlay heading",
+      "default": "Explore all featured banners"
+    },
+    {
+      "type": "header",
+      "content": "Right promo images"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_top_image",
+      "label": "Top promo image"
+    },
+    {
+      "type": "url",
+      "id": "promo_top_link",
+      "label": "Top promo link"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_bottom_image",
+      "label": "Bottom promo image"
+    },
+    {
+      "type": "url",
+      "id": "promo_bottom_link",
+      "label": "Bottom promo link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image (optional)"
+        },
+        {
+          "type": "text",
+          "id": "nav_title",
+          "label": "Category title",
+          "default": "Featured category"
+        },
+        {
+          "type": "text",
+          "id": "nav_caption",
+          "label": "Category action label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "text",
+          "id": "grid_title",
+          "label": "View all card title",
+          "default": "Featured category"
+        },
+        {
+          "type": "text",
+          "id": "grid_text",
+          "label": "View all card subtitle",
+          "default": "Tap to explore"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner",
+      "blocks": [
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

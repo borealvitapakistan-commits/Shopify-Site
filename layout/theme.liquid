@@ -1,0 +1,755 @@
+<!doctype html>
+{%- assign bv_region = localization.country.iso_code | default: 'CA' | upcase -%}
+{%- assign bv_market_handle = localization.market.handle | default: '' | downcase -%}
+{%- if bv_market_handle == 'united-states' or bv_market_handle == 'us' or bv_region == 'US' -%}
+  {%- assign bv_region = 'US' -%}
+{%- elsif bv_market_handle == 'pakistan' or bv_market_handle == 'pk' or bv_region == 'PK' -%}
+  {%- assign bv_region = 'PK' -%}
+{%- else -%}
+  {%- assign bv_region = 'CA' -%}
+{%- endif -%}
+<html class="no-js" lang="{{ request.locale.iso_code }}" data-bv-region="{{ bv_region }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0">
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+  <meta name="bv-theme-revision" content="{{ settings.bv_cache_revision | default: 'm5-comfort-mode-20260531-2' | escape }}">
+  {%- assign brand_name = 'Boreal Vita' -%}
+  {%- assign default_seo_title = 'Boreal Vita | Herbal By Nature, Backed by Science' -%}
+  {%- assign default_seo_description = 'Shop Boreal Vita supplements with clear labels, herbal formulas, antioxidant support, and Health Canada NPN quality signals.' -%}
+  {%- if bv_region == 'US' -%}
+    {%- assign default_seo_title = 'Boreal Vita USA | Herbal Wellness Supplements' -%}
+    {%- assign default_seo_description = 'Shop Boreal Vita herbal wellness formulas with clear labels, antioxidant support, and fast US delivery.' -%}
+  {%- elsif bv_region == 'PK' -%}
+    {%- assign default_seo_title = 'Boreal Vita Pakistan | Herbal Wellness Supplements' -%}
+    {%- assign default_seo_description = 'Shop Boreal Vita vitamins and herbal formulas in Pakistan with clear labels, trusted quality signals, and fast nationwide delivery.' -%}
+  {%- endif -%}
+  {%- assign seo_title = page_title | strip | default: default_seo_title -%}
+  {%- if request.page_type == 'index' or seo_title == blank -%}
+    {%- assign seo_title = default_seo_title -%}
+  {%- elsif seo_title contains brand_name -%}
+    {%- assign seo_title = seo_title -%}
+  {%- else -%}
+    {%- assign seo_title = seo_title | append: ' | ' | append: brand_name -%}
+  {%- endif -%}
+  {%- assign seo_description = page_description | default: shop.description | strip_html | strip -%}
+  {%- if request.page_type == 'index' or seo_description == blank -%}
+    {%- assign seo_description = default_seo_description -%}
+  {%- endif -%}
+  {%- capture structured_search_url -%}{{ shop.url }}{{ routes.search_url }}?q={search_term_string}{%- endcapture -%}
+  {%- assign google_analytics_measurement_id = settings.google_analytics_measurement_id | strip -%}
+  <title>{{ seo_title | escape }}</title>
+
+  <meta name="description" content="{{ seo_description | truncate: 180 | escape }}">
+
+  <meta property="og:site_name" content="Boreal Vita">
+  <meta property="og:title" content="{{ seo_title | escape }}">
+  <meta property="og:description" content="{{ seo_description | truncate: 200 | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ seo_title | escape }}">
+  <meta name="twitter:description" content="{{ seo_description | truncate: 200 | escape }}">
+  {% if settings.favicon != blank %}
+    <meta property="og:image" content="{{ settings.favicon | image_url: width: 600, height: 600 }}">
+  {% else %}
+    <meta property="og:image" content="{{ 'favicon-clear.png' | asset_url }}">
+  {% endif %}
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": {{ brand_name | json }},
+      "url": {{ shop.url | json }},
+      "description": {{ default_seo_description | json }}
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": {{ brand_name | json }},
+      "url": {{ shop.url | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ structured_search_url | strip | json }},
+        "query-input": "required name=search_term_string"
+      }
+    }
+  </script>
+
+  <link rel="canonical" href="{{ canonical_url }}">
+  {%- assign alternate_path = request.path | default: '/' -%}
+  {% # theme-check-disable RemoteAsset %}
+  <link rel="alternate" hreflang="en-CA" href="https://borealvita.ca{{ alternate_path }}">
+  <link rel="alternate" hreflang="en-US" href="https://borealvita.com{{ alternate_path }}">
+  <link rel="alternate" hreflang="en-PK" href="https://borealvita.pk{{ alternate_path }}">
+  <link rel="alternate" hreflang="x-default" href="https://borealvita.ca{{ alternate_path }}">
+  {% # theme-check-enable RemoteAsset %}
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  {%- if google_analytics_measurement_id != blank -%}
+    {% # theme-check-disable RemoteAsset %}
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    {% # theme-check-enable RemoteAsset %}
+  {%- endif -%}
+
+  {% if settings.favicon != blank %}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    <link rel="shortcut icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
+  {% else %}
+    <link rel="icon" type="image/png" href="{{ 'favicon-clear.png' | asset_url }}">
+    <link rel="shortcut icon" type="image/png" href="{{ 'favicon-clear.png' | asset_url }}">
+    <link rel="apple-touch-icon" href="{{ 'favicon-clear.png' | asset_url }}">
+  {% endif %}
+
+  {{ 'dm-sans-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+  {{ 'montserrat-latin.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: true }}
+  <script>
+    (function() {
+      try {
+        if (window.localStorage && window.localStorage.getItem('bvComfortMode') === 'true') {
+          document.documentElement.classList.add('bv-comfort-mode');
+        }
+      } catch (error) {}
+    })();
+  </script>
+  {% render 'brand-fonts' %}
+  {{ 'tokens.css' | asset_url | stylesheet_tag }}
+  {% render 'css-variables' %}
+  
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ 'component-header.css' | asset_url | stylesheet_tag }}
+  <style>
+    html.bv-comfort-mode .product-information-layout__content,
+    html.bv-comfort-mode .product-information-layout__panel,
+    html.bv-comfort-mode .product-ingredients-showcase {
+      max-width: 100% !important;
+      overflow-x: clip !important;
+    }
+
+    html.bv-comfort-mode .product-ingredients-showcase {
+      grid-template-columns: minmax(0, 1fr) !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+
+    html.bv-comfort-mode .product-ingredients-showcase__header,
+    html.bv-comfort-mode .product-ingredients-showcase__viewport,
+    html.bv-comfort-mode .product-ingredients-showcase__controls,
+    html.bv-comfort-mode .product-ingredients-showcase__grid {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+
+    html.bv-comfort-mode .product-ingredients-showcase__viewport {
+      overflow: hidden !important;
+    }
+
+    html.bv-comfort-mode .product-ingredients-showcase__controls,
+    html.bv-comfort-mode .product-ingredients-showcase__dots {
+      flex-wrap: wrap !important;
+    }
+
+    html.bv-comfort-mode .product-ingredients-showcase__dots {
+      min-width: 0 !important;
+      max-width: 100% !important;
+    }
+  </style>
+  {%- assign async_stylesheets = 'component-footer.css,section-account.css,section-content.css,section-features.css,product-card-amzn.css' | split: ',' -%}
+  {%- for stylesheet in async_stylesheets -%}
+    {% # theme-check-disable AssetPreload %}
+    <link rel="preload" href="{{ stylesheet | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    {% # theme-check-enable AssetPreload %}
+    <noscript>{{ stylesheet | asset_url | stylesheet_tag }}</noscript>
+  {%- endfor -%}
+  {% render 'brand-identity-overrides' %}
+
+  {{ content_for_header }}
+
+  {%- if google_analytics_measurement_id != blank -%}
+    {% # theme-check-disable RemoteAsset %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ google_analytics_measurement_id | escape }}"></script>
+    {% # theme-check-enable RemoteAsset %}
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', {{ google_analytics_measurement_id | json }});
+    </script>
+  {%- endif -%}
+
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+
+<body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}-{{ template.suffix }}{% endif %}">
+  <a class="skip-to-content-link visually-hidden" href="#MainContent">
+    {{ 'accessibility.skip_to_content' | t }}
+  </a>
+
+  {% sections 'header-group' %}
+
+  <main id="MainContent" class="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {% sections 'footer-group' %}
+
+  <div class="wishlist-modal" hidden data-wishlist-modal>
+    <div class="wishlist-modal__backdrop" data-close-wishlist></div>
+    <div class="wishlist-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="WishlistModalTitle" data-wishlist-modal-dialog>
+      <button type="button" class="wishlist-modal__close" aria-label="Close wishlist" data-close-wishlist>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+
+      <div class="wishlist-modal__header">
+        <div class="wishlist-modal__heading">
+          <p class="wishlist-modal__eyebrow">Saved for later</p>
+          <p id="WishlistModalTitle" class="wishlist-modal__title">My Wishlist</p>
+        </div>
+        <p class="wishlist-modal__count" data-wishlist-panel-count>0 items</p>
+      </div>
+
+      <div class="wishlist-modal__body">
+        <div class="wishlist-modal__toolbar" data-wishlist-toolbar hidden>
+          <a href="{{ routes.all_products_collection_url }}" class="wishlist-modal__toolbar-link">Continue shopping</a>
+          <div class="wishlist-modal__toolbar-actions">
+            <button type="button" class="wishlist-modal__toolbar-button wishlist-modal__toolbar-button--ghost" data-wishlist-clear>
+              Clear wishlist
+            </button>
+            <button type="button" class="wishlist-modal__toolbar-button" data-wishlist-add-all>
+              Add all to cart
+            </button>
+          </div>
+        </div>
+
+        <div class="wishlist-modal__empty" data-wishlist-panel-empty>
+          <div class="wishlist-modal__empty-icon">
+            {% render 'icon-heart' %}
+          </div>
+          <h3>Your wishlist is empty</h3>
+          <p>Save your favorite products here and come back anytime.</p>
+          <a href="{{ routes.all_products_collection_url }}" class="wishlist-modal__browse">Browse Products</a>
+        </div>
+
+        <div class="wishlist-modal__grid" data-wishlist-panel-grid></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var params = new URLSearchParams(window.location.search);
+      var requestedRegion = (params.get('region') || '').toUpperCase();
+      var supportedRegions = ['CA', 'US', 'PK'];
+
+      if (supportedRegions.indexOf(requestedRegion) === -1) {
+        return;
+      }
+
+      document.documentElement.dataset.bvRegion = requestedRegion;
+
+      document.querySelectorAll('[data-region-text]').forEach(function(element) {
+        var key = 'region' + requestedRegion.charAt(0) + requestedRegion.slice(1).toLowerCase();
+        var value = element.dataset[key];
+
+        if (value) {
+          element.textContent = value;
+        }
+      });
+    })();
+  </script>
+
+  <script>
+    (function() {
+      var storageKey = 'bvComfortMode';
+      var root = document.documentElement;
+      var toggles = [];
+
+      function storageAvailable() {
+        try {
+          return !!window.localStorage;
+        } catch (error) {
+          return false;
+        }
+      }
+
+      function savePreference(enabled) {
+        if (!storageAvailable()) return;
+
+        try {
+          window.localStorage.setItem(storageKey, enabled ? 'true' : 'false');
+        } catch (error) {}
+      }
+
+      function syncButton() {
+        if (!toggles.length) return;
+
+        var enabled = root.classList.contains('bv-comfort-mode');
+
+        toggles.forEach(function(toggle) {
+          var label = toggle.querySelector('[data-comfort-label]');
+          toggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+
+          if (label) {
+            label.textContent = enabled ? 'Comfort on' : 'Comfort';
+          }
+        });
+      }
+
+      function setComfortMode(enabled, options) {
+        root.classList.toggle('bv-comfort-mode', enabled);
+        root.dataset.bvComfortMode = enabled ? 'on' : 'off';
+        syncButton();
+
+        if (!options || !options.skipStorage) {
+          savePreference(enabled);
+        }
+      }
+
+      function initComfortMode() {
+        toggles = Array.from(document.querySelectorAll('[data-comfort-toggle]'));
+        if (!toggles.length) return;
+
+        syncButton();
+        toggles.forEach(function(toggle) {
+          toggle.addEventListener('click', function() {
+            setComfortMode(!root.classList.contains('bv-comfort-mode'));
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initComfortMode);
+      } else {
+        initComfortMode();
+      }
+
+      window.addEventListener('storage', function(event) {
+        if (event.key === storageKey) {
+          setComfortMode(event.newValue === 'true', { skipStorage: true });
+        }
+      });
+    })();
+  </script>
+
+  <script>
+    (function() {
+      if (document.getElementById('wishlistGrid')) return;
+
+      class BorealVitaWishlistRuntime {
+        constructor() {
+          this.storageKey = 'wishlist';
+          this.items = this.getItems();
+          this.modal = document.querySelector('[data-wishlist-modal]');
+          this.modalGrid = this.modal ? this.modal.querySelector('[data-wishlist-panel-grid]') : null;
+          this.modalEmpty = this.modal ? this.modal.querySelector('[data-wishlist-panel-empty]') : null;
+          this.modalCount = this.modal ? this.modal.querySelector('[data-wishlist-panel-count]') : null;
+          this.modalToolbar = this.modal ? this.modal.querySelector('[data-wishlist-toolbar]') : null;
+          this.closeTimer = null;
+          this.renderToken = 0;
+          this.bindEvents();
+          this.updateUI();
+          this.updateButtonStates();
+          this.observeMutations();
+        }
+
+        bindEvents() {
+          document.addEventListener('click', (event) => {
+            const wishlistTrigger = event.target.closest('[data-open-wishlist]');
+            if (wishlistTrigger) {
+              event.preventDefault();
+              event.stopPropagation();
+              this.openModal();
+              return;
+            }
+
+            const wishlistClose = event.target.closest('[data-close-wishlist]');
+            if (wishlistClose && this.modal && this.modal.contains(wishlistClose)) {
+              event.preventDefault();
+              this.closeModal();
+              return;
+            }
+
+            const removeButton = event.target.closest('[data-wishlist-remove]');
+            if (removeButton) {
+              event.preventDefault();
+              event.stopPropagation();
+              this.remove(removeButton.dataset.wishlistRemove);
+              return;
+            }
+
+            const addToCartButton = event.target.closest('[data-wishlist-panel-add-to-cart]');
+            if (addToCartButton) {
+              event.preventDefault();
+              event.stopPropagation();
+              this.addToCart(addToCartButton.dataset.wishlistPanelAddToCart);
+              return;
+            }
+
+            const clearButton = event.target.closest('[data-wishlist-clear]');
+            if (clearButton) {
+              event.preventDefault();
+              event.stopPropagation();
+              this.clear();
+              return;
+            }
+
+            const addAllButton = event.target.closest('[data-wishlist-add-all]');
+            if (addAllButton) {
+              event.preventDefault();
+              event.stopPropagation();
+              this.addAllToCart();
+              return;
+            }
+
+            const button = event.target.closest('[data-wishlist-add]');
+            if (!button) return;
+
+            event.preventDefault();
+            event.stopPropagation();
+            this.toggle(button.dataset.wishlistAdd);
+          });
+
+          document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && this.modal && !this.modal.hidden) {
+              this.closeModal();
+            }
+          });
+        }
+
+        observeMutations() {
+          let frame = null;
+          const observer = new MutationObserver(() => {
+            if (frame) cancelAnimationFrame(frame);
+            frame = requestAnimationFrame(() => {
+              this.updateButtonStates();
+            });
+          });
+
+          observer.observe(document.body, { childList: true, subtree: true });
+        }
+
+        getItems() {
+          try {
+            return JSON.parse(localStorage.getItem(this.storageKey)) || [];
+          } catch (error) {
+            return [];
+          }
+        }
+
+        saveItems() {
+          localStorage.setItem(this.storageKey, JSON.stringify(this.items));
+        }
+
+        has(handle) {
+          return this.items.includes(handle);
+        }
+
+        toggle(handle) {
+          if (!handle) return;
+
+          const index = this.items.indexOf(handle);
+
+          if (index === -1) {
+            this.items.push(handle);
+            this.showToast('Added to wishlist');
+          } else {
+            this.items.splice(index, 1);
+            this.showToast('Removed from wishlist');
+          }
+
+          this.saveItems();
+          this.updateUI();
+          this.updateButtonStates();
+          this.renderPanel();
+        }
+
+        remove(handle) {
+          if (!handle) return;
+
+          const index = this.items.indexOf(handle);
+          if (index === -1) return;
+
+          this.items.splice(index, 1);
+          this.saveItems();
+          this.updateUI();
+          this.updateButtonStates();
+          this.renderPanel();
+          this.showToast('Removed from wishlist');
+        }
+
+        clear() {
+          this.items = [];
+          this.saveItems();
+          this.updateUI();
+          this.updateButtonStates();
+          this.renderPanel();
+          this.showToast('Wishlist cleared');
+        }
+
+        updateUI() {
+          document.querySelectorAll('.wishlist-count-badge').forEach((element) => {
+            element.textContent = this.items.length;
+            element.style.display = this.items.length > 0 ? 'flex' : 'none';
+          });
+
+          if (this.modalCount) {
+            this.modalCount.textContent = `${this.items.length} ${this.items.length === 1 ? 'item' : 'items'}`;
+          }
+
+          if (this.modalToolbar) {
+            this.modalToolbar.hidden = this.items.length === 0;
+          }
+        }
+
+        updateButtonStates() {
+          document.querySelectorAll('[data-wishlist-add]').forEach((button) => {
+            const handle = button.dataset.wishlistAdd;
+            const isActive = this.has(handle);
+
+            button.classList.toggle('is-active', isActive);
+            button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+
+            const text = button.querySelector('.wishlist-text');
+            if (text) {
+              text.textContent = isActive ? 'In Wishlist' : 'Add to Wishlist';
+            }
+          });
+        }
+
+        closeAccountMenus() {
+          document.querySelectorAll('[data-account-menu]').forEach((menu) => {
+            menu.classList.remove('is-open', 'is-pinned');
+            const trigger = menu.querySelector('[data-account-menu-toggle]');
+            if (trigger) {
+              trigger.setAttribute('aria-expanded', 'false');
+            }
+          });
+        }
+
+        openModal() {
+          if (!this.modal) return;
+
+          this.closeAccountMenus();
+          if (this.closeTimer) {
+            window.clearTimeout(this.closeTimer);
+            this.closeTimer = null;
+          }
+          this.modal.hidden = false;
+          document.body.classList.add('wishlist-panel-open');
+          this.renderPanel();
+
+          window.requestAnimationFrame(() => {
+            this.modal.classList.add('is-open');
+          });
+        }
+
+        closeModal() {
+          if (!this.modal) return;
+
+          this.modal.classList.remove('is-open');
+          document.body.classList.remove('wishlist-panel-open');
+
+          if (this.closeTimer) {
+            window.clearTimeout(this.closeTimer);
+          }
+
+          this.closeTimer = window.setTimeout(() => {
+            if (!this.modal.classList.contains('is-open')) {
+              this.modal.hidden = true;
+            }
+          }, 220);
+        }
+
+        formatMoney(cents) {
+          const amount = Number(cents || 0) / 100;
+          return `$${amount.toFixed(2)}`;
+        }
+
+        escapeHtml(value) {
+          return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+        }
+
+        async fetchWishlistProducts() {
+          const handles = [...this.items];
+          const responses = await Promise.all(
+            handles.map((handle) =>
+              fetch(`/products/${handle}.js`)
+                .then((response) => (response.ok ? response.json() : null))
+                .catch(() => null)
+            )
+          );
+
+          const validHandles = [];
+          const products = [];
+
+          responses.forEach((product, index) => {
+            if (!product) return;
+            validHandles.push(handles[index]);
+            products.push(product);
+          });
+
+          if (validHandles.length !== this.items.length) {
+            this.items = validHandles;
+            this.saveItems();
+            this.updateUI();
+            this.updateButtonStates();
+          }
+
+          return products;
+        }
+
+        async addToCart(variantId) {
+          if (!variantId) return;
+
+          try {
+            const response = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: parseInt(variantId, 10), quantity: 1 })
+            });
+
+            if (!response.ok) {
+              throw new Error('Cart add failed');
+            }
+
+            this.showToast('Added to cart');
+          } catch (error) {
+            this.showToast('Unable to add to cart');
+          }
+        }
+
+        async addAllToCart() {
+          if (!this.items.length) return;
+
+          try {
+            const products = await this.fetchWishlistProducts();
+            const variants = products
+              .map((product) => (product && product.variants && product.variants[0] ? product.variants[0].id : null))
+              .filter(Boolean);
+
+            for (const variantId of variants) {
+              await fetch('/cart/add.js', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: parseInt(variantId, 10), quantity: 1 })
+              });
+            }
+
+            if (variants.length) {
+              this.showToast(`Added ${variants.length} items to cart`);
+            }
+          } catch (error) {
+            this.showToast('Unable to add all items');
+          }
+        }
+
+        async renderPanel() {
+          if (!this.modal || !this.modalGrid || this.modal.hidden) return;
+
+          const renderToken = ++this.renderToken;
+          this.updateUI();
+
+          if (!this.items.length) {
+            this.modalEmpty.style.display = 'grid';
+            this.modalGrid.innerHTML = '';
+            return;
+          }
+
+          this.modalEmpty.style.display = 'none';
+          this.modalGrid.innerHTML = '<div class="wishlist-modal__loading">Loading your wishlist...</div>';
+
+          const products = await this.fetchWishlistProducts();
+          if (renderToken !== this.renderToken) return;
+
+          if (!products.length) {
+            this.modalEmpty.style.display = 'grid';
+            this.modalGrid.innerHTML = '';
+            return;
+          }
+
+          this.modalEmpty.style.display = 'none';
+          this.modalGrid.innerHTML = products
+            .map((product) => {
+              const image = product.featured_image || '';
+              const variant = (product.variants && product.variants[0]) || null;
+              const comparePrice = Number(product.compare_at_price || 0);
+              const price = Number(product.price || 0);
+              const variantId = variant && variant.id ? String(variant.id) : '';
+              const title = this.escapeHtml(product.title);
+              const productUrl = `/products/${product.handle}`;
+              const variantTitle = variant && variant.title && variant.title !== 'Default Title'
+                ? this.escapeHtml(variant.title)
+                : '';
+
+              return `
+                <article class="wishlist-modal__item">
+                  <a class="wishlist-modal__image" href="${productUrl}">
+                    ${image ? `<img src="${image}" alt="${title}" loading="lazy">` : '<div class="wishlist-modal__image-placeholder"></div>'}
+                  </a>
+                  <div class="wishlist-modal__info">
+                    <a class="wishlist-modal__product-title" href="${productUrl}">${title}</a>
+                    ${variantTitle ? `<p class="wishlist-modal__variant">${variantTitle}</p>` : ''}
+                    <div class="wishlist-modal__price">
+                      ${comparePrice > price ? `<span class="wishlist-modal__compare"><s>${this.formatMoney(comparePrice)}</s></span>` : ''}
+                      <span class="wishlist-modal__current">${this.formatMoney(price)}</span>
+                    </div>
+                  </div>
+                  <div class="wishlist-modal__side">
+                    <div class="wishlist-modal__actions">
+                      <a class="wishlist-modal__view" href="${productUrl}">View product</a>
+                      ${variantId ? `<button type="button" class="wishlist-modal__cart" data-wishlist-panel-add-to-cart="${variantId}">Add to cart</button>` : ''}
+                    </div>
+                    <button type="button" class="wishlist-modal__remove" data-wishlist-remove="${product.handle}" aria-label="Remove ${title}">
+                      Remove
+                    </button>
+                  </div>
+                </article>
+              `;
+            })
+            .join('');
+        }
+
+        showToast(message) {
+          const existing = document.querySelector('.wishlist-toast');
+          if (existing) existing.remove();
+
+          const toast = document.createElement('div');
+          toast.className = 'wishlist-toast';
+          toast.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            ${message}
+          `;
+          document.body.appendChild(toast);
+
+          setTimeout(() => toast.classList.add('is-visible'), 10);
+          setTimeout(() => {
+            toast.classList.remove('is-visible');
+            setTimeout(() => toast.remove(), 300);
+          }, 3000);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        if (!window.Wishlist) {
+          window.Wishlist = new BorealVitaWishlistRuntime();
+        }
+      });
+    })();
+  </script>
+
+  <script src="{{ 'global.js' | asset_url }}" defer></script>
+</body>
+</html>

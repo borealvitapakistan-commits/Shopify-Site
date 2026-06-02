@@ -1,0 +1,513 @@
+{%- comment -%}
+  Homepage blog slider: large active article with four selectable cards.
+{%- endcomment -%}
+
+{%- assign blog_handle = section.settings.blog | default: 'news' -%}
+{%- assign selected_blog = blogs[blog_handle] -%}
+{%- assign has_articles = false -%}
+{%- if selected_blog != blank and selected_blog.articles.size > 0 -%}
+  {%- assign has_articles = true -%}
+{%- endif -%}
+
+<section class="homepage-blogs-section" id="HomepageBlogs-{{ section.id }}" data-homepage-blog-slider>
+  <div class="container homepage-blogs__container">
+    <div class="homepage-blogs__header">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="homepage-blogs__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.title != blank -%}
+        <h2 class="homepage-blogs__title">{{ section.settings.title }}</h2>
+      {%- endif -%}
+    </div>
+
+    <div class="homepage-blogs__layout">
+      <div class="homepage-blogs__featured-wrap">
+        {%- if has_articles -%}
+          {%- for article in selected_blog.articles limit: 4 -%}
+            <a
+              class="homepage-blog-feature{% if forloop.first %} is-active{% endif %}"
+              href="{{ article.url }}"
+              data-homepage-blog-feature="{{ forloop.index0 }}"
+              {% unless forloop.first %}hidden{% endunless %}
+            >
+              <span class="homepage-blog-feature__media">
+                {%- if article.image != blank -%}
+                  <img
+                    src="{{ article.image | image_url: width: 1100 }}"
+                    srcset="
+                      {{ article.image | image_url: width: 560 }} 560w,
+                      {{ article.image | image_url: width: 820 }} 820w,
+                      {{ article.image | image_url: width: 1100 }} 1100w
+                    "
+                    sizes="(min-width: 990px) 50vw, 100vw"
+                    alt="{{ article.image.alt | default: article.title | escape }}"
+                    width="{{ article.image.width }}"
+                    height="{{ article.image.height }}"
+                    loading="lazy"
+                  >
+                {%- else -%}
+                  <span class="homepage-blog-card__placeholder" aria-hidden="true">{{ article.title | slice: 0 | upcase }}</span>
+                {%- endif -%}
+              </span>
+              <span class="homepage-blog-feature__body">
+                <span class="homepage-blog-card__kicker">Featured Article</span>
+                <h3 class="homepage-blog-feature__title">{{ article.title }}</h3>
+                <span class="homepage-blog-feature__excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</span>
+              </span>
+            </a>
+          {%- endfor -%}
+        {%- else -%}
+          {%- assign fallback_titles = 'Wellness Guides|Natural Ingredients|Healthy Living|Daily Wellness' | split: '|' -%}
+          {%- assign fallback_excerpts = 'Simple education for choosing supplements with more confidence.|A closer look at herbs, vitamins, and everyday wellness support.|Practical health notes for better daily routines.|Helpful guidance for building a calmer wellness routine.' | split: '|' -%}
+          {%- for title in fallback_titles -%}
+            {%- assign fallback_index = forloop.index0 -%}
+            <a
+              class="homepage-blog-feature{% if forloop.first %} is-active{% endif %}"
+              href="/blogs/news"
+              data-homepage-blog-feature="{{ fallback_index }}"
+              {% unless forloop.first %}hidden{% endunless %}
+            >
+              <span class="homepage-blog-feature__media">
+                <span class="homepage-blog-card__placeholder" aria-hidden="true">{{ title | slice: 0 }}</span>
+              </span>
+              <span class="homepage-blog-feature__body">
+                <span class="homepage-blog-card__kicker">Featured Article</span>
+                <h3 class="homepage-blog-feature__title">{{ title }}</h3>
+                <span class="homepage-blog-feature__excerpt">{{ fallback_excerpts[fallback_index] }}</span>
+              </span>
+            </a>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      <div class="homepage-blogs__side">
+        <div class="homepage-blogs__cards" aria-label="Blog slider navigation">
+          {%- if has_articles -%}
+            {%- for article in selected_blog.articles limit: 4 -%}
+              <a
+                class="homepage-blog-mini{% if forloop.first %} is-active{% endif %}"
+                href="{{ article.url }}"
+                data-homepage-blog-trigger="{{ forloop.index0 }}"
+              >
+                <span class="homepage-blog-mini__media">
+                  {%- if article.image != blank -%}
+                    <img
+                      src="{{ article.image | image_url: width: 520 }}"
+                      alt="{{ article.image.alt | default: article.title | escape }}"
+                      width="{{ article.image.width }}"
+                      height="{{ article.image.height }}"
+                      loading="lazy"
+                    >
+                  {%- else -%}
+                    <span class="homepage-blog-card__placeholder" aria-hidden="true">{{ article.title | slice: 0 | upcase }}</span>
+                  {%- endif -%}
+                </span>
+                <span class="homepage-blog-mini__body">
+                  <strong>{{ article.title }}</strong>
+                  <span>{{ article.excerpt_or_content | strip_html | truncatewords: 9 }}</span>
+                </span>
+              </a>
+            {%- endfor -%}
+          {%- else -%}
+            {%- assign fallback_titles = 'Wellness Guides|Natural Ingredients|Healthy Living|Daily Wellness' | split: '|' -%}
+            {%- assign fallback_excerpts = 'Simple education for choosing supplements with more confidence.|A closer look at herbs, vitamins, and everyday wellness support.|Practical health notes for better daily routines.|Helpful guidance for building a calmer wellness routine.' | split: '|' -%}
+            {%- for title in fallback_titles -%}
+              {%- assign fallback_index = forloop.index0 -%}
+              <a
+                class="homepage-blog-mini{% if forloop.first %} is-active{% endif %}"
+                href="/blogs/news"
+                data-homepage-blog-trigger="{{ fallback_index }}"
+              >
+                <span class="homepage-blog-mini__media">
+                  <span class="homepage-blog-card__placeholder" aria-hidden="true">{{ title | slice: 0 }}</span>
+                </span>
+                <span class="homepage-blog-mini__body">
+                  <strong>{{ title }}</strong>
+                  <span>{{ fallback_excerpts[fallback_index] }}</span>
+                </span>
+              </a>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.show_view_all -%}
+          <a class="homepage-blogs__view-all" href="{% if selected_blog != blank %}{{ selected_blog.url }}{% else %}/blogs/news{% endif %}">
+            View All
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .homepage-blogs-section {
+    padding: clamp(1.9rem, 3.6vw, 3.4rem) 0;
+    background: #ffffff;
+  }
+
+  .homepage-blogs__container {
+    max-width: 1240px;
+  }
+
+  .homepage-blogs__header {
+    display: grid;
+    justify-items: center;
+    gap: 0.8rem;
+    margin-bottom: clamp(1.35rem, 2.5vw, 2rem);
+    text-align: center;
+  }
+
+  .homepage-blogs__eyebrow {
+    margin: 0;
+    color: var(--brand-accent-dark, #C89F27);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(0.86rem, 1.05vw, 1.08rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .homepage-blogs__title {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.9rem, 3vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.15;
+  }
+
+  .homepage-blogs__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.84fr);
+    gap: clamp(1rem, 2vw, 1.75rem);
+    align-items: stretch;
+  }
+
+  .homepage-blogs__featured-wrap {
+    position: relative;
+    min-height: clamp(25rem, 34vw, 30rem);
+  }
+
+  .homepage-blog-feature {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.1);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #F4F8F7 0%, #EDF5F3 100%);
+    color: inherit;
+    text-decoration: none;
+    opacity: 0;
+    transform: translateY(0.4rem);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+    pointer-events: none;
+  }
+
+  .homepage-blog-feature.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .homepage-blog-feature[hidden] {
+    display: flex;
+  }
+
+  .homepage-blog-feature__media {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 78% 20%, rgba(var(--brand-accent-rgb, 250, 208, 84), 0.42), transparent 9rem),
+      linear-gradient(135deg, var(--brand-primary-light, #163E43), var(--brand-primary, #0A282C));
+  }
+
+  .homepage-blog-feature__media img,
+  .homepage-blog-mini__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .homepage-blog-feature__body {
+    display: grid;
+    align-content: start;
+    gap: 0.45rem;
+    padding: clamp(1rem, 1.8vw, 1.45rem);
+  }
+
+  .homepage-blog-card__kicker {
+    color: var(--brand-accent-dark, #C89F27);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .homepage-blog-feature__title {
+    margin: 0;
+    color: var(--brand-primary-dark, #06181B);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.55rem, 2.5vw, 2.25rem);
+    font-weight: 800;
+    line-height: 1.08;
+  }
+
+  .homepage-blog-feature__excerpt {
+    color: #243f43;
+    font-size: 0.98rem;
+    line-height: 1.5;
+  }
+
+  .homepage-blogs__side {
+    display: grid;
+    align-content: start;
+    gap: 1rem;
+  }
+
+  .homepage-blogs__cards {
+    display: grid;
+    gap: 0.78rem;
+  }
+
+  .homepage-blog-mini {
+    position: relative;
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    min-height: 6.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.1);
+    border-radius: 8px;
+    background: linear-gradient(135deg, #F4F8F7 0%, #EDF5F3 100%);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+  }
+
+  .homepage-blog-mini::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 3px;
+    background: var(--brand-accent, #FAD054);
+    opacity: 0;
+    transform: scaleX(0.2);
+    transform-origin: left center;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .homepage-blog-mini.is-active,
+  .homepage-blog-mini:hover,
+  .homepage-blog-mini:focus-visible {
+    border-color: rgba(var(--brand-primary-rgb, 10, 40, 44), 0.28);
+    box-shadow: 0 10px 24px rgba(var(--brand-primary-rgb, 10, 40, 44), 0.12);
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  .homepage-blog-mini.is-active::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .homepage-blog-mini__media {
+    min-width: 0;
+    background:
+      radial-gradient(circle at 72% 22%, rgba(var(--brand-accent-rgb, 250, 208, 84), 0.36), transparent 6rem),
+      linear-gradient(135deg, var(--brand-primary-light, #163E43), var(--brand-primary, #0A282C));
+  }
+
+  .homepage-blog-card__placeholder {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    place-items: center;
+    color: #ffffff;
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(2.6rem, 5vw, 4.6rem);
+    line-height: 1;
+  }
+
+  .homepage-blog-mini__body {
+    display: grid;
+    align-content: center;
+    gap: 0.35rem;
+    min-width: 0;
+    padding: 0.85rem 0.95rem;
+  }
+
+  .homepage-blog-mini__body strong {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--brand-primary-dark, #06181B);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.12;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .homepage-blog-mini__body span {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #33585D;
+    font-size: 0.88rem;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .homepage-blogs__view-all {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: start;
+    gap: 0.45rem;
+    min-height: 2.65rem;
+    padding: 0 1.45rem;
+    border-radius: 8px;
+    background: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .homepage-blogs__view-all:hover,
+  .homepage-blogs__view-all:focus-visible {
+    color: #ffffff;
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(var(--brand-primary-rgb, 10, 40, 44), 0.18);
+    outline: none;
+  }
+
+  @media (max-width: 989px) {
+    .homepage-blogs__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .homepage-blogs__featured-wrap {
+      min-height: 26rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .homepage-blog-mini {
+      grid-template-columns: 7.2rem minmax(0, 1fr);
+    }
+
+    .homepage-blogs__view-all {
+      width: 100%;
+      max-width: 180px;
+      justify-self: center;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var section = document.getElementById('HomepageBlogs-{{ section.id }}');
+    if (!section || section.dataset.initialized === 'true') return;
+
+    section.dataset.initialized = 'true';
+
+    var features = Array.prototype.slice.call(section.querySelectorAll('[data-homepage-blog-feature]'));
+    var triggers = Array.prototype.slice.call(section.querySelectorAll('[data-homepage-blog-trigger]'));
+    var activeIndex = 0;
+    var timer = null;
+
+    if (features.length < 2 || triggers.length < 2) return;
+
+    function setActive(index) {
+      activeIndex = (index + features.length) % features.length;
+
+      features.forEach(function(feature, featureIndex) {
+        var isActive = featureIndex === activeIndex;
+        feature.classList.toggle('is-active', isActive);
+        feature.hidden = !isActive;
+      });
+
+      triggers.forEach(function(trigger, triggerIndex) {
+        trigger.classList.toggle('is-active', triggerIndex === activeIndex);
+      });
+    }
+
+    function start() {
+      stop();
+      timer = window.setInterval(function() {
+        setActive(activeIndex + 1);
+      }, 4200);
+    }
+
+    function stop() {
+      if (timer) window.clearInterval(timer);
+      timer = null;
+    }
+
+    triggers.forEach(function(trigger, index) {
+      trigger.addEventListener('mouseenter', function() {
+        setActive(index);
+      });
+      trigger.addEventListener('focus', function() {
+        setActive(index);
+      });
+    });
+
+    section.addEventListener('focusin', stop);
+    section.addEventListener('focusout', start);
+
+    setActive(0);
+    start();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Homepage blogs",
+  "tag": "section",
+  "class": "section-homepage-blogs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Wellness journal"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Blogs"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All link",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Homepage blogs"
+    }
+  ]
+}
+{% endschema %}

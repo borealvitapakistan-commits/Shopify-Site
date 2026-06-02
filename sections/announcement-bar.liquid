@@ -1,0 +1,78 @@
+{% if section.settings.show_announcement %}
+  {%- assign bv_region = localization.country.iso_code | default: 'CA' | upcase -%}
+  {%- assign bv_market_handle = localization.market.handle | default: '' | downcase -%}
+  {%- if bv_market_handle == 'united-states' or bv_market_handle == 'us' or bv_region == 'US' -%}
+    {%- assign bv_region = 'US' -%}
+  {%- elsif bv_market_handle == 'pakistan' or bv_market_handle == 'pk' or bv_region == 'PK' -%}
+    {%- assign bv_region = 'PK' -%}
+  {%- else -%}
+    {%- assign bv_region = 'CA' -%}
+  {%- endif -%}
+
+  {%- assign text_ca = section.settings.text | default: 'Free shipping across Canada | Health Canada NPN approved' -%}
+  {%- assign text_us = section.settings.text_us | default: 'Free shipping across the US | FDA compliant' -%}
+  {%- assign text_pk = section.settings.text_pk | default: 'Fast delivery across Pakistan | Clear-label herbal wellness' -%}
+  {%- assign announcement_text = text_ca -%}
+  {%- if bv_region == 'US' -%}
+    {%- assign announcement_text = text_us -%}
+  {%- elsif bv_region == 'PK' -%}
+    {%- assign announcement_text = text_pk -%}
+  {%- endif -%}
+
+  <div class="announcement-bar">
+    <div class="container">
+      <span
+        data-region-text
+        data-region-ca="{{ text_ca | escape }}"
+        data-region-us="{{ text_us | escape }}"
+        data-region-pk="{{ text_pk | escape }}"
+      >{{ announcement_text }}</span>
+      {% if section.settings.link_label != blank and section.settings.link_url != blank %}
+        <a href="{{ section.settings.link_url }}">{{ section.settings.link_label }}</a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Free shipping across Canada | Health Canada NPN approved"
+    },
+    {
+      "type": "text",
+      "id": "text_us",
+      "label": "Text - United States",
+      "default": "Free shipping across the US | FDA compliant"
+    },
+    {
+      "type": "text",
+      "id": "text_pk",
+      "label": "Text - Pakistan",
+      "default": "Fast delivery across Pakistan | Clear-label herbal wellness"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    }
+  ]
+}
+{% endschema %}

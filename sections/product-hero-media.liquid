@@ -1,0 +1,281 @@
+{%- comment -%}
+  Product Hero Media (visual only)
+  - Full width
+  - Product images or custom images
+  - Optional slider with thumbnails
+{%- endcomment -%}
+
+{% assign hero_images_count = 0 %}
+{% assign use_custom = false %}
+{% if section.settings.image_source == 'custom' %}
+  {% assign use_custom = true %}
+{% endif %}
+
+{% capture hero_slides %}
+  {% if use_custom %}
+    {% for block in section.blocks %}
+      {% if block.settings.image != blank %}
+        {% assign hero_images_count = hero_images_count | plus: 1 %}
+        <div class="product-hero-media__slide" data-hero-slide {{ block.shopify_attributes }}>
+          <img
+            class="product-hero-media__image"
+            src="{{ block.settings.image | image_url: width: 2000 }}"
+            alt="{{ block.settings.image.alt | default: product.title | escape }}"
+            width="{{ block.settings.image.width }}"
+            height="{{ block.settings.image.height }}"
+            loading="{% if hero_images_count == 1 %}eager{% else %}lazy{% endif %}"
+          >
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    {% for image in product.images %}
+      {% assign hero_images_count = hero_images_count | plus: 1 %}
+      <div class="product-hero-media__slide" data-hero-slide>
+        <img
+          class="product-hero-media__image"
+          src="{{ image | image_url: width: 2000 }}"
+          alt="{{ image.alt | default: product.title | escape }}"
+          width="{{ image.width }}"
+          height="{{ image.height }}"
+          loading="{% if hero_images_count == 1 %}eager{% else %}lazy{% endif %}"
+        >
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endcapture %}
+
+{% if hero_images_count > 0 %}
+  <section
+    class="product-hero-media"
+    id="ProductHeroMedia-{{ section.id }}"
+    style="--hero-max-height: {{ section.settings.max_height_desktop }}px; --hero-max-height-mobile: {{ section.settings.max_height_mobile }}px;"
+  >
+    <div class="product-hero-media__viewport">
+      <div class="product-hero-media__track" data-hero-track>
+        {{ hero_slides }}
+      </div>
+    </div>
+
+    {% if section.settings.enable_slider and hero_images_count > 1 %}
+      <div class="product-hero-media__thumbs" data-hero-thumbs>
+        {% if use_custom %}
+          {% assign thumb_index = 0 %}
+          {% for block in section.blocks %}
+            {% if block.settings.image != blank %}
+              <button class="product-hero-media__thumb" type="button" data-hero-thumb="{{ thumb_index }}">
+                <img
+                  src="{{ block.settings.image | image_url: width: 200 }}"
+                  alt="{{ block.settings.image.alt | default: product.title | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="lazy"
+                >
+              </button>
+              {% assign thumb_index = thumb_index | plus: 1 %}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% for image in product.images %}
+            <button class="product-hero-media__thumb" type="button" data-hero-thumb="{{ forloop.index0 }}">
+              <img
+                src="{{ image | image_url: width: 200 }}"
+                alt="{{ image.alt | default: product.title | escape }}"
+                width="{{ image.width }}"
+                height="{{ image.height }}"
+                loading="lazy"
+              >
+            </button>
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
+{% endif %}
+
+<style>
+  .product-hero-media {
+    width: 100%;
+    background: #F8FBFA;
+    padding: 1rem 0 0.75rem;
+  }
+
+  .product-hero-media__viewport {
+    width: 100%;
+    height: var(--hero-max-height, 520px);
+    max-height: var(--hero-max-height, 520px);
+    background: #F8FBFA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-hero-media__track {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .product-hero-media__slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .product-hero-media__slide.is-active {
+    display: flex;
+  }
+
+  .product-hero-media__image {
+    width: 100%;
+    height: 100%;
+    object-fit: {{ section.settings.image_fit }};
+    object-position: center;
+    background: #fff;
+  }
+
+  .product-hero-media__thumbs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem 0;
+    overflow-x: auto;
+    justify-content: center;
+  }
+
+  .product-hero-media__thumb {
+    border: 1px solid var(--color-border);
+    background: #fff;
+    border-radius: var(--radius-sm);
+    padding: 0.25rem;
+    width: 64px;
+    height: 64px;
+    flex: 0 0 auto;
+    cursor: pointer;
+  }
+
+  .product-hero-media__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .product-hero-media__thumb.is-active {
+    border-color: var(--color-primary);
+  }
+
+  @media (max-width: 768px) {
+    .product-hero-media__viewport {
+      height: var(--hero-max-height-mobile, 360px);
+      max-height: var(--hero-max-height-mobile, 360px);
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const section = document.getElementById('ProductHeroMedia-{{ section.id }}');
+    if (!section) return;
+
+    const slides = Array.from(section.querySelectorAll('[data-hero-slide]'));
+    const thumbs = Array.from(section.querySelectorAll('[data-hero-thumb]'));
+    const enableSlider = {{ section.settings.enable_slider | json }};
+
+    if (!slides.length) return;
+
+    const setActive = (index) => {
+      slides.forEach((slide, idx) => slide.classList.toggle('is-active', idx === index));
+      thumbs.forEach((thumb, idx) => thumb.classList.toggle('is-active', idx === index));
+    };
+
+    setActive(0);
+
+    if (!enableSlider || slides.length < 2) return;
+
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        const idx = Number(thumb.dataset.heroThumb);
+        setActive(idx);
+      });
+    });
+
+    window.addEventListener('hero:select', (event) => {
+      if (!event.detail) return;
+      const idx = Number(event.detail.index || 0);
+      if (!Number.isNaN(idx)) {
+        setActive(Math.max(0, Math.min(idx, slides.length - 1)));
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product hero media",
+  "tag": "section",
+  "class": "section-product-hero-media",
+  "settings": [
+    {
+      "type": "select",
+      "id": "image_source",
+      "label": "Image source",
+      "default": "product",
+      "options": [
+        { "value": "product", "label": "Use product images" },
+        { "value": "custom", "label": "Use custom hero images" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_slider",
+      "label": "Enable slider",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "default": "contain",
+      "options": [
+        { "value": "contain", "label": "Contain" },
+        { "value": "cover", "label": "Cover" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "max_height_desktop",
+      "label": "Max hero height (desktop)",
+      "min": 360,
+      "max": 700,
+      "step": 20,
+      "default": 520,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "max_height_mobile",
+      "label": "Max hero height (mobile)",
+      "min": 240,
+      "max": 520,
+      "step": 20,
+      "default": 360,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Hero image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

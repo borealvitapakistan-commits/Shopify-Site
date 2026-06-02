@@ -1,0 +1,77 @@
+{%- comment -%}
+  Product Trust & Compliance
+  - Legal disclaimer from metafield or theme setting
+{%- endcomment -%}
+
+{% assign disclaimer_content = section.settings.disclaimer_text %}
+{% assign use_metafield = false %}
+{% assign metafield_value = nil %}
+
+{% if section.settings.disclaimer_metafield != blank %}
+  {% assign parts = section.settings.disclaimer_metafield | split: '.' %}
+  {% assign namespace = parts[0] %}
+  {% assign key = parts[1] %}
+  {% if namespace != blank and key != blank %}
+    {% assign metafield_value = product.metafields[namespace][key] %}
+    {% if metafield_value != blank %}
+      {% assign use_metafield = true %}
+    {% endif %}
+  {% endif %}
+{% endif %}
+
+{% if disclaimer_content != blank %}
+  <section class="product-trust">
+    <div class="container">
+      {% if section.settings.heading != blank %}
+        <h2 class="product-section-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      <div class="rte product-trust__content">
+        {% if use_metafield %}
+          {{ metafield_value | metafield_tag }}
+        {% else %}
+          {{ disclaimer_content }}
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .product-trust {
+      padding: 2.5rem 0 3rem;
+      background: var(--color-muted);
+    }
+
+    .product-trust__content {
+      color: var(--color-muted-foreground);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+  </style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product trust",
+  "tag": "section",
+  "class": "section-product-trust",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Important information"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer_metafield",
+      "label": "Disclaimer metafield (namespace.key)",
+      "info": "Example: custom.legal_disclaimer"
+    },
+    {
+      "type": "richtext",
+      "id": "disclaimer_text",
+      "label": "Fallback disclaimer text"
+    }
+  ]
+}
+{% endschema %}

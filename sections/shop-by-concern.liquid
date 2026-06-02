@@ -1,0 +1,523 @@
+{%- comment -%}
+  Homepage concern cards with editable images, labels, and links.
+{%- endcomment -%}
+
+{% liquid
+  assign eyebrow = section.settings.eyebrow | default: 'SHOP BY CONCERN'
+  assign heading_emphasis = section.settings.heading_emphasis | default: 'Personalized Solutions'
+  assign heading_suffix = section.settings.heading_suffix | default: 'for Every Health Goal'
+  assign desktop_columns = section.settings.columns | default: 5
+%}
+
+<section
+  id="shop-by-concern"
+  class="shop-by-concern"
+  style="--shop-concern-columns: {{ desktop_columns }};"
+>
+  <div class="container shop-by-concern__container">
+    <div class="shop-by-concern__header">
+      {% if eyebrow != blank %}
+        <p class="shop-by-concern__eyebrow">{{ eyebrow }}</p>
+      {% endif %}
+
+      <h2 class="shop-by-concern__heading">
+        {% if heading_emphasis != blank %}
+          <em>{{ heading_emphasis }}</em>
+        {% endif %}
+        {% if heading_suffix != blank %}
+          <span>{{ heading_suffix }}</span>
+        {% endif %}
+      </h2>
+    </div>
+
+    <div class="shop-by-concern__carousel" data-shop-by-concern-carousel>
+      <button type="button" class="shop-by-concern__nav shop-by-concern__nav--prev" aria-label="Previous concerns" data-shop-by-concern-prev>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m15 6-6 6 6 6"></path>
+        </svg>
+      </button>
+
+      <div class="shop-by-concern__viewport" aria-label="{{ eyebrow | escape }}" data-shop-by-concern-track tabindex="0">
+        <div class="shop-by-concern__track">
+          {% for block in section.blocks %}
+            {% liquid
+              assign concern_title = block.settings.title | default: 'Concern'
+              assign concern_link = block.settings.link
+              if concern_link == blank
+                assign concern_handle = concern_title | handleize
+                assign concern_link = routes.all_products_collection_url | append: '/' | append: concern_handle
+              endif
+              assign concern_image = block.settings.image
+            %}
+
+            <a
+              href="{{ concern_link }}"
+              class="shop-by-concern-card"
+              {{ block.shopify_attributes }}
+            >
+              <span class="shop-by-concern-card__media">
+                {% if concern_image != blank %}
+                  {{
+                    concern_image
+                    | image_url: width: 520
+                    | image_tag:
+                      class: 'shop-by-concern-card__image',
+                      loading: 'lazy',
+                      widths: '180, 260, 360, 520',
+                      sizes: '(max-width: 640px) 44vw, (max-width: 989px) 28vw, 180px',
+                      alt: concern_title
+                  }}
+                {% else %}
+                  <span class="shop-by-concern-card__placeholder" aria-hidden="true">
+                    <span></span>
+                  </span>
+                {% endif %}
+              </span>
+
+              <span class="shop-by-concern-card__title">{{ concern_title }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <button type="button" class="shop-by-concern__nav shop-by-concern__nav--next" aria-label="Next concerns" data-shop-by-concern-next>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m9 6 6 6-6 6"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .shop-by-concern {
+    background: #ffffff;
+    padding: clamp(2.7rem, 5vw, 4.5rem) 0 clamp(2.6rem, 4.6vw, 4rem);
+    scroll-margin-top: calc(var(--header-height, 64px) + 1.25rem);
+  }
+
+  .shop-by-concern__container {
+    max-width: min(1120px, var(--site-content-max-width, 1440px));
+  }
+
+  .shop-by-concern__header {
+    text-align: center;
+    margin-bottom: clamp(2.3rem, 4vw, 3.45rem);
+  }
+
+  .shop-by-concern__eyebrow {
+    margin: 0 0 1.45rem;
+    color: var(--brand-accent-dark, #C89F27);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(0.86rem, 1.05vw, 1.08rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .shop-by-concern__heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.55rem;
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.9rem, 3vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  .shop-by-concern__heading em {
+    color: var(--brand-primary, #0A282C);
+    font-family: inherit;
+    font-style: normal;
+    font-weight: 800;
+  }
+
+  .shop-by-concern__heading span {
+    color: var(--brand-text, #102F34);
+    font-weight: 500;
+  }
+
+  .shop-by-concern__carousel {
+    --shop-concern-gap: clamp(1.35rem, 3vw, 3.35rem);
+    --shop-concern-card-width: calc((100% - (var(--shop-concern-gap) * (var(--shop-concern-columns) - 1))) / var(--shop-concern-columns));
+    position: relative;
+    padding: 0 clamp(2.35rem, 4.2vw, 3.65rem);
+  }
+
+  .shop-by-concern__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .shop-by-concern__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .shop-by-concern__track {
+    display: flex;
+    align-items: start;
+    gap: var(--shop-concern-gap);
+  }
+
+  .shop-by-concern-card {
+    flex: 0 0 var(--shop-concern-card-width);
+    display: grid;
+    justify-items: center;
+    gap: 0.72rem;
+    min-width: 0;
+    color: #343434;
+    scroll-snap-align: start;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .shop-by-concern__nav {
+    position: absolute;
+    top: 5.15rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.55rem;
+    height: 2.55rem;
+    border: 1px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.16);
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 12px 26px rgba(10, 40, 44, 0.12);
+    color: var(--brand-primary, #0A282C);
+    cursor: pointer;
+    transition: background 180ms ease, color 180ms ease, opacity 180ms ease, transform 180ms ease;
+  }
+
+  .shop-by-concern__nav--prev {
+    left: 0;
+  }
+
+  .shop-by-concern__nav--next {
+    right: 0;
+  }
+
+  .shop-by-concern__nav svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .shop-by-concern__nav:hover,
+  .shop-by-concern__nav:focus-visible {
+    background: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  .shop-by-concern__nav:disabled {
+    opacity: 0.32;
+    cursor: default;
+    transform: none;
+  }
+
+  .shop-by-concern__nav:disabled:hover {
+    background: #ffffff;
+    color: var(--brand-primary, #0A282C);
+  }
+
+  .shop-by-concern-card__media {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 156px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--brand-accent, #FAD054) 20%, white);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+
+  .shop-by-concern-card:hover .shop-by-concern-card__media,
+  .shop-by-concern-card:focus-visible .shop-by-concern-card__media {
+    box-shadow: 0 16px 28px rgba(10, 40, 44, 0.13);
+    transform: translateY(-3px);
+  }
+
+  .shop-by-concern-card:focus-visible {
+    outline: 2px solid var(--brand-accent, #FAD054);
+    outline-offset: 6px;
+  }
+
+  .shop-by-concern-card__image,
+  .shop-by-concern-card__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .shop-by-concern-card__image {
+    padding: 0.35rem;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  .shop-by-concern-card__placeholder {
+    position: relative;
+    background:
+      radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.5) 0 16%, transparent 17%),
+      linear-gradient(145deg, var(--brand-surface-warm, #FFF8E7) 0%, color-mix(in srgb, var(--brand-accent, #FAD054) 28%, white) 100%);
+  }
+
+  .shop-by-concern-card__placeholder span {
+    position: absolute;
+    left: 50%;
+    bottom: 18%;
+    width: 48%;
+    height: 30%;
+    border-radius: 999px 999px 8px 8px;
+    background: rgba(255, 255, 255, 0.44);
+    transform: translateX(-50%);
+  }
+
+  .shop-by-concern-card__corner {
+    display: none;
+  }
+
+  .shop-by-concern-card__corner::before {
+    display: none;
+  }
+
+  .shop-by-concern-card__title {
+    display: block;
+    max-width: 11rem;
+    color: var(--brand-text, #102F34);
+    font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    font-size: clamp(1.02rem, 1.28vw, 1.2rem);
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 989px) {
+    .shop-by-concern__carousel {
+      --shop-concern-gap: 1.25rem;
+      --shop-concern-card-width: calc((100% - (var(--shop-concern-gap) * 2)) / 3);
+    }
+
+    .shop-by-concern-card__media {
+      max-width: 148px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .shop-by-concern {
+      padding-top: 2.25rem;
+    }
+
+    .shop-by-concern__heading {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: clamp(1.6rem, 8vw, 2.1rem);
+    }
+
+    .shop-by-concern__carousel {
+      --shop-concern-gap: 1rem;
+      --shop-concern-card-width: calc((100% - var(--shop-concern-gap)) / 2);
+      padding: 0 2rem;
+    }
+
+    .shop-by-concern-card__media {
+      max-width: min(156px, 100%);
+    }
+
+    .shop-by-concern__nav {
+      top: 4.9rem;
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[data-shop-by-concern-carousel]').forEach(function(carousel) {
+      const viewport = carousel.querySelector('[data-shop-by-concern-track]');
+      const prev = carousel.querySelector('[data-shop-by-concern-prev]');
+      const next = carousel.querySelector('[data-shop-by-concern-next]');
+
+      if (!viewport || !prev || !next) return;
+
+      const getStep = function() {
+        const card = viewport.querySelector('.shop-by-concern-card');
+        if (!card) return viewport.clientWidth * 0.85;
+
+        const styles = window.getComputedStyle(viewport.querySelector('.shop-by-concern__track'));
+        const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+        return card.getBoundingClientRect().width + gap;
+      };
+
+      const updateButtons = function() {
+        const maxScroll = viewport.scrollWidth - viewport.clientWidth - 2;
+        prev.disabled = viewport.scrollLeft <= 2;
+        next.disabled = viewport.scrollLeft >= maxScroll;
+      };
+
+      prev.addEventListener('click', function() {
+        viewport.scrollBy({ left: -getStep(), behavior: 'smooth' });
+      });
+
+      next.addEventListener('click', function() {
+        viewport.scrollBy({ left: getStep(), behavior: 'smooth' });
+      });
+
+      viewport.addEventListener('scroll', updateButtons, { passive: true });
+      window.addEventListener('resize', updateButtons);
+      updateButtons();
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Shop by concern",
+  "tag": "section",
+  "class": "section-shop-by-concern",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "SHOP BY CONCERN"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Italic heading text",
+      "default": "Personalized Solutions"
+    },
+    {
+      "type": "text",
+      "id": "heading_suffix",
+      "label": "Heading suffix",
+      "default": "for Every Health Goal"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Desktop columns",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "concern",
+      "name": "Concern",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Concern name",
+          "default": "Concern"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by concern",
+      "blocks": [
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Allergy & Respiratory"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Gut & Liver Health"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Immunity Booster"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Kidney & Urology"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Weight Management"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Joint Care"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Everyday Health Support"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Mental Wellness"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Skin Care"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Hair Care"
+          }
+        },
+        {
+          "type": "concern",
+          "settings": {
+            "title": "Heart Health"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

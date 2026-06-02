@@ -1,0 +1,287 @@
+{%- comment -%}
+  Beginner guide callout shown below Wellness Bundles.
+{%- endcomment -%}
+
+{% liquid
+  assign guide_link = section.settings.button_link
+  if guide_link == blank
+    assign guide_link = routes.all_products_collection_url
+  endif
+%}
+
+<section class="supplement-guide" id="supplement-guide" data-section-anchor="SupplementGuide-{{ section.id }}">
+  <div class="container supplement-guide__container">
+    <div class="supplement-guide__art">
+      {% if section.settings.guide_image != blank %}
+        {{
+          section.settings.guide_image
+          | image_url: width: 760
+          | image_tag:
+            class: 'supplement-guide__image',
+            loading: 'lazy',
+            widths: '360, 540, 760',
+            sizes: '(max-width: 899px) 76vw, 34vw',
+            alt: section.settings.image_alt
+        }}
+      {% else %}
+        <div class="supplement-guide__cover" aria-hidden="true">
+          <span class="supplement-guide__cover-title">A beginner's guide<br>to supplements</span>
+          <span class="supplement-guide__cover-scene">
+            <svg viewBox="0 0 240 150" fill="none">
+              <path d="M18 105c34-38 64-54 91-48 18 4 33 17 49 17 19 0 38-18 64-46" stroke="currentColor" stroke-width="3" opacity="0.24"/>
+              <path d="M24 126c38-22 74-28 109-18 27 8 52 8 81-10" stroke="currentColor" stroke-width="3" opacity="0.24"/>
+              <circle cx="92" cy="78" r="18" fill="currentColor" opacity="0.12"/>
+              <path d="M85 90c16-14 26-20 31-17 4 3 0 13-11 29" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+              <path d="M78 92c-13 4-22 11-28 22" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+              <path d="M122 101c18-2 34 2 48 12" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="supplement-guide__cover-brand">Boreal Vita</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="supplement-guide__content">
+      <h2 class="supplement-guide__title">
+        <span>{{ section.settings.heading }}</span>
+        <strong>{{ section.settings.heading_strong }}</strong>
+      </h2>
+
+      {% if section.settings.body != blank %}
+        <div class="supplement-guide__body rte">{{ section.settings.body }}</div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a class="supplement-guide__button" href="{{ guide_link }}">{{ section.settings.button_label }}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .supplement-guide {
+    padding: clamp(2.8rem, 5.5vw, 5.2rem) 0;
+    background: #ffffff;
+  }
+
+  .supplement-guide__container {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(2rem, 5vw, 4.8rem);
+    align-items: center;
+    max-width: 1120px;
+  }
+
+  .supplement-guide__art {
+    position: relative;
+    display: grid;
+    min-height: clamp(22rem, 35vw, 31rem);
+    place-items: center;
+  }
+
+  .supplement-guide__art::before {
+    content: "";
+    position: absolute;
+    inset: 7% 11% 6% 16%;
+    border-radius: 0.18rem;
+    background: var(--brand-gold-gradient, linear-gradient(135deg, #FFE7A0 0%, #FAD054 100%));
+    transform: rotate(-2deg);
+    z-index: 0;
+  }
+
+  .supplement-guide__image,
+  .supplement-guide__cover {
+    position: relative;
+    z-index: 1;
+    width: min(78%, 340px);
+    aspect-ratio: 0.76;
+    transform: rotate(-7deg);
+    box-shadow: 0 18px 38px rgba(10, 40, 44, 0.14);
+  }
+
+  .supplement-guide__image {
+    display: block;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .supplement-guide__cover {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow: hidden;
+    padding: clamp(1.15rem, 2vw, 1.55rem);
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(244, 248, 247, 0.9)),
+      linear-gradient(135deg, #ffffff, var(--brand-surface-warm, #FFF8E7));
+    color: var(--brand-primary, #0A282C);
+  }
+
+  .supplement-guide__cover-title {
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.45rem, 2.5vw, 2rem);
+    font-weight: 700;
+    line-height: 1.18;
+    text-align: center;
+  }
+
+  .supplement-guide__cover-scene {
+    display: grid;
+    place-items: end center;
+    color: var(--brand-accent-dark, #C89F27);
+  }
+
+  .supplement-guide__cover-scene svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .supplement-guide__cover-brand {
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: 0.92rem;
+    font-weight: 800;
+  }
+
+  .supplement-guide__content {
+    max-width: 620px;
+  }
+
+  .supplement-guide__title {
+    display: grid;
+    gap: 0.15rem;
+    margin: 0 0 1.35rem;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(2.2rem, 4.5vw, 3.65rem);
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: 0;
+  }
+
+  .supplement-guide__title strong {
+    color: var(--brand-primary-light, #163E43);
+    font-weight: 800;
+  }
+
+  .supplement-guide__body {
+    color: var(--brand-text, #102F34);
+    font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    font-size: clamp(1rem, 1.15vw, 1.12rem);
+    line-height: 1.45;
+  }
+
+  .supplement-guide__body p {
+    margin: 0 0 1.15rem;
+  }
+
+  .supplement-guide__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: min(100%, 356px);
+    min-height: 3.55rem;
+    margin-top: clamp(0.65rem, 1.5vw, 1.1rem);
+    padding: 0.9rem 1.8rem;
+    border-radius: 999px;
+    background: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1rem, 1.2vw, 1.14rem);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  }
+
+  .supplement-guide__button:hover,
+  .supplement-guide__button:focus-visible {
+    background: var(--brand-accent, #FAD054);
+    box-shadow: 0 16px 30px rgba(var(--brand-accent-rgb, 250, 208, 84), 0.28);
+    color: var(--brand-primary, #0A282C);
+    outline: none;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 899px) {
+    .supplement-guide__container {
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+      text-align: center;
+    }
+
+    .supplement-guide__content {
+      justify-self: center;
+    }
+
+    .supplement-guide__button {
+      justify-self: center;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .supplement-guide__art {
+      min-height: 19rem;
+    }
+
+    .supplement-guide__title {
+      font-size: clamp(2rem, 11vw, 2.8rem);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Supplement Guide",
+  "tag": "section",
+  "class": "section-supplement-guide",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "guide_image",
+      "label": "Guide image"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image alt text",
+      "default": "Beginner guide to supplements"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "New to supplements?"
+    },
+    {
+      "type": "text",
+      "id": "heading_strong",
+      "label": "Bold heading line",
+      "default": "Start here!"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Curious about supplements but not sure where to start? Our free Beginner's Guide to Supplements is here to help you navigate vitamins, minerals and specialty formulas that can help you feel your best.</p><p>This easy-to-follow guide offers essential insights into different types of supplements, their benefits and how to choose the right ones for your health goals.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Get your free guide now!"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Supplement Guide"
+    }
+  ]
+}
+{% endschema %}

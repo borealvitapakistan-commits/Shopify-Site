@@ -1,0 +1,116 @@
+{%- if section.settings.show_section -%}
+  {%- assign bv_region = localization.country.iso_code | default: 'CA' | upcase -%}
+  {%- assign bv_market_handle = localization.market.handle | default: '' | downcase -%}
+  {%- if bv_market_handle == 'united-states' or bv_market_handle == 'us' or bv_region == 'US' -%}
+    {%- assign bv_region = 'US' -%}
+  {%- elsif bv_market_handle == 'pakistan' or bv_market_handle == 'pk' or bv_region == 'PK' -%}
+    {%- assign bv_region = 'PK' -%}
+  {%- else -%}
+    {%- assign bv_region = 'CA' -%}
+  {%- endif -%}
+
+  {%- assign heading_ca = 'Clear-label supplements made for everyday wellness routines' -%}
+  {%- assign heading_us = 'Clear-label supplements for everyday wellness routines' -%}
+  {%- assign heading_pk = 'Clear-label supplements for Pakistan wellness routines' -%}
+  {%- assign heading = heading_ca -%}
+  {%- if bv_region == 'US' -%}
+    {%- assign heading = heading_us -%}
+  {%- elsif bv_region == 'PK' -%}
+    {%- assign heading = heading_pk -%}
+  {%- endif -%}
+
+  <section class="homepage-seo-content" id="HomepageSeoContent-{{ section.id }}">
+    <div class="container homepage-seo-content__inner">
+      <div class="homepage-seo-content__copy">
+        <p class="homepage-seo-content__eyebrow">Boreal Vita standards</p>
+        <h2
+          class="homepage-seo-content__heading"
+          data-region-text
+          data-region-ca="{{ heading_ca | escape }}"
+          data-region-us="{{ heading_us | escape }}"
+          data-region-pk="{{ heading_pk | escape }}"
+        >{{ heading }}</h2>
+      </div>
+
+      <div class="homepage-seo-content__text">
+        <p>
+          Boreal Vita builds wellness around a simple promise: supplements should be clear, trustworthy, and aligned with the values of the people taking them. Our product experience highlights practical daily support and labels that shoppers can review with confidence.
+        </p>
+        <p>
+          The collection is organized around common health goals including immunity, digestion, heart health, joint care, mental wellness, skin care, hair care, and everyday health support. Each product page is designed to make ingredients, directions, cautions, and product details easier to compare before checkout.
+        </p>
+        <p>
+          Regional messaging is handled through Shopify Markets so shoppers see the right currency, shipping context, and trust signals for Canada, the United States, or Pakistan while keeping the Boreal Vita brand experience consistent across markets.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    #HomepageSeoContent-{{ section.id }} {
+      background: #ffffff;
+      border-top: 1px solid rgba(10, 40, 44, 0.07);
+    }
+
+    #HomepageSeoContent-{{ section.id }} .homepage-seo-content__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+      gap: clamp(1.25rem, 3vw, 3rem);
+      padding-block: clamp(2rem, 4vw, 3.5rem);
+    }
+
+    #HomepageSeoContent-{{ section.id }} .homepage-seo-content__eyebrow {
+      margin: 0 0 0.65rem;
+      color: var(--brand-accent-dark, #C89F27);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    #HomepageSeoContent-{{ section.id }} .homepage-seo-content__heading {
+      max-width: 14em;
+      margin: 0;
+      color: var(--brand-primary, #0A282C);
+      font-size: clamp(1.55rem, 2.4vw, 2.45rem);
+      line-height: 1.12;
+    }
+
+    #HomepageSeoContent-{{ section.id }} .homepage-seo-content__text {
+      display: grid;
+      gap: 0.95rem;
+      color: rgba(34, 52, 58, 0.78);
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    #HomepageSeoContent-{{ section.id }} .homepage-seo-content__text p {
+      margin: 0;
+    }
+
+    @media (max-width: 849px) {
+      #HomepageSeoContent-{{ section.id }} .homepage-seo-content__inner {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Homepage SEO content",
+  "class": "section-homepage-seo-content",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show homepage SEO content",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Homepage SEO content"
+    }
+  ]
+}
+{% endschema %}

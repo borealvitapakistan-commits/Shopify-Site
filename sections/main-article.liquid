@@ -1,0 +1,221 @@
+{%- comment -%}
+  Article Detail Page - Matches React design
+{%- endcomment -%}
+
+<article class="main-article">
+  <div class="container">
+    {%- comment -%} Breadcrumbs {%- endcomment -%}
+    <nav class="breadcrumbs">
+      <a href="{{ routes.root_url }}">Home</a>
+      {% render 'icon-chevron-right' %}
+      <a href="{{ blog.url }}">{{ blog.title }}</a>
+      {% render 'icon-chevron-right' %}
+      <span>{{ article.title | truncatewords: 5 }}</span>
+    </nav>
+
+    <div class="article-layout">
+      {%- comment -%} Main Content {%- endcomment -%}
+      <div class="article-main">
+        {%- comment -%} Article Header {%- endcomment -%}
+        <header class="article-header">
+          <div class="article-meta">
+            {%- if article.tags.size > 0 -%}
+              <span class="article-tag">{{ article.tags.first }}</span>
+            {%- endif -%}
+            <span class="article-date">{{ article.published_at | date: format: 'date' }}</span>
+            <span class="article-author">by {{ article.author }}</span>
+          </div>
+          <h1 class="article-title">{{ article.title }}</h1>
+        </header>
+
+        {%- comment -%} Featured Image {%- endcomment -%}
+        {%- if article.image -%}
+          <figure class="article-featured-image">
+            <img
+              src="{{ article.image | image_url: width: 1200 }}"
+              alt="{{ article.title }}"
+              width="{{ article.image.width }}"
+              height="{{ article.image.height }}"
+            >
+          </figure>
+        {%- endif -%}
+
+        {%- comment -%} Article Content {%- endcomment -%}
+        <div class="article-content prose">
+          {{ article.content }}
+        </div>
+
+        {%- comment -%} Tags {%- endcomment -%}
+        {%- if article.tags.size > 0 -%}
+          <div class="article-tags">
+            <span class="tags-label">Tags:</span>
+            {%- for tag in article.tags -%}
+              <a href="{{ blog.url }}/tagged/{{ tag | handleize }}" class="tag-link">{{ tag }}</a>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- comment -%} Share Buttons {%- endcomment -%}
+        <div class="article-share">
+          <span class="share-label">Share this article:</span>
+          <div class="share-buttons">
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url }}{{ article.url }}" target="_blank" class="share-btn facebook">
+              {% render 'icon-facebook' %}
+            </a>
+            <a href="https://twitter.com/intent/tweet?url={{ shop.url }}{{ article.url }}&text={{ article.title | url_encode }}" target="_blank" class="share-btn twitter">
+              {% render 'icon-twitter' %}
+            </a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ shop.url }}{{ article.url }}&title={{ article.title | url_encode }}" target="_blank" class="share-btn linkedin">
+              {% render 'icon-linkedin' %}
+            </a>
+            <button class="share-btn copy-link" data-url="{{ shop.url }}{{ article.url }}">
+              {% render 'icon-link' %}
+            </button>
+          </div>
+        </div>
+
+        {%- comment -%} Comments Section {%- endcomment -%}
+        {%- if blog.comments_enabled? -%}
+          <section class="article-comments">
+            <h2 class="comments-title">Comments ({{ article.comments_count }})</h2>
+
+            {%- if article.comments.size > 0 -%}
+              <div class="comments-list">
+                {%- paginate article.comments by 10 -%}
+                  {%- for comment in article.comments -%}
+                    <div class="comment">
+                      <div class="comment-avatar">
+                        {{ comment.author | slice: 0 | upcase }}
+                      </div>
+                      <div class="comment-content">
+                        <div class="comment-header">
+                          <span class="comment-author">{{ comment.author }}</span>
+                          <span class="comment-date">{{ comment.created_at | date: format: 'date' }}</span>
+                        </div>
+                        <div class="comment-body">{{ comment.content }}</div>
+                      </div>
+                    </div>
+                  {%- endfor -%}
+
+                  {%- if paginate.pages > 1 -%}
+                    {% render 'pagination', paginate: paginate %}
+                  {%- endif -%}
+                {%- endpaginate -%}
+              </div>
+            {%- endif -%}
+
+            {%- comment -%} Comment Form {%- endcomment -%}
+            <div class="comment-form-wrapper">
+              <h3>Leave a Comment</h3>
+              {%- form 'new_comment', article, class: 'comment-form' -%}
+                {%- if form.errors -%}
+                  <div class="form-error">
+                    {{ form.errors | default_errors }}
+                  </div>
+                {%- endif -%}
+
+                {%- if form.posted_successfully? -%}
+                  <div class="form-success">
+                    {%- if blog.moderated? -%}
+                      Your comment is pending approval.
+                    {%- else -%}
+                      Your comment has been posted!
+                    {%- endif -%}
+                  </div>
+                {%- endif -%}
+
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="CommentAuthor" class="form-label">Name</label>
+                    <input type="text" name="comment[author]" id="CommentAuthor" class="form-input" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="CommentEmail" class="form-label">Email</label>
+                    <input type="email" name="comment[email]" id="CommentEmail" class="form-input" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="CommentBody" class="form-label">Comment</label>
+                  <textarea name="comment[body]" id="CommentBody" class="form-textarea" rows="5" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+              {%- endform -%}
+            </div>
+          </section>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Sidebar {%- endcomment -%}
+      <aside class="article-sidebar">
+        {%- comment -%} Author Card {%- endcomment -%}
+        <div class="sidebar-card author-card">
+          <div class="author-avatar">
+            {{ article.author | slice: 0 | upcase }}
+          </div>
+          <h3 class="author-name">{{ article.author }}</h3>
+          <p class="author-bio">Health and wellness writer passionate about helping people live their best lives.</p>
+        </div>
+
+        {%- comment -%} Newsletter Signup {%- endcomment -%}
+        <div class="sidebar-card newsletter-card">
+          <h3>Stay Updated</h3>
+          <p>Get health tips and updates delivered to your inbox.</p>
+          {%- form 'customer', class: 'newsletter-form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <input type="email" name="contact[email]" placeholder="Your email" class="form-input" required>
+            <button type="submit" class="btn btn-primary btn-full">Subscribe</button>
+          {%- endform -%}
+        </div>
+
+        {%- comment -%} Related Articles {%- endcomment -%}
+        <div class="sidebar-card related-articles-card">
+          <h3>Related Articles</h3>
+          <div class="related-articles-list">
+            {%- for related in blog.articles limit: 3 -%}
+              {%- unless related.id == article.id -%}
+                <a href="{{ related.url }}" class="related-article">
+                  {%- if related.image -%}
+                    <img
+                      src="{{ related.image | image_url: width: 80 }}"
+                      alt="{{ related.title }}"
+                      width="{{ related.image.width }}"
+                      height="{{ related.image.height }}"
+                    >
+                  {%- endif -%}
+                  <div>
+                    <h4>{{ related.title | truncatewords: 6 }}</h4>
+                    <span class="date">{{ related.published_at | date: format: 'date' }}</span>
+                  </div>
+                </a>
+              {%- endunless -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</article>
+
+<script>
+  document.querySelector('.copy-link')?.addEventListener('click', function() {
+    navigator.clipboard.writeText(this.dataset.url);
+    this.innerHTML = '{% render "icon-check" %}';
+    setTimeout(() => {
+      this.innerHTML = '{% render "icon-link" %}';
+    }, 2000);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Article",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Article"
+    }
+  ]
+}
+{% endschema %}

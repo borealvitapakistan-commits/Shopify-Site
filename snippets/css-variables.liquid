@@ -1,0 +1,118 @@
+{% style %}
+  :root {
+    /* Shopify/theme compatibility aliases backed by assets/tokens.css */
+    --font-title: var(--font-display);
+    --font-rare-heading: var(--font-display);
+    --font-ingredients: var(--font-body);
+    --font-price-address: var(--font-heading);
+    --font-size-base: {{ settings.font_size_base | default: 17 }}px;
+    
+    /* Brand Colors */
+    --brand-primary: var(--bv-teal-800);
+    --brand-primary-light: var(--bv-teal-600);
+    --brand-primary-dark: var(--bv-teal-900);
+    --brand-primary-rgb: 17, 66, 69;
+    --brand-accent: var(--bv-gold-500);
+    --brand-accent-light: var(--bv-gold-200);
+    --brand-accent-dark: var(--bv-brown-900);
+    --brand-accent-rgb: 233, 165, 38;
+    --brand-surface: var(--bv-teal-tint);
+    --brand-surface-warm: var(--bv-cream);
+    --brand-text: var(--bv-ink);
+    --brand-text-soft: #344B4D;
+    --brand-title-gradient-start: var(--bv-teal-900);
+    --brand-title-gradient-end: var(--bv-teal-600);
+    --brand-title-gradient: var(--bv-grad-heading);
+    --brand-green-gradient-start: var(--bv-teal-700);
+    --brand-green-gradient-end: var(--bv-teal-500);
+    --brand-green-gradient: var(--bv-grad-main);
+    --brand-gold-light: var(--bv-gold-200);
+    --brand-gold: var(--bv-gold-500);
+    --brand-gold-gradient: var(--bv-grad-gold);
+
+    /* Compatibility aliases */
+    --brand-purple: var(--brand-primary);
+    --brand-purple-light: var(--brand-primary-light);
+    --brand-purple-dark: var(--brand-primary-dark);
+    --brand-purple-rgb: var(--brand-primary-rgb);
+    --brand-green: var(--brand-accent);
+    --brand-green-light: var(--brand-accent-light);
+    --brand-green-dark: var(--brand-accent-dark);
+    --brand-green-rgb: var(--brand-accent-rgb);
+    --logo-purple: var(--brand-primary);
+    --logo-green: var(--brand-accent);
+    --logo-green-dark: var(--brand-accent-dark);
+    --logo-purple-rgb: var(--brand-primary-rgb);
+    --logo-green-rgb: var(--brand-accent-rgb);
+
+    --color-primary: var(--brand-purple);
+    --color-primary-light: var(--brand-purple-light);
+    --color-primary-dark: var(--brand-purple-dark);
+    --color-primary-rgb: var(--brand-purple-rgb);
+    --color-primary-foreground: var(--bv-white);
+    --brand-main: var(--brand-purple);
+    --brand-copy: var(--brand-text);
+    --brand-subheading: var(--brand-purple);
+    --brand-subheading-dark: var(--brand-primary-dark);
+    --brand-accent-gradient: var(--brand-green-gradient);
+    --brand-soft: var(--brand-surface);
+    --brand-softer: var(--brand-surface-warm);
+    --brand-stroke-fill: var(--bv-white);
+    --brand-stroke-color: var(--brand-purple-dark);
+    --brand-stroke-green: var(--brand-purple);
+    --brand-text-green: var(--brand-purple);
+    
+    /* Category Icon Colors */
+    --category-icon-color: var(--brand-purple);
+    --category-icon-bg: linear-gradient(135deg, color-mix(in srgb, var(--brand-accent) 18%, white) 0%, var(--brand-surface-warm) 100%);
+    --category-icon-bg-hover: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-purple) 100%);
+    
+    /* Accent */
+    --color-accent: var(--brand-accent);
+    --color-accent-light: var(--brand-accent-light);
+    --color-accent-soft: var(--brand-surface-warm);
+    --color-accent-foreground: var(--brand-primary);
+    --brand-yellow-base: var(--brand-gold);
+    --brand-yellow-gradient-start: var(--brand-gold-light);
+    --brand-yellow-gradient-end: var(--brand-gold);
+    --brand-yellow-gradient: var(--brand-gold-gradient);
+    
+    /* Neutral Colors */
+    --color-background: var(--bv-white);
+    --color-bg: var(--bv-cream);
+    --color-card: var(--bv-white);
+    --color-ink: var(--bv-ink);
+    --color-outline: rgba(var(--brand-primary-rgb), 0.16);
+    --color-foreground: var(--brand-text);
+    --color-muted: var(--brand-surface);
+    --color-muted-foreground: var(--brand-text-soft);
+    --color-border: rgba(var(--brand-purple-rgb), 0.18);
+    
+    /* Status Colors */
+    --color-destructive: var(--bv-error);
+    --color-success: var(--bv-success);
+    --color-focus: var(--bv-focus);
+    
+    /* Spacing & Radius */
+    --radius: 0.875rem;
+    --radius-sm: 0.5rem;
+    --radius-lg: 1.125rem;
+    
+    /* Layout */
+    --header-height: 64px;
+    --site-max-width: 1920px;
+    --site-content-max-width: 1440px;
+    --site-edge-gutter: clamp(0.9rem, 1.74vw, 2.1rem);
+    --slideshow-edge-gutter: clamp(0.75rem, 1.45vw, 1.75rem);
+    
+    /* Shadows */
+    --shadow-sm: 0 0.25rem 0.75rem rgba(10, 39, 42, 0.08);
+    --shadow: 0 0.75rem 1.75rem rgba(10, 39, 42, 0.12);
+    --shadow-lg: 0 1.25rem 3rem rgba(10, 39, 42, 0.16);
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition: 200ms ease;
+    --transition-slow: 300ms ease;
+  }
+{% endstyle %}

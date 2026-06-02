@@ -1,0 +1,39 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "about-us-intro",
+      "settings": {
+        "heading": "More than providing medicine, we guide you toward the right wellness support for your condition.",
+        "paragraph_1": "",
+        "paragraph_2": "",
+        "hero_image": ""
+      }
+    },
+    "trust-badges": {
+      "type": "trust-badges",
+      "settings": {
+        "show_section": true
+      }
+    },
+    "homepage-seo-content": {
+      "type": "homepage-seo-content",
+      "settings": {
+        "show_section": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "trust-badges",
+    "homepage-seo-content"
+  ]
+}

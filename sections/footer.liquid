@@ -1,0 +1,327 @@
+{%- comment -%}
+  Footer Section
+{%- endcomment -%}
+
+{%- liquid
+  assign footer_brand = shop.name | default: 'Boreal Vita'
+  assign fallback_logo_width = 180
+  assign fallback_logo_height = fallback_logo_width | times: 496 | divided_by: 1749
+
+  assign footer_about_url = '/pages/about-us'
+  if pages['about-us'] != blank
+    assign footer_about_url = pages['about-us'].url
+  elsif pages['about'] != blank
+    assign footer_about_url = pages['about'].url
+  elsif pages['contact'] != blank
+    assign footer_about_url = pages['contact'].url | append: '?view=about-us'
+  elsif pages['contact-us'] != blank
+    assign footer_about_url = pages['contact-us'].url | append: '?view=about-us'
+  endif
+
+  assign footer_contact_url = '/pages/contact'
+  if pages['contact-us'] != blank
+    assign footer_contact_url = pages['contact-us'].url
+  elsif pages['contact'] != blank
+    assign footer_contact_url = pages['contact'].url
+  endif
+
+  assign footer_store_locator_url = footer_contact_url
+  if pages['store-locator'] != blank
+    assign footer_store_locator_url = pages['store-locator'].url
+  elsif pages['storelocator'] != blank
+    assign footer_store_locator_url = pages['storelocator'].url
+  elsif pages['store-locations'] != blank
+    assign footer_store_locator_url = pages['store-locations'].url
+  endif
+
+  assign footer_track_order_url = routes.account_url
+  unless customer
+    if routes.account_login_url != blank
+      assign footer_track_order_url = routes.account_login_url
+    endif
+  endunless
+  if pages['track-your-order'] != blank
+    assign footer_track_order_url = pages['track-your-order'].url
+  elsif pages['track-order'] != blank
+    assign footer_track_order_url = pages['track-order'].url
+  endif
+
+  assign footer_returns_url = '/policies/refund-policy'
+  if pages['returns-exchanges'] != blank
+    assign footer_returns_url = pages['returns-exchanges'].url
+  elsif pages['returns-and-exchanges'] != blank
+    assign footer_returns_url = pages['returns-and-exchanges'].url
+  endif
+
+  assign footer_faq_url = '/pages/faq'
+  if pages['faq'] != blank
+    assign footer_faq_url = pages['faq'].url
+  elsif pages['faqs'] != blank
+    assign footer_faq_url = pages['faqs'].url
+  endif
+
+  assign footer_careers_url = footer_contact_url
+  if pages['careers'] != blank
+    assign footer_careers_url = pages['careers'].url
+  endif
+
+  assign footer_account_url = routes.account_url
+  assign footer_login_url = routes.account_login_url | default: '/account/login'
+  assign footer_register_url = routes.account_register_url | default: '/account/register'
+  assign footer_cart_url = routes.cart_url
+
+  assign footer_newsletter_heading = section.settings.newsletter_heading | default: 'Join The Community!'
+  assign footer_newsletter_text = section.settings.newsletter_text | default: 'Sign up for our newsletter and enjoy 10% off on your next purchase - stay updated and save big!'
+-%}
+
+<footer class="site-footer">
+  <div class="container site-footer__container">
+    <div class="site-footer__brand-row">
+      <a class="site-footer__logo-link" href="{{ routes.root_url }}" aria-label="{{ footer_brand | escape }} home">
+        {% if section.settings.logo != blank %}
+          {{
+            section.settings.logo
+            | image_url: width: 260
+            | image_tag:
+              class: 'site-footer__logo',
+              loading: 'lazy',
+              alt: footer_brand
+          }}
+        {% else %}
+          <img
+            src="{{ 'logo-white-440.png' | asset_url }}"
+            alt="{{ footer_brand | escape }}"
+            class="site-footer__logo"
+            width="{{ fallback_logo_width }}"
+            height="{{ fallback_logo_height }}"
+            loading="lazy"
+          >
+        {% endif %}
+      </a>
+    </div>
+
+    <div class="site-footer__main">
+      <nav class="site-footer__columns" aria-label="Footer navigation">
+        <div class="site-footer__column">
+          <p class="footer-heading">Information</p>
+          <ul class="site-footer__list">
+            <li><a href="/policies/privacy-policy">Privacy Policy</a></li>
+            <li><a href="{{ footer_store_locator_url }}">Store Locator</a></li>
+            <li><a href="{{ footer_track_order_url }}">Track Your Order</a></li>
+            <li><a href="/policies/terms-of-service">Terms &amp; Conditions</a></li>
+            <li><a href="{{ footer_returns_url }}">Returns &amp; Exchanges</a></li>
+          </ul>
+        </div>
+
+        <div class="site-footer__column">
+          <p class="footer-heading">Help</p>
+          <ul class="site-footer__list">
+            <li><a href="{{ footer_faq_url }}">FAQs</a></li>
+            <li><a href="{{ footer_about_url }}">About Us</a></li>
+            <li><a href="{{ footer_careers_url }}">Careers</a></li>
+            <li><a href="{{ footer_contact_url }}">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="site-footer__column">
+          <p class="footer-heading">Account Details</p>
+          <ul class="site-footer__list">
+            <li><a href="{{ footer_account_url }}">Account</a></li>
+            <li><a href="{{ footer_login_url }}">Login</a></li>
+            <li><a href="{{ footer_register_url }}">Register</a></li>
+            <li><a href="{{ footer_cart_url }}">Cart</a></li>
+          </ul>
+        </div>
+
+        <div class="site-footer__column site-footer__column--community">
+          <p class="footer-heading">{{ footer_newsletter_heading }}</p>
+          <p class="site-footer__newsletter-text">{{ footer_newsletter_text }}</p>
+
+          {% if section.settings.show_newsletter %}
+            {% form 'customer', class: 'site-footer__newsletter-form' %}
+              {% if form.posted_successfully? %}
+                <p class="site-footer__form-note">{{ section.settings.newsletter_success | default: 'Thanks for subscribing.' }}</p>
+              {% else %}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <label class="visually-hidden" for="FooterEmail-{{ section.id }}">Email</label>
+                <div class="site-footer__newsletter-fields">
+                  <input
+                    id="FooterEmail-{{ section.id }}"
+                    class="site-footer__newsletter-input"
+                    type="email"
+                    name="contact[email]"
+                    placeholder="{{ section.settings.newsletter_placeholder | default: 'Enter your email' }}"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    autocomplete="email"
+                    required
+                  >
+                  <button type="submit" class="site-footer__newsletter-button" aria-label="Subscribe to newsletter">
+                    <svg aria-hidden="true" viewBox="0 0 24 24">
+                      <path d="M5 12h14"/>
+                      <path d="m13 6 6 6-6 6"/>
+                    </svg>
+                  </button>
+                </div>
+                {% if form.errors %}
+                  <p class="site-footer__form-note">{{ form.errors | default_errors }}</p>
+                {% endif %}
+              {% endif %}
+            {% endform %}
+          {% endif %}
+
+          <div class="site-footer__socials" role="group" aria-label="Social links">
+            {% if settings.social_facebook_url != blank %}
+              <a class="site-footer__social" href="{{ settings.social_facebook_url }}" aria-label="Facebook" target="_blank" rel="noopener">
+            {% else %}
+              <span class="site-footer__social" aria-hidden="true">
+            {% endif %}
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 8h3V4h-3c-3.3 0-5 2-5 5v3H6v4h3v8h4v-8h3.3l.7-4h-4V9c0-.7.3-1 1-1Z"/></svg>
+            {% if settings.social_facebook_url != blank %}</a>{% else %}</span>{% endif %}
+
+            {% if settings.social_instagram_url != blank %}
+              <a class="site-footer__social" href="{{ settings.social_instagram_url }}" aria-label="Instagram" target="_blank" rel="noopener">
+            {% else %}
+              <span class="site-footer__social" aria-hidden="true">
+            {% endif %}
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 4a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm5.25-3.35a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"/></svg>
+            {% if settings.social_instagram_url != blank %}</a>{% else %}</span>{% endif %}
+
+            {% if settings.social_twitter_url != blank %}
+              <a class="site-footer__social" href="{{ settings.social_twitter_url }}" aria-label="X" target="_blank" rel="noopener">
+            {% else %}
+              <span class="site-footer__social" aria-hidden="true">
+            {% endif %}
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18.3 2h3.1l-6.8 7.8 8 12.2h-6.3l-4.9-7.2L5.8 22H2.7l7.3-8.4L2.3 2h6.4l4.4 6.5L18.3 2Zm-1.1 17.9h1.7L7.8 4H6L17.2 19.9Z"/></svg>
+            {% if settings.social_twitter_url != blank %}</a>{% else %}</span>{% endif %}
+
+            <span class="site-footer__social" aria-hidden="true">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.8h4v12H3v-12Zm6.2 0H13v1.6c.6-.9 1.7-1.9 3.6-1.9 3.9 0 4.6 2.6 4.6 5.9V22h-4v-5.9c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3.1v6H9.2v-12.2Z"/></svg>
+            </span>
+
+            {% if settings.social_youtube_url != blank %}
+              <a class="site-footer__social" href="{{ settings.social_youtube_url }}" aria-label="YouTube" target="_blank" rel="noopener">
+            {% else %}
+              <span class="site-footer__social" aria-hidden="true">
+            {% endif %}
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.6-.8-2-.9C16 4 12 4 12 4s-4 0-6.8.2c-.4.1-1.3.1-2 .9-.6.6-.8 2.1-.8 2.1S2 9 2 10.8v1.7c0 1.8.4 3.6.4 3.6s.2 1.5.8 2.1c.8.8 1.8.8 2.2.9 1.6.2 6.6.2 6.6.2s4 0 6.8-.2c.4-.1 1.3-.1 2-.9.6-.6.8-2.1.8-2.1s.4-1.8.4-3.6v-1.7c0-1.8-.4-3.6-.4-3.6ZM10 15.5v-7l6 3.5-6 3.5Z"/></svg>
+            {% if settings.social_youtube_url != blank %}</a>{% else %}</span>{% endif %}
+
+            <span class="site-footer__social" aria-hidden="true">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 2c.3 2.5 1.6 4 4 4.4v4.1c-1.5 0-2.8-.4-4-1.2V16a6 6 0 1 1-6-6c.4 0 .8 0 1.2.1v4.3c-.4-.2-.8-.3-1.2-.3a1.9 1.9 0 1 0 1.9 1.9V2H16Z"/></svg>
+            </span>
+
+            <span class="site-footer__social" aria-hidden="true">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 3.9A11.8 11.8 0 0 0 12.1 1C6 1 1 5.9 1 12c0 2 .5 3.9 1.5 5.6L1 23l5.6-1.5c1.6.9 3.5 1.4 5.4 1.4h.1C18 22.9 23 18 23 12c0-3.1-1.2-6-3-8.1ZM12 20.8h-.1c-1.7 0-3.4-.5-4.8-1.4l-.3-.2-3.3.9.9-3.2-.2-.3A8.7 8.7 0 0 1 3.2 12c0-4.8 4-8.8 8.8-8.8 2.4 0 4.6.9 6.2 2.6a8.7 8.7 0 0 1-6.1 15Zm4.8-6.6c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.7.2-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.8-.7-1.4-1.7-1.5-2-.2-.3 0-.4.1-.6l.5-.5c.2-.2.3-.3.4-.5.1-.2.1-.4 0-.6-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1-1.1 2.4 0 1.4 1 2.8 1.1 3 .1.2 2 3.1 4.8 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.1-1.4-.1-.2-.3-.2-.6-.4Z"/></svg>
+            </span>
+          </div>
+        </div>
+      </nav>
+
+      <div class="site-footer__bottom">
+        <p>Copyright &copy; {{ 'now' | date: '%Y' }} {{ footer_brand }}. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "footer_background_image",
+      "label": "Footer background image"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Your trusted source for premium health supplements."
+    },
+    {
+      "type": "link_list",
+      "id": "menu_secondary",
+      "label": "Secondary menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_secondary_title",
+      "label": "Secondary menu title",
+      "default": "Customer Service"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email",
+      "default": "support@borealvita.com"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone",
+      "default": "+971 4 204 0700"
+    },
+    {
+      "type": "richtext",
+      "id": "address",
+      "label": "Address",
+      "default": "<p>3230 Preston Ave S, Saskatoon, SK S7T 0Y3, Canada</p>"
+    },
+    {
+      "type": "text",
+      "id": "hours",
+      "label": "Business hours"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter",
+      "label": "Show newsletter",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter heading",
+      "default": "Join The Community!"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter text",
+      "default": "Sign up for our newsletter and enjoy 10% off on your next purchase - stay updated and save big!"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Newsletter placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button",
+      "label": "Newsletter button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_success",
+      "label": "Newsletter success message",
+      "default": "Thanks for subscribing."
+    }
+  ]
+}
+{% endschema %}

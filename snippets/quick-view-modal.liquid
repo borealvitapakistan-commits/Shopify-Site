@@ -1,0 +1,279 @@
+{%- comment -%}
+  Quick View Modal - Product preview without leaving page
+{%- endcomment -%}
+
+<div id="QuickViewModal" class="quick-view-modal" aria-hidden="true">
+  <div class="modal-backdrop" data-close-quick-view></div>
+  <div class="modal-container">
+    <button class="modal-close" data-close-quick-view aria-label="Close">
+      {% render 'icon-x' %}
+    </button>
+    
+    <div class="modal-content">
+      <div class="quick-view-loading">
+        <div class="spinner"></div>
+        <p>Loading product...</p>
+      </div>
+      
+      <div class="quick-view-product" style="display: none;">
+        <div class="quick-view-grid">
+          {%- comment -%} Product Image {%- endcomment -%}
+          <div class="quick-view-image">
+            <img
+              src="{{ 'Logo.svg' | asset_url }}"
+              alt="Product preview image"
+              id="quickViewImage"
+              width="800"
+              height="800"
+            >
+          </div>
+          
+          {%- comment -%} Product Info {%- endcomment -%}
+          <div class="quick-view-info">
+            <p class="quick-view-vendor" id="quickViewVendor"></p>
+            <p class="quick-view-title" id="quickViewTitle"></p>
+            
+            <div class="quick-view-price">
+              <span class="current-price" id="quickViewPrice"></span>
+              <span class="compare-price" id="quickViewComparePrice"></span>
+            </div>
+            
+            <p class="quick-view-description" id="quickViewDescription"></p>
+            
+            {%- comment -%} Variant Selector {%- endcomment -%}
+            <div class="quick-view-variants" id="quickViewVariants"></div>
+            
+            {%- comment -%} Quantity {%- endcomment -%}
+            <div class="quick-view-quantity">
+              <label>Quantity</label>
+              <div class="quantity-selector">
+                <button type="button" class="qty-btn" data-action="decrease">
+                  {% render 'icon-minus' %}
+                </button>
+                <input type="number" id="quickViewQty" value="1" min="1" max="99">
+                <button type="button" class="qty-btn" data-action="increase">
+                  {% render 'icon-plus' %}
+                </button>
+              </div>
+            </div>
+            
+            {%- comment -%} Actions {%- endcomment -%}
+            <div class="quick-view-actions">
+              <button type="button" class="btn btn-primary btn-full" id="quickViewAddToCart">
+                {% render 'icon-cart' %}
+                Add to Cart
+              </button>
+              <button type="button" class="btn btn-outline btn-icon" id="quickViewWishlist" aria-label="Add to wishlist">
+                {% render 'icon-heart' %}
+              </button>
+            </div>
+            
+            <a href="" class="view-full-details" id="quickViewLink">
+              View Full Details
+              {% render 'icon-chevron-right' %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  class QuickView {
+    constructor() {
+      this.modal = document.getElementById('QuickViewModal');
+      this.loading = this.modal.querySelector('.quick-view-loading');
+      this.product = this.modal.querySelector('.quick-view-product');
+      this.currentVariantId = null;
+      this.currentProductHandle = null;
+      
+      this.bindEvents();
+    }
+    
+    bindEvents() {
+      // Open quick view
+      document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('[data-quick-view]');
+        if (trigger) {
+          e.preventDefault();
+          e.stopPropagation();
+          this.open(trigger.dataset.quickView);
+        }
+      });
+      
+      // Close modal
+      document.querySelectorAll('[data-close-quick-view]').forEach(el => {
+        el.addEventListener('click', () => this.close());
+      });
+      
+      // Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.modal.getAttribute('aria-hidden') === 'false') {
+          this.close();
+        }
+      });
+      
+      // Quantity buttons
+      this.modal.querySelectorAll('.qty-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const input = document.getElementById('quickViewQty');
+          const action = btn.dataset.action;
+          let value = parseInt(input.value);
+          
+          if (action === 'increase') value++;
+          else if (action === 'decrease' && value > 1) value--;
+          
+          input.value = value;
+        });
+      });
+      
+      // Add to cart
+      document.getElementById('quickViewAddToCart')?.addEventListener('click', () => {
+        this.addToCart();
+      });
+      
+      // Wishlist
+      document.getElementById('quickViewWishlist')?.addEventListener('click', () => {
+        if (this.currentProductHandle) {
+          window.Wishlist?.toggle(this.currentProductHandle);
+        }
+      });
+    }
+    
+    async open(handle) {
+      this.currentProductHandle = handle;
+      this.modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      
+      this.loading.style.display = 'flex';
+      this.product.style.display = 'none';
+      
+      try {
+        const response = await fetch(`/products/${handle}.js`);
+        const data = await response.json();
+        this.renderProduct(data);
+      } catch (error) {
+        console.error('Failed to load product:', error);
+        this.close();
+      }
+    }
+    
+    renderProduct(product) {
+      const firstVariant = product.variants[0];
+      this.currentVariantId = firstVariant.id;
+      
+      document.getElementById('quickViewImage').src = product.featured_image || "{{ 'Logo.svg' | asset_url }}";
+      document.getElementById('quickViewImage').alt = product.title;
+      document.getElementById('quickViewVendor').textContent = product.vendor;
+      document.getElementById('quickViewTitle').textContent = product.title;
+      document.getElementById('quickViewPrice').textContent = this.formatMoney(firstVariant.price);
+      document.getElementById('quickViewDescription').textContent = product.description.replace(/<[^>]*>/g, '').slice(0, 200) + '...';
+      document.getElementById('quickViewLink').href = `/products/${product.handle}`;
+      
+      if (firstVariant.compare_at_price > firstVariant.price) {
+        document.getElementById('quickViewComparePrice').textContent = this.formatMoney(firstVariant.compare_at_price);
+        document.getElementById('quickViewComparePrice').style.display = 'inline';
+      } else {
+        document.getElementById('quickViewComparePrice').style.display = 'none';
+      }
+      
+      // Render variants
+      const variantsContainer = document.getElementById('quickViewVariants');
+      variantsContainer.innerHTML = '';
+      
+      if (product.variants.length > 1) {
+        product.options.forEach((option, index) => {
+          const optionHtml = `
+            <div class="variant-option">
+              <label>${option}</label>
+              <div class="variant-buttons">
+                ${[...new Set(product.variants.map(v => v.options[index]))].map(value => `
+                  <button type="button" class="variant-btn" data-option="${index}" data-value="${value}">${value}</button>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          variantsContainer.innerHTML += optionHtml;
+        });
+        
+        // Bind variant selection
+        variantsContainer.querySelectorAll('.variant-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const siblings = btn.parentElement.querySelectorAll('.variant-btn');
+            siblings.forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            
+            this.updateVariant(product);
+          });
+        });
+        
+        // Select first variant options
+        variantsContainer.querySelectorAll('.variant-buttons').forEach(container => {
+          container.querySelector('.variant-btn')?.classList.add('active');
+        });
+      }
+      
+      this.loading.style.display = 'none';
+      this.product.style.display = 'block';
+    }
+    
+    updateVariant(product) {
+      const selectedOptions = [];
+      document.querySelectorAll('#quickViewVariants .variant-btn.active').forEach(btn => {
+        selectedOptions[btn.dataset.option] = btn.dataset.value;
+      });
+      
+      const variant = product.variants.find(v => 
+        v.options.every((opt, i) => opt === selectedOptions[i])
+      );
+      
+      if (variant) {
+        this.currentVariantId = variant.id;
+        document.getElementById('quickViewPrice').textContent = this.formatMoney(variant.price);
+        
+        if (variant.compare_at_price > variant.price) {
+          document.getElementById('quickViewComparePrice').textContent = this.formatMoney(variant.compare_at_price);
+          document.getElementById('quickViewComparePrice').style.display = 'inline';
+        } else {
+          document.getElementById('quickViewComparePrice').style.display = 'none';
+        }
+      }
+    }
+    
+    async addToCart() {
+      const qty = parseInt(document.getElementById('quickViewQty').value);
+      
+      try {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: this.currentVariantId,
+            quantity: qty
+          })
+        });
+        
+        if (response.ok) {
+          this.close();
+          window.CartDrawer?.open();
+        }
+      } catch (error) {
+        console.error('Add to cart failed:', error);
+      }
+    }
+    
+    close() {
+      this.modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+    }
+    
+    formatMoney(cents) {
+      return '$' + (cents / 100).toFixed(2);
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    window.QuickView = new QuickView();
+  });
+</script>

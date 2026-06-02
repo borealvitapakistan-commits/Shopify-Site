@@ -1,0 +1,371 @@
+{%- comment -%}
+  Compact Slideshow Section
+  Contained-width banner slider for promotional imagery
+{%- endcomment -%}
+
+<section
+  class="compact-slideshow-section"
+  data-compact-slider="{{ section.id }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-interval="{{ section.settings.autoplay_interval | times: 1000 }}"
+  style="--compact-desktop-ratio: {{ section.settings.desktop_ratio }}; --compact-mobile-ratio: {{ section.settings.mobile_ratio }};"
+>
+  <div class="container">
+    <div class="compact-slideshow">
+      <div class="compact-slideshow__viewport">
+        <div class="compact-slideshow__track" data-compact-track>
+          {% for block in section.blocks %}
+            {% assign slide_image = block.settings.image | default: block.settings.mobile_image %}
+            <div class="compact-slideshow__slide" data-compact-slide {{ block.shopify_attributes }}>
+              <div class="compact-slideshow__media">
+                {% if block.settings.link != blank %}
+                  <a class="compact-slideshow__slide-link" href="{{ block.settings.link }}">
+                {% endif %}
+                {% if slide_image != blank %}
+                  <picture class="compact-slideshow__picture">
+                    {% if block.settings.mobile_image != blank and block.settings.image != blank %}
+                      <source
+                        media="(max-width: 767px)"
+                        srcset="
+                          {{ block.settings.mobile_image | image_url: width: 420 }} 420w,
+                          {{ block.settings.mobile_image | image_url: width: 640 }} 640w,
+                          {{ block.settings.mobile_image | image_url: width: 900 }} 900w,
+                          {{ block.settings.mobile_image | image_url: width: 1200 }} 1200w
+                        "
+                        sizes="100vw"
+                      >
+                    {% endif %}
+                    <img
+                      class="compact-slideshow__image"
+                      src="{{ slide_image | image_url: width: 2000 }}"
+                      srcset="
+                        {{ slide_image | image_url: width: 900 }} 900w,
+                        {{ slide_image | image_url: width: 1400 }} 1400w,
+                        {{ slide_image | image_url: width: 1800 }} 1800w,
+                        {{ slide_image | image_url: width: 2000 }} 2000w
+                      "
+                      sizes="(min-width: 1280px) calc(100vw - 3.5rem), (min-width: 768px) calc(100vw - 3.5rem), calc(100vw - 1.5rem)"
+                      alt="{{ slide_image.alt | default: shop.name | escape }}"
+                      width="{{ slide_image.width }}"
+                      height="{{ slide_image.height }}"
+                      loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                    >
+                  </picture>
+                {% else %}
+                  <div class="compact-slideshow__image compact-slideshow__image--placeholder"></div>
+                {% endif %}
+                {% if block.settings.link != blank %}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if section.blocks.size > 1 %}
+        <button type="button" class="compact-slideshow__nav compact-slideshow__nav--prev" aria-label="Previous slide" data-compact-prev>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button type="button" class="compact-slideshow__nav compact-slideshow__nav--next" aria-label="Next slide" data-compact-next>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+
+        <div class="compact-slideshow__dots" role="tablist">
+          {% for block in section.blocks %}
+            <button
+              class="compact-slideshow__dot {% if forloop.first %}is-active{% endif %}"
+              type="button"
+              aria-label="Go to slide {{ forloop.index }}"
+              data-compact-dot="{{ forloop.index0 }}"
+            ></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .compact-slideshow-section {
+    padding: 2rem 0 1.5rem;
+  }
+
+  .compact-slideshow-section > .container {
+    max-width: var(--site-max-width, 1920px);
+    padding-right: var(--slideshow-edge-gutter, clamp(0.75rem, 1.45vw, 1.75rem));
+    padding-left: var(--slideshow-edge-gutter, clamp(0.75rem, 1.45vw, 1.75rem));
+  }
+
+  .compact-slideshow {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-muted);
+  }
+
+  .compact-slideshow__viewport {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .compact-slideshow__track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.6s ease;
+    will-change: transform;
+  }
+
+  .compact-slideshow__slide {
+    min-width: 100%;
+    position: relative;
+  }
+
+  .compact-slideshow__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--compact-desktop-ratio, 16 / 4.5);
+  }
+
+  .compact-slideshow__slide-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .compact-slideshow__picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .compact-slideshow__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .compact-slideshow__image--placeholder {
+    background: var(--brand-yellow-gradient, linear-gradient(135deg, #FAD054 0%, #FFF8E7 100%));
+  }
+
+  .compact-slideshow__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.62);
+    background: rgba(var(--color-primary-rgb, 10, 40, 44), 0.78);
+    color: #ffffff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    z-index: 3;
+  }
+
+  .compact-slideshow__nav--prev {
+    left: 14px;
+  }
+
+  .compact-slideshow__nav--next {
+    right: 14px;
+  }
+
+  .compact-slideshow__dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 3;
+  }
+
+  .compact-slideshow__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+  }
+
+  .compact-slideshow__dot.is-active {
+    background: #ffffff;
+  }
+
+  @media (max-width: 767px) {
+    .compact-slideshow__media {
+      aspect-ratio: var(--compact-mobile-ratio, 16 / 9);
+    }
+
+    .compact-slideshow__nav {
+      width: 36px;
+      height: 36px;
+    }
+
+    .compact-slideshow__nav--prev {
+      left: 10px;
+    }
+
+    .compact-slideshow__nav--next {
+      right: 10px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const section = document.querySelector('[data-compact-slider="{{ section.id }}"]');
+    if (!section) return;
+
+    const track = section.querySelector('[data-compact-track]');
+    const slides = Array.from(section.querySelectorAll('[data-compact-slide]'));
+    const prevBtn = section.querySelector('[data-compact-prev]');
+    const nextBtn = section.querySelector('[data-compact-next]');
+    const dots = Array.from(section.querySelectorAll('[data-compact-dot]'));
+
+    if (!track || slides.length === 0) return;
+
+    let activeIndex = 0;
+    let timer;
+
+    const update = () => {
+      track.style.transform = `translateX(-${activeIndex * 100}%)`;
+      dots.forEach((dot, idx) => dot.classList.toggle('is-active', idx === activeIndex));
+    };
+
+    const setActive = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+      update();
+    };
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        setActive(activeIndex - 1);
+        resetAutoplay();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        setActive(activeIndex + 1);
+        resetAutoplay();
+      });
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        setActive(Number(dot.dataset.compactDot));
+        resetAutoplay();
+      });
+    });
+
+    const autoplay = section.dataset.autoplay === 'true';
+    const interval = Number(section.dataset.interval) || 5000;
+
+    const startAutoplay = () => {
+      if (!autoplay || slides.length < 2) return;
+      timer = setInterval(() => {
+        setActive(activeIndex + 1);
+      }, interval);
+    };
+
+    const resetAutoplay = () => {
+      if (!autoplay) return;
+      clearInterval(timer);
+      startAutoplay();
+    };
+
+    update();
+    startAutoplay();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Compact Slideshow",
+  "tag": "section",
+  "class": "section-compact-slideshow",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Autoplay interval (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "desktop_ratio",
+      "label": "Desktop slide ratio",
+      "default": "16 / 4.5",
+      "options": [
+        { "value": "16 / 4", "label": "16:4 (short)" },
+        { "value": "16 / 4.5", "label": "16:4.5 (recommended)" },
+        { "value": "16 / 5", "label": "16:5" },
+        { "value": "16 / 6", "label": "16:6 (tall)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_ratio",
+      "label": "Mobile slide ratio",
+      "default": "16 / 9",
+      "options": [
+        { "value": "16 / 9", "label": "16:9" },
+        { "value": "4 / 3", "label": "4:3" },
+        { "value": "1 / 1", "label": "1:1" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image (optional)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Compact Slideshow",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

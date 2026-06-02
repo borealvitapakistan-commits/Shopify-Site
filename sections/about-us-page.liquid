@@ -1,0 +1,717 @@
+{%- comment -%}
+  About Us page experience with scroll storytelling and editorial blocks.
+{%- endcomment -%}
+
+{{ 'about-us.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'about-us.js' | asset_url }}" defer></script>
+
+{%- assign has_story_steps = false -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'story_step' -%}
+    {%- assign has_story_steps = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<section class="about-page" id="AboutPage-{{ section.id }}" data-about-page>
+  <div class="about-page__hero about-page__hero--immersive">
+    <div class="about-page__hero-background" aria-hidden="true">
+      {% if section.settings.hero_image != blank %}
+        <img
+          src="{{ section.settings.hero_image | image_url: width: 2400 }}"
+          srcset="
+            {{ section.settings.hero_image | image_url: width: 900 }} 900w,
+            {{ section.settings.hero_image | image_url: width: 1400 }} 1400w,
+            {{ section.settings.hero_image | image_url: width: 1800 }} 1800w,
+            {{ section.settings.hero_image | image_url: width: 2400 }} 2400w
+          "
+          sizes="100vw"
+          alt="{{ section.settings.hero_image.alt | default: section.settings.hero_title | escape }}"
+          width="{{ section.settings.hero_image.width }}"
+          height="{{ section.settings.hero_image.height }}"
+          loading="eager"
+        >
+      {% else %}
+        <div class="about-page__hero-fallback-mark" aria-hidden="true">
+          <img
+            src="{{ 'Logo.svg' | asset_url }}"
+            alt="Boreal Vita"
+            width="1744"
+            height="1478"
+            loading="eager"
+          >
+        </div>
+      {% endif %}
+    </div>
+    <div class="container about-page__hero-content">
+      <div class="about-page__hero-copy" data-reveal>
+        {% if section.settings.hero_eyebrow != blank %}
+          <p class="about-eyebrow">{{ section.settings.hero_eyebrow }}</p>
+        {% endif %}
+        <h1 class="about-hero-title">{{ section.settings.hero_title | default: page.title }}</h1>
+        {% if section.settings.hero_intro != blank %}
+          <div class="about-hero-intro rte">{{ section.settings.hero_intro }}</div>
+        {% endif %}
+        {% if section.settings.hero_button_label != blank and section.settings.hero_button_link != blank %}
+          <a class="about-btn about-btn--primary" href="{{ section.settings.hero_button_link }}">
+            {{ section.settings.hero_button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="about-page__content">
+    <div class="container">
+      {% assign rendered_story = false %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'split_section' %}
+            <section class="about-block about-block--split {% if block.settings.reverse_layout %}is-reverse{% endif %}" {{ block.shopify_attributes }}>
+              <div class="about-split">
+                <div class="about-split__copy" data-reveal>
+                  {% if block.settings.eyebrow != blank %}
+                    <p class="about-eyebrow">{{ block.settings.eyebrow }}</p>
+                  {% endif %}
+                  {% if block.settings.heading != blank %}
+                    <h2>{{ block.settings.heading }}</h2>
+                  {% endif %}
+                  {% if block.settings.body != blank %}
+                    <div class="rte">{{ block.settings.body }}</div>
+                  {% endif %}
+                  {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                    <a class="about-btn about-btn--secondary" href="{{ block.settings.button_link }}">
+                      {{ block.settings.button_label }}
+                    </a>
+                  {% endif %}
+                </div>
+                <div class="about-split__media" data-reveal>
+                  {% if block.settings.image != blank %}
+                    <img
+                      src="{{ block.settings.image | image_url: width: 1500 }}"
+                      srcset="
+                        {{ block.settings.image | image_url: width: 640 }} 640w,
+                        {{ block.settings.image | image_url: width: 900 }} 900w,
+                        {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                        {{ block.settings.image | image_url: width: 1500 }} 1500w
+                      "
+                      sizes="(max-width: 989px) 100vw, 48vw"
+                      alt="{{ block.settings.image.alt | default: block.settings.heading | escape }}"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.height }}"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="about-placeholder" aria-hidden="true"></div>
+                  {% endif %}
+                </div>
+              </div>
+            </section>
+
+          {% when 'full_width_image' %}
+            {% assign overlay_opacity = block.settings.overlay_opacity | default: 42 %}
+            <section class="about-block about-block--full" {{ block.shopify_attributes }}>
+              <div
+                class="about-full-image about-full-image--{{ block.settings.height | default: 'medium' }} about-full-image--{{ block.settings.text_align | default: 'left' }}{% if block.settings.enable_scroll_animation %} is-animated-band{% endif %}"
+                style="--overlayOpacity: {{ overlay_opacity }};"
+                {% if block.settings.enable_scroll_animation %}data-band{% endif %}
+              >
+                {% if block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 2200 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 900 }} 900w,
+                      {{ block.settings.image | image_url: width: 1280 }} 1280w,
+                      {{ block.settings.image | image_url: width: 1700 }} 1700w,
+                      {{ block.settings.image | image_url: width: 2200 }} 2200w
+                    "
+                    sizes="100vw"
+                    alt="{{ block.settings.image.alt | default: block.settings.heading | escape }}"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="about-placeholder" aria-hidden="true"></div>
+                {% endif %}
+
+                <div class="about-full-image__overlay about-full-image__overlay--{{ block.settings.caption_theme | default: 'light' }}">
+                  {% if block.settings.heading != blank %}
+                    <h2>{{ block.settings.heading }}</h2>
+                  {% endif %}
+                  {% if block.settings.body != blank %}
+                    <div class="rte">{{ block.settings.body }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </section>
+
+          {% when 'story_step' %}
+            {% if rendered_story == false %}
+              {% assign rendered_story = true %}
+              {% assign initial_story_image = section.settings.story_default_image %}
+              {% assign initial_story_alt = section.settings.story_heading | default: 'Story image' %}
+              {% assign initial_story_width = 1200 %}
+              {% assign initial_story_height = 1200 %}
+
+              {% for story_block in section.blocks %}
+                {% if story_block.type == 'story_step' and story_block.settings.image != blank %}
+                  {% assign initial_story_image = story_block.settings.image %}
+                  {% assign initial_story_alt = story_block.settings.image.alt | default: story_block.settings.heading %}
+                  {% assign initial_story_width = story_block.settings.image.width %}
+                  {% assign initial_story_height = story_block.settings.image.height %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+
+              {% if section.settings.story_default_image != blank and initial_story_image == section.settings.story_default_image %}
+                {% assign initial_story_width = section.settings.story_default_image.width %}
+                {% assign initial_story_height = section.settings.story_default_image.height %}
+              {% endif %}
+
+              <section class="about-block about-block--story" data-scroll-story style="--stickyTop: {{ section.settings.sticky_top }}px;">
+                <div class="about-story">
+                  <div class="about-story__media-col">
+                    <div class="about-story__sticky-wrap">
+                      <div class="about-story__sticky-card">
+                        {% if initial_story_image != blank %}
+                          <img
+                            class="about-story__sticky-image"
+                            data-story-image
+                            src="{{ initial_story_image | image_url: width: 1700 }}"
+                            srcset="{{ initial_story_image | image_url: width: 640 }} 640w, {{ initial_story_image | image_url: width: 960 }} 960w, {{ initial_story_image | image_url: width: 1280 }} 1280w, {{ initial_story_image | image_url: width: 1700 }} 1700w"
+                            sizes="(max-width: 989px) 100vw, 44vw"
+                            alt="{{ initial_story_alt | escape }}"
+                            loading="lazy"
+                            width="{{ initial_story_width }}"
+                            height="{{ initial_story_height }}"
+                          >
+                        {% else %}
+                          <img
+                            class="about-story__sticky-image about-story__sticky-image--fallback"
+                            data-story-image
+                            src="{{ 'Logo.svg' | asset_url }}"
+                            sizes="(max-width: 989px) 100vw, 44vw"
+                            alt="{{ initial_story_alt | escape }}"
+                            loading="lazy"
+                            width="1744"
+                            height="1478"
+                          >
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="about-story__content-col">
+                    {% if section.settings.story_eyebrow != blank %}
+                      <p class="about-eyebrow" data-reveal>{{ section.settings.story_eyebrow }}</p>
+                    {% endif %}
+                    {% if section.settings.story_heading != blank %}
+                      <h2 data-reveal>{{ section.settings.story_heading }}</h2>
+                    {% endif %}
+                    {% if section.settings.story_intro != blank %}
+                      <div class="about-story__intro rte" data-reveal>{{ section.settings.story_intro }}</div>
+                    {% endif %}
+
+                    <div class="about-story__steps" data-story-steps>
+                      {% assign story_index = 0 %}
+                      {% for story_block in section.blocks %}
+                        {% if story_block.type == 'story_step' %}
+                          <article
+                            class="about-story-step"
+                            data-story-step
+                            data-step-index="{{ story_index }}"
+                            {% if story_block.settings.image != blank %}
+                              data-step-src="{{ story_block.settings.image | image_url: width: 1700 }}"
+                              data-step-srcset="{{ story_block.settings.image | image_url: width: 640 }} 640w, {{ story_block.settings.image | image_url: width: 960 }} 960w, {{ story_block.settings.image | image_url: width: 1280 }} 1280w, {{ story_block.settings.image | image_url: width: 1700 }} 1700w"
+                              data-step-sizes="(max-width: 989px) 100vw, 44vw"
+                              data-step-alt="{{ story_block.settings.image.alt | default: story_block.settings.heading | escape }}"
+                            {% endif %}
+                            {{ story_block.shopify_attributes }}
+                          >
+                            {% if story_block.settings.eyebrow != blank %}
+                              <p class="about-eyebrow">{{ story_block.settings.eyebrow }}</p>
+                            {% endif %}
+                            {% if story_block.settings.heading != blank %}
+                              <h3>{{ story_block.settings.heading }}</h3>
+                            {% endif %}
+                            {% if story_block.settings.body != blank %}
+                              <div class="rte">{{ story_block.settings.body }}</div>
+                            {% endif %}
+                          </article>
+                          {% assign story_index = story_index | plus: 1 %}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            {% endif %}
+
+          {% when 'gradient_band' %}
+            <section class="about-block about-block--band" {{ block.shopify_attributes }}>
+              <div class="about-gradient-band" data-reveal>
+                {% if block.settings.heading != blank %}
+                  <h2>{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.body != blank %}
+                  <div class="rte">{{ block.settings.body }}</div>
+                {% endif %}
+              </div>
+            </section>
+
+          {% when 'highlight_cards' %}
+            <section class="about-block about-block--highlights" {{ block.shopify_attributes }}>
+              <div class="about-highlights" data-reveal>
+                {% if block.settings.heading != blank %}
+                  <h2>{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.body != blank %}
+                  <div class="rte">{{ block.settings.body }}</div>
+                {% endif %}
+                <div class="about-highlights__grid">
+                  {% for i in (1..4) %}
+                    {% capture title_key %}card_{{ i }}_title{% endcapture %}
+                    {% capture body_key %}card_{{ i }}_body{% endcapture %}
+                    {% assign card_title = block.settings[title_key] %}
+                    {% assign card_body = block.settings[body_key] %}
+                    {% if card_title != blank or card_body != blank %}
+                      <article class="about-highlight-card" data-reveal>
+                        <span class="about-highlight-card__icon" aria-hidden="true"></span>
+                        {% if card_title != blank %}
+                          <h3>{{ card_title }}</h3>
+                        {% endif %}
+                        {% if card_body != blank %}
+                          <p>{{ card_body }}</p>
+                        {% endif %}
+                      </article>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </section>
+
+          {% when 'stats_row' %}
+            <section class="about-block about-block--stats" {{ block.shopify_attributes }}>
+              <div class="about-stats" data-reveal>
+                {% if block.settings.heading != blank %}
+                  <h2>{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.body != blank %}
+                  <div class="rte">{{ block.settings.body }}</div>
+                {% endif %}
+
+                <div class="about-stats__grid">
+                  {% for i in (1..4) %}
+                    {% capture value_key %}stat_{{ i }}_value{% endcapture %}
+                    {% capture label_key %}stat_{{ i }}_label{% endcapture %}
+                    {% assign stat_value = block.settings[value_key] %}
+                    {% assign stat_label = block.settings[label_key] %}
+                    {% if stat_value != blank or stat_label != blank %}
+                      <article class="about-stat-card" data-reveal>
+                        {% if stat_value != blank %}
+                          <p class="about-stat-card__value">{{ stat_value }}</p>
+                        {% endif %}
+                        {% if stat_label != blank %}
+                          <p class="about-stat-card__label">{{ stat_label }}</p>
+                        {% endif %}
+                      </article>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </section>
+
+          {% when 'values_grid' %}
+            <section class="about-block about-block--values" {{ block.shopify_attributes }}>
+              <div class="about-values" data-reveal>
+                {% if block.settings.heading != blank %}
+                  <h2>{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.body != blank %}
+                  <div class="rte">{{ block.settings.body }}</div>
+                {% endif %}
+
+                <div class="about-values__grid">
+                  {% for i in (1..3) %}
+                    {% capture title_key %}value_{{ i }}_title{% endcapture %}
+                    {% capture body_key %}value_{{ i }}_body{% endcapture %}
+                    {% assign value_title = block.settings[title_key] %}
+                    {% assign value_body = block.settings[body_key] %}
+                    {% if value_title != blank or value_body != blank %}
+                      <article class="about-value-card" data-reveal>
+                        {% if value_title != blank %}
+                          <h3>{{ value_title }}</h3>
+                        {% endif %}
+                        {% if value_body != blank %}
+                          <p>{{ value_body }}</p>
+                        {% endif %}
+                      </article>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </section>
+
+          {% when 'faq_mini' %}
+            <section class="about-block about-block--faq" {{ block.shopify_attributes }}>
+              <div class="about-faq" data-reveal>
+                {% if block.settings.heading != blank %}
+                  <h2>{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.body != blank %}
+                  <div class="rte">{{ block.settings.body }}</div>
+                {% endif %}
+
+                <div class="about-faq__items">
+                  {% for i in (1..3) %}
+                    {% capture question_key %}q_{{ i }}{% endcapture %}
+                    {% capture answer_key %}a_{{ i }}{% endcapture %}
+                    {% assign faq_question = block.settings[question_key] %}
+                    {% assign faq_answer = block.settings[answer_key] %}
+                    {% if faq_question != blank and faq_answer != blank %}
+                      <details class="about-faq-item" data-reveal>
+                        <summary>{{ faq_question }}</summary>
+                        <div class="rte">{{ faq_answer }}</div>
+                      </details>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </section>
+
+          {% when 'cta_section' %}
+            <section class="about-block about-block--cta" {{ block.shopify_attributes }}>
+              <div class="about-cta" data-reveal>
+                {% if block.settings.heading != blank %}
+                  <h2>{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.body != blank %}
+                  <div class="rte">{{ block.settings.body }}</div>
+                {% endif %}
+                {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                  <a class="about-btn about-btn--primary" href="{{ block.settings.button_link }}">
+                    {{ block.settings.button_label }}
+                  </a>
+                {% endif %}
+              </div>
+            </section>
+
+          {% when 'product_teaser' %}
+            <section class="about-block about-block--teaser" {{ block.shopify_attributes }}>
+              <div class="about-teaser" data-reveal>
+                {% if block.settings.heading != blank %}
+                  <h2>{{ block.settings.heading }}</h2>
+                {% endif %}
+                {% if block.settings.body != blank %}
+                  <div class="rte">{{ block.settings.body }}</div>
+                {% endif %}
+
+                {% assign teaser_collection = collections[block.settings.collection] %}
+                {% if teaser_collection != blank %}
+                  <div class="about-teaser__grid">
+                    {% for product in teaser_collection.products limit: block.settings.products_to_show %}
+                      <a class="about-teaser-card" href="{{ product.url }}">
+                        <div class="about-teaser-card__media">
+                          {% if product.featured_media %}
+                            <img
+                              src="{{ product.featured_media | image_url: width: 1100 }}"
+                              srcset="
+                                {{ product.featured_media | image_url: width: 360 }} 360w,
+                                {{ product.featured_media | image_url: width: 540 }} 540w,
+                                {{ product.featured_media | image_url: width: 720 }} 720w,
+                                {{ product.featured_media | image_url: width: 1100 }} 1100w
+                              "
+                              sizes="(max-width: 989px) 50vw, 25vw"
+                              alt="{{ product.featured_media.alt | default: product.title | escape }}"
+                              width="{{ product.featured_media.width }}"
+                              height="{{ product.featured_media.height }}"
+                              loading="lazy"
+                            >
+                          {% else %}
+                            <div class="about-placeholder" aria-hidden="true"></div>
+                          {% endif %}
+                        </div>
+                        <div class="about-teaser-card__body">
+                          <h3>{{ product.title }}</h3>
+                          <p>{{ product.price | money }}</p>
+                        </div>
+                      </a>
+                    {% endfor %}
+                  </div>
+                  {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                    <div class="about-teaser__cta">
+                      <a class="about-btn about-btn--secondary" href="{{ block.settings.button_link }}">
+                        {{ block.settings.button_label }}
+                      </a>
+                    </div>
+                  {% endif %}
+                {% endif %}
+              </div>
+            </section>
+        {% endcase %}
+      {% endfor %}
+
+      {% unless has_story_steps %}
+        <section class="about-block about-block--story-empty">
+          <div class="about-story-empty" data-reveal>
+            <p>Add one or more <strong>Story step</strong> blocks to enable the sticky scroll section.</p>
+          </div>
+        </section>
+      {% endunless %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Us Page",
+  "tag": "section",
+  "class": "section-about-us-page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Hero eyebrow",
+      "default": "Durham Natural Health Foods"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "About Durham Natural Health Foods"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_intro",
+      "label": "Hero intro",
+      "default": "<p>We create science-backed supplements and everyday wellness essentials designed for consistent, long-term health support.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero image"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_label",
+      "label": "Hero button label",
+      "default": "Shop supplements"
+    },
+    {
+      "type": "url",
+      "id": "hero_button_link",
+      "label": "Hero button link"
+    },
+    {
+      "type": "text",
+      "id": "story_eyebrow",
+      "label": "Story section eyebrow",
+      "default": "How We Build"
+    },
+    {
+      "type": "text",
+      "id": "story_heading",
+      "label": "Story section heading",
+      "default": "Every step is designed for quality and trust"
+    },
+    {
+      "type": "richtext",
+      "id": "story_intro",
+      "label": "Story section intro",
+      "default": "<p>As each step appears, the sticky visual updates so your story feels connected while the user scrolls.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_default_image",
+      "label": "Default sticky image"
+    },
+    {
+      "type": "range",
+      "id": "sticky_top",
+      "label": "Sticky top offset",
+      "min": 60,
+      "max": 180,
+      "step": 4,
+      "default": 96,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "split_section",
+      "name": "Split section",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our Story" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Made to support your routine" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Use this section for your mission, process, and why customers trust your brand.</p>" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "checkbox", "id": "reverse_layout", "label": "Reverse layout on desktop", "default": false },
+        { "type": "text", "id": "button_label", "label": "Button label" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    },
+    {
+      "type": "full_width_image",
+      "name": "Full-width image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        {
+          "type": "select",
+          "id": "height",
+          "label": "Height",
+          "default": "medium",
+          "options": [
+            { "value": "strip", "label": "Strip" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "tall", "label": "Tall" }
+          ]
+        },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Wellness, every day" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Use short copy over an editorial image to create momentum between sections.</p>" },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text alignment",
+          "default": "left",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "caption_theme",
+          "label": "Caption theme",
+          "default": "light",
+          "options": [
+            { "value": "light", "label": "Light text" },
+            { "value": "dark", "label": "Dark text" }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay opacity",
+          "min": 0,
+          "max": 85,
+          "step": 5,
+          "default": 40,
+          "unit": "%"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_scroll_animation",
+          "label": "Enable scroll animation",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "story_step",
+      "name": "Story step",
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Step" },
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Science-backed formulations" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Each formula is built around efficacy, ingredient integrity, and customer outcomes.</p>" },
+        { "type": "image_picker", "id": "image", "label": "Sticky image for this step" }
+      ]
+    },
+    {
+      "type": "gradient_band",
+      "name": "Gradient band",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "You are worth feeling your best" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Keep this line short and high-impact.</p>" }
+      ]
+    },
+    {
+      "type": "highlight_cards",
+      "name": "Highlights row",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Comprehensive support for your routine" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Use this row for trust badges, quality points, and purchase reassurance.</p>" },
+        { "type": "text", "id": "card_1_title", "label": "Card 1 title", "default": "Quality tested" },
+        { "type": "textarea", "id": "card_1_body", "label": "Card 1 text", "default": "Batch-tested for consistency and ingredient integrity." },
+        { "type": "text", "id": "card_2_title", "label": "Card 2 title", "default": "Clean formulas" },
+        { "type": "textarea", "id": "card_2_body", "label": "Card 2 text", "default": "Formulated to support daily use with clear labeling." },
+        { "type": "text", "id": "card_3_title", "label": "Card 3 title", "default": "Transparent sourcing" },
+        { "type": "textarea", "id": "card_3_body", "label": "Card 3 text", "default": "Ingredient quality and sourcing are documented and traceable." },
+        { "type": "text", "id": "card_4_title", "label": "Card 4 title", "default": "Customer first" },
+        { "type": "textarea", "id": "card_4_body", "label": "Card 4 text", "default": "Support resources and straightforward guidance after purchase." }
+      ]
+    },
+    {
+      "type": "stats_row",
+      "name": "Stats row",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "By the numbers" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Add measurable proof points that reinforce trust and momentum.</p>" },
+        { "type": "text", "id": "stat_1_value", "label": "Stat 1 value", "default": "10+" },
+        { "type": "text", "id": "stat_1_label", "label": "Stat 1 label", "default": "Years in wellness" },
+        { "type": "text", "id": "stat_2_value", "label": "Stat 2 value", "default": "98%" },
+        { "type": "text", "id": "stat_2_label", "label": "Stat 2 label", "default": "Quality release rate" },
+        { "type": "text", "id": "stat_3_value", "label": "Stat 3 value", "default": "24/7" },
+        { "type": "text", "id": "stat_3_label", "label": "Stat 3 label", "default": "Customer support" },
+        { "type": "text", "id": "stat_4_value", "label": "Stat 4 value", "default": "100k+" },
+        { "type": "text", "id": "stat_4_label", "label": "Stat 4 label", "default": "Orders fulfilled" }
+      ]
+    },
+    {
+      "type": "values_grid",
+      "name": "Values grid",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "What guides every formula" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Summarize your principles with clear, customer-friendly language.</p>" },
+        { "type": "text", "id": "value_1_title", "label": "Value 1 title", "default": "Clarity first" },
+        { "type": "textarea", "id": "value_1_body", "label": "Value 1 text", "default": "Straightforward labels, practical dosage guidance, and no unnecessary complexity." },
+        { "type": "text", "id": "value_2_title", "label": "Value 2 title", "default": "Evidence minded" },
+        { "type": "textarea", "id": "value_2_body", "label": "Value 2 text", "default": "Ingredients are selected with efficacy, quality standards, and intended use in mind." },
+        { "type": "text", "id": "value_3_title", "label": "Value 3 title", "default": "Long-term consistency" },
+        { "type": "textarea", "id": "value_3_body", "label": "Value 3 text", "default": "Products are designed to support repeatable routines people can sustain over time." }
+      ]
+    },
+    {
+      "type": "faq_mini",
+      "name": "FAQ mini",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Common questions" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Address your highest-intent questions before customers leave the page.</p>" },
+        { "type": "text", "id": "q_1", "label": "Question 1", "default": "How quickly should I expect results?" },
+        { "type": "richtext", "id": "a_1", "label": "Answer 1", "default": "<p>Results vary by product and routine consistency, but many customers track changes over several weeks of regular use.</p>" },
+        { "type": "text", "id": "q_2", "label": "Question 2", "default": "Can I combine multiple products?" },
+        { "type": "richtext", "id": "a_2", "label": "Answer 2", "default": "<p>Many formulas are built to fit together. Always review label guidance and consult your healthcare professional if needed.</p>" },
+        { "type": "text", "id": "q_3", "label": "Question 3", "default": "Where can I get support?" },
+        { "type": "richtext", "id": "a_3", "label": "Answer 3", "default": "<p>Reach out through our contact page for personalized product guidance and post-purchase support.</p>" }
+      ]
+    },
+    {
+      "type": "cta_section",
+      "name": "CTA section",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Ready to build your wellness stack?" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Guide visitors to your best-selling collection or primary category.</p>" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop best sellers" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    },
+    {
+      "type": "product_teaser",
+      "name": "Product teaser",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Featured products" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Show high-intent products directly on the About page.</p>" },
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 2, "max": 8, "step": 1, "default": 6 },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "View all products" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Us Page"
+    }
+  ]
+}
+{% endschema %}

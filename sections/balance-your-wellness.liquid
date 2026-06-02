@@ -1,0 +1,668 @@
+{%- comment -%}
+  Tabbed wellness collection feature for the homepage.
+{%- endcomment -%}
+
+{% liquid
+  assign men_collection = collections[section.settings.men_collection]
+  assign female_collection = collections[section.settings.female_collection]
+  assign kids_collection = collections[section.settings.kids_collection]
+  assign fallback_collection = collections['all']
+
+  if men_collection == blank
+    assign men_collection = fallback_collection
+  endif
+
+  if female_collection == blank
+    assign female_collection = fallback_collection
+  endif
+
+  if kids_collection == blank
+    assign kids_collection = fallback_collection
+  endif
+
+  assign men_url = men_collection.url | default: routes.all_products_collection_url
+  assign female_url = female_collection.url | default: routes.all_products_collection_url
+  assign kids_url = kids_collection.url | default: routes.all_products_collection_url
+%}
+
+<section class="balance-wellness" id="BalanceWellness-{{ section.id }}">
+  <div class="container balance-wellness__container">
+    <div class="balance-wellness__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="balance-wellness__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h2 class="balance-wellness__title">{{ section.settings.heading }}</h2>
+      {% endif %}
+    </div>
+
+    <div class="balance-wellness__tabs" role="tablist" aria-label="{{ section.settings.eyebrow | default: 'Balance your wellness' | escape }}">
+      <button
+        type="button"
+        class="balance-wellness__tab is-active"
+        data-balance-tab="men"
+        id="BalanceWellnessTab-{{ section.id }}-men"
+        role="tab"
+        aria-selected="true"
+        aria-controls="BalanceWellnessPanel-{{ section.id }}-men"
+      >
+        Men Health
+      </button>
+      <button
+        type="button"
+        class="balance-wellness__tab"
+        data-balance-tab="female"
+        id="BalanceWellnessTab-{{ section.id }}-female"
+        role="tab"
+        aria-selected="false"
+        aria-controls="BalanceWellnessPanel-{{ section.id }}-female"
+        tabindex="-1"
+      >
+        Female Health
+      </button>
+      <button
+        type="button"
+        class="balance-wellness__tab"
+        data-balance-tab="kids"
+        id="BalanceWellnessTab-{{ section.id }}-kids"
+        role="tab"
+        aria-selected="false"
+        aria-controls="BalanceWellnessPanel-{{ section.id }}-kids"
+        tabindex="-1"
+      >
+        Child/Kids Health
+      </button>
+    </div>
+
+    {% if section.settings.description != blank %}
+      <div class="balance-wellness__description rte">{{ section.settings.description }}</div>
+    {% endif %}
+
+    <div
+      class="balance-wellness__panel is-active"
+      data-balance-panel="men"
+      id="BalanceWellnessPanel-{{ section.id }}-men"
+      role="tabpanel"
+      aria-labelledby="BalanceWellnessTab-{{ section.id }}-men"
+    >
+      <a class="balance-wellness__feature" href="{{ men_url }}">
+        {% if section.settings.men_image != blank %}
+          {{
+            section.settings.men_image
+            | image_url: width: 760
+            | image_tag:
+              class: 'balance-wellness__feature-image',
+              loading: 'lazy',
+              widths: '360, 540, 760',
+              sizes: '(max-width: 989px) 100vw, 28vw',
+              alt: 'Men Health'
+          }}
+        {% elsif men_collection.image != blank %}
+          {{
+            men_collection.image
+            | image_url: width: 760
+            | image_tag:
+              class: 'balance-wellness__feature-image',
+              loading: 'lazy',
+              widths: '360, 540, 760',
+              sizes: '(max-width: 989px) 100vw, 28vw',
+              alt: men_collection.title
+          }}
+        {% else %}
+          <span class="balance-wellness__feature-placeholder" aria-hidden="true"></span>
+        {% endif %}
+        <span class="balance-wellness__feature-content">
+          <span class="balance-wellness__feature-kicker">Men Health</span>
+          <span class="balance-wellness__feature-title">Shop All</span>
+          <span class="balance-wellness__feature-button">Shop All</span>
+        </span>
+      </a>
+
+      <div class="balance-wellness__products">
+        {% if men_collection != blank and men_collection.products.size > 0 %}
+          {% for product in men_collection.products limit: 3 %}
+            <div class="balance-wellness__product">
+              {% render 'product-card-amzn',
+                product: product,
+                show_rating: true,
+                show_pricing: true,
+                show_unit_price: true,
+                show_delivery: false,
+                show_social_proof: false,
+                show_add_to_cart: true
+              %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="balance-wellness__empty">Add products to this collection.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div
+      class="balance-wellness__panel"
+      data-balance-panel="female"
+      id="BalanceWellnessPanel-{{ section.id }}-female"
+      role="tabpanel"
+      aria-labelledby="BalanceWellnessTab-{{ section.id }}-female"
+      hidden
+    >
+      <a class="balance-wellness__feature" href="{{ female_url }}">
+        {% if section.settings.female_image != blank %}
+          {{
+            section.settings.female_image
+            | image_url: width: 760
+            | image_tag:
+              class: 'balance-wellness__feature-image',
+              loading: 'lazy',
+              widths: '360, 540, 760',
+              sizes: '(max-width: 989px) 100vw, 28vw',
+              alt: 'Female Health'
+          }}
+        {% elsif female_collection.image != blank %}
+          {{
+            female_collection.image
+            | image_url: width: 760
+            | image_tag:
+              class: 'balance-wellness__feature-image',
+              loading: 'lazy',
+              widths: '360, 540, 760',
+              sizes: '(max-width: 989px) 100vw, 28vw',
+              alt: female_collection.title
+          }}
+        {% else %}
+          <span class="balance-wellness__feature-placeholder" aria-hidden="true"></span>
+        {% endif %}
+        <span class="balance-wellness__feature-content">
+          <span class="balance-wellness__feature-kicker">Female Health</span>
+          <span class="balance-wellness__feature-title">Shop All</span>
+          <span class="balance-wellness__feature-button">Shop All</span>
+        </span>
+      </a>
+
+      <div class="balance-wellness__products">
+        {% if female_collection != blank and female_collection.products.size > 0 %}
+          {% for product in female_collection.products limit: 3 %}
+            <div class="balance-wellness__product">
+              {% render 'product-card-amzn',
+                product: product,
+                show_rating: true,
+                show_pricing: true,
+                show_unit_price: true,
+                show_delivery: false,
+                show_social_proof: false,
+                show_add_to_cart: true
+              %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="balance-wellness__empty">Add products to this collection.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div
+      class="balance-wellness__panel"
+      data-balance-panel="kids"
+      id="BalanceWellnessPanel-{{ section.id }}-kids"
+      role="tabpanel"
+      aria-labelledby="BalanceWellnessTab-{{ section.id }}-kids"
+      hidden
+    >
+      <a class="balance-wellness__feature" href="{{ kids_url }}">
+        {% if section.settings.kids_image != blank %}
+          {{
+            section.settings.kids_image
+            | image_url: width: 760
+            | image_tag:
+              class: 'balance-wellness__feature-image',
+              loading: 'lazy',
+              widths: '360, 540, 760',
+              sizes: '(max-width: 989px) 100vw, 28vw',
+              alt: 'Child/Kids Health'
+          }}
+        {% elsif kids_collection.image != blank %}
+          {{
+            kids_collection.image
+            | image_url: width: 760
+            | image_tag:
+              class: 'balance-wellness__feature-image',
+              loading: 'lazy',
+              widths: '360, 540, 760',
+              sizes: '(max-width: 989px) 100vw, 28vw',
+              alt: kids_collection.title
+          }}
+        {% else %}
+          <span class="balance-wellness__feature-placeholder" aria-hidden="true"></span>
+        {% endif %}
+        <span class="balance-wellness__feature-content">
+          <span class="balance-wellness__feature-kicker">Child/Kids Health</span>
+          <span class="balance-wellness__feature-title">Shop All</span>
+          <span class="balance-wellness__feature-button">Shop All</span>
+        </span>
+      </a>
+
+      <div class="balance-wellness__products">
+        {% if kids_collection != blank and kids_collection.products.size > 0 %}
+          {% for product in kids_collection.products limit: 3 %}
+            <div class="balance-wellness__product">
+              {% render 'product-card-amzn',
+                product: product,
+                show_rating: true,
+                show_pricing: true,
+                show_unit_price: true,
+                show_delivery: false,
+                show_social_proof: false,
+                show_add_to_cart: true
+              %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="balance-wellness__empty">Add products to this collection.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .balance-wellness {
+    padding: clamp(2.6rem, 5vw, 4.5rem) 0;
+    background: #ffffff;
+  }
+
+  .balance-wellness__container {
+    max-width: 1160px;
+  }
+
+  .balance-wellness__header {
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    margin-bottom: clamp(1.3rem, 2.8vw, 2rem);
+    text-align: center;
+  }
+
+  .balance-wellness__eyebrow {
+    margin: 0;
+    color: var(--brand-accent-dark, #C89F27);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(0.86rem, 1.05vw, 1.08rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .balance-wellness__title {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.9rem, 3vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  .balance-wellness__tabs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: clamp(0.65rem, 1.2vw, 1.05rem);
+    margin-bottom: clamp(1.2rem, 2.4vw, 1.8rem);
+  }
+
+  .balance-wellness__tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 2.7rem;
+    padding: 0.65rem 1.05rem 0.78rem;
+    border: 0;
+    background: transparent;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: 0.94rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  }
+
+  .balance-wellness__tab::before {
+    content: "";
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.2rem;
+    left: 0.75rem;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--brand-accent-dark, #C89F27), var(--brand-accent, #FAD054));
+    opacity: 0;
+    transform: scaleX(0.45);
+    transform-origin: center;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .balance-wellness__tab:not(:last-child)::after {
+    content: "/";
+    position: absolute;
+    top: 50%;
+    right: calc(-0.65rem - 1px);
+    color: var(--brand-primary, #0A282C);
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .balance-wellness__tab.is-active,
+  .balance-wellness__tab:hover,
+  .balance-wellness__tab:focus-visible {
+    background: transparent;
+    color: var(--brand-primary, #0A282C);
+    box-shadow: 0 0.55rem 1.1rem rgba(var(--brand-primary-rgb, 10, 40, 44), 0.08);
+    outline: none;
+    transform: translateY(-1px);
+  }
+
+  .balance-wellness__tab.is-active::before,
+  .balance-wellness__tab:hover::before,
+  .balance-wellness__tab:focus-visible::before {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .balance-wellness__description {
+    max-width: 760px;
+    margin: 0 auto clamp(1.6rem, 2.8vw, 2.15rem);
+    color: var(--brand-text-soft, #33585D);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  .balance-wellness__panel {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.82fr) minmax(0, 2.25fr);
+    gap: clamp(0.9rem, 1.8vw, 1.35rem);
+    align-items: stretch;
+  }
+
+  .balance-wellness__panel[hidden] {
+    display: none;
+  }
+
+  .balance-wellness__feature {
+    position: relative;
+    display: flex;
+    min-height: 100%;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background:
+      linear-gradient(135deg, rgba(var(--brand-primary-rgb, 10, 40, 44), 0.74), rgba(var(--brand-primary-rgb, 10, 40, 44), 0.24)),
+      var(--brand-surface, #F4F8F7);
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .balance-wellness__feature::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(10, 40, 44, 0.2));
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .balance-wellness__feature-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 1;
+    transition: transform 320ms ease;
+  }
+
+  .balance-wellness__feature-placeholder {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 82% 18%, rgba(var(--brand-accent-rgb, 250, 208, 84), 0.58), transparent 7rem),
+      radial-gradient(circle at 18% 82%, rgba(255, 255, 255, 0.18), transparent 7rem),
+      linear-gradient(135deg, var(--brand-primary-light, #163E43), var(--brand-primary, #0A282C));
+  }
+
+  .balance-wellness__feature:hover .balance-wellness__feature-image,
+  .balance-wellness__feature:focus-visible .balance-wellness__feature-image {
+    transform: scale(1.035);
+  }
+
+  .balance-wellness__feature-content {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    align-content: end;
+    gap: 0.7rem;
+    width: 100%;
+    min-height: clamp(19rem, 30vw, 25rem);
+    padding: clamp(1.1rem, 2vw, 1.55rem);
+  }
+
+  .balance-wellness__feature-kicker {
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .balance-wellness__feature-title {
+    color: #ffffff;
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.65rem, 2.4vw, 2.35rem);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .balance-wellness__feature-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: start;
+    min-width: 8.8rem;
+    min-height: 2.55rem;
+    padding: 0.72rem 1.1rem;
+    border-radius: 999px;
+    background: var(--brand-accent, #FAD054);
+    color: var(--brand-primary, #0A282C);
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .balance-wellness__feature:focus-visible {
+    outline: 2px solid var(--brand-accent, #FAD054);
+    outline-offset: 4px;
+  }
+
+  .balance-wellness__products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13.75rem, 14.75rem));
+    justify-content: center;
+    gap: clamp(1rem, 1.45vw, 1.35rem);
+  }
+
+  .balance-wellness__product {
+    min-width: 0;
+  }
+
+  .balance-wellness__products .amzn-card {
+    width: 100%;
+    min-height: 26.35rem;
+    border-radius: 1rem;
+    box-shadow: 0 0.6rem 1.55rem rgba(10, 40, 44, 0.06);
+  }
+
+  .balance-wellness__products .amzn-card__media {
+    border-radius: 0.82rem;
+    aspect-ratio: 1 / 1.08;
+    background: #f2f2f2;
+    border: 0;
+  }
+
+  .balance-wellness__products .amzn-card__body {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .balance-wellness__products .amzn-card__title {
+    font-size: clamp(0.94rem, 0.92vw, 1.05rem);
+  }
+
+  .balance-wellness__empty {
+    grid-column: 1 / -1;
+    display: grid;
+    min-height: 16rem;
+    place-items: center;
+    border: 1px dashed rgba(var(--brand-primary-rgb, 10, 40, 44), 0.22);
+    border-radius: 0.5rem;
+    color: var(--brand-text-soft, #33585D);
+    font-weight: 700;
+  }
+
+  @media (max-width: 989px) {
+    .balance-wellness__panel {
+      grid-template-columns: 1fr;
+    }
+
+    .balance-wellness__feature-content {
+      min-height: 18rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .balance-wellness__tabs {
+      gap: 0.8rem;
+    }
+
+    .balance-wellness__tab,
+    .balance-wellness__tab:first-child,
+    .balance-wellness__tab:last-child {
+      width: auto;
+      border-radius: 0.35rem;
+    }
+
+    .balance-wellness__title {
+      font-size: clamp(1.65rem, 8vw, 2.05rem);
+      max-width: 18ch;
+    }
+
+    .balance-wellness__products {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const section = document.getElementById('BalanceWellness-{{ section.id }}');
+    if (!section || section.dataset.initialized === 'true') return;
+
+    section.dataset.initialized = 'true';
+
+    const tabs = Array.from(section.querySelectorAll('[data-balance-tab]'));
+    const panels = Array.from(section.querySelectorAll('[data-balance-panel]'));
+
+    function setActivePanel(target) {
+      tabs.forEach(function(tab) {
+        const isActive = tab.dataset.balanceTab === target;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        tab.setAttribute('tabindex', isActive ? '0' : '-1');
+      });
+
+      panels.forEach(function(panel) {
+        const isActive = panel.dataset.balancePanel === target;
+        panel.classList.toggle('is-active', isActive);
+        panel.hidden = !isActive;
+      });
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        setActivePanel(tab.dataset.balanceTab);
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Balance Your Wellness",
+  "tag": "section",
+  "class": "section-balance-wellness",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "BALANCE YOUR WELLNESS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Herbal Products for Your Wellness"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Explore herbal wellness support for every stage of daily health.</p>"
+    },
+    {
+      "type": "collection",
+      "id": "men_collection",
+      "label": "Men Health collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "men_image",
+      "label": "Men Health feature image"
+    },
+    {
+      "type": "collection",
+      "id": "female_collection",
+      "label": "Female Health collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "female_image",
+      "label": "Female Health feature image"
+    },
+    {
+      "type": "collection",
+      "id": "kids_collection",
+      "label": "Child/Kids Health collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "kids_image",
+      "label": "Child/Kids Health feature image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Balance Your Wellness"
+    }
+  ]
+}
+{% endschema %}

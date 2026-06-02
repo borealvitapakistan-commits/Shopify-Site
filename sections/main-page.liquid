@@ -1,0 +1,140 @@
+{%- comment -%}
+  Main Page Section
+{%- endcomment -%}
+
+{% assign is_about_page = false %}
+{% if page.handle == 'about-us' or page.handle == 'about' %}
+  {% assign is_about_page = true %}
+{% endif %}
+
+{% if is_about_page %}
+  <section class="about-intro-section" id="AboutIntro-MainPage-{{ section.id }}">
+    <div class="about-intro-section__inner">
+      <div class="about-intro-section__heading-bar">
+        <h1>ABOUT US</h1>
+      </div>
+
+      <div class="about-intro-section__copy">
+        <p>Paris Natural Health Foods is locally owned and operated in Saskatoon. For the past 13 years we have continued to grow our product line while keeping the brand closely connected to the same people and standards behind it. Our products are also locally manufactured, and our formulator has more than 20 years of experience working with herbs, teas, tinctures, and oils.</p>
+        <p>Over time, our products have become a reliable source of health and wellness for many customers. What started as a clinical outlet has grown into stores and ecommerce while staying focused on quality, trust, and practical wellness support.</p>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    #AboutIntro-MainPage-{{ section.id }} {
+      --about-intro-green-start: var(--brand-purple-dark, #06181B);
+      --about-intro-green-end: var(--brand-purple, #0A282C);
+      --about-intro-text: #000000;
+      background: #ffffff;
+      color: var(--about-intro-text);
+      padding: clamp(2.5rem, 5vw, 4.25rem) 1rem clamp(5rem, 9vw, 7rem);
+    }
+
+    #AboutIntro-MainPage-{{ section.id }} .about-intro-section__inner {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    #AboutIntro-MainPage-{{ section.id }} .about-intro-section__heading-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 67px;
+      padding: 1rem 1.5rem;
+      border-radius: 5px;
+      background: linear-gradient(90deg, var(--about-intro-green-start) 0%, var(--about-intro-green-end) 100%);
+    }
+
+    #AboutIntro-MainPage-{{ section.id }} h1 {
+      margin: 0;
+      color: var(--color-primary-foreground, #ffffff);
+      font-family: var(--font-heading, "DM Sans", "Segoe UI", sans-serif);
+      font-size: clamp(1.65rem, 2.9vw, 2.15rem);
+      font-weight: 700;
+      letter-spacing: 0.17em;
+      line-height: 1;
+      text-align: center;
+      text-transform: uppercase;
+      text-shadow:
+        -1px -1px 0 var(--brand-purple-dark, #06181B),
+        1px -1px 0 var(--brand-purple-dark, #06181B),
+        -1px 1px 0 var(--brand-purple-dark, #06181B),
+        1px 1px 0 var(--brand-purple-dark, #06181B);
+    }
+
+    #AboutIntro-MainPage-{{ section.id }} .about-intro-section__copy {
+      margin-top: clamp(1.45rem, 2.4vw, 1.8rem);
+      color: var(--about-intro-text);
+      font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+      font-size: clamp(0.98rem, 1.25vw, 1.08rem);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1.72;
+    }
+
+    #AboutIntro-MainPage-{{ section.id }} .about-intro-section__copy p {
+      max-width: none;
+      margin: 0 0 1.15rem;
+    }
+
+    #AboutIntro-MainPage-{{ section.id }} .about-intro-section__copy p:last-child {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 720px) {
+      #AboutIntro-MainPage-{{ section.id }} {
+        padding: 2rem 1rem 4rem;
+      }
+
+      #AboutIntro-MainPage-{{ section.id }} .about-intro-section__heading-bar {
+        min-height: 58px;
+        padding: 0.85rem 1rem;
+      }
+
+      #AboutIntro-MainPage-{{ section.id }} h1 {
+        font-size: 1.45rem;
+        letter-spacing: 0.13em;
+      }
+
+      #AboutIntro-MainPage-{{ section.id }} .about-intro-section__copy {
+        font-size: 0.96rem;
+        line-height: 1.68;
+      }
+    }
+  </style>
+{% else %}
+  <section class="main-page">
+    <div class="container">
+      <article class="page-content">
+        <h1 class="page-title">{{ page.title }}</h1>
+        <div class="page-body rte">
+          {{ page.content }}
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <style>
+    .main-page {
+      padding: 2rem 0 4rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .page-body {
+      max-width: 800px;
+    }
+  </style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Main Page",
+  "tag": "section",
+  "class": "section-main-page"
+}
+{% endschema %}

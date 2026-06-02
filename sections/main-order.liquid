@@ -1,0 +1,169 @@
+{%- comment -%}
+  Order Details Page - Matches React design
+{%- endcomment -%}
+
+<div class="main-order">
+  <div class="container">
+    {%- comment -%} Breadcrumbs {%- endcomment -%}
+    <nav class="breadcrumbs">
+      <a href="{{ routes.account_url }}">Account</a>
+      {% render 'icon-chevron-right' %}
+      <span>Order {{ order.name }}</span>
+    </nav>
+
+    <div class="order-header">
+      <div class="order-header-info">
+        <h1 class="order-title">{{ 'customer.order.title' | t: name: order.name }}</h1>
+        <p class="order-date">{{ 'customer.order.date_html' | t: date: order.created_at | date: format: 'date' }}</p>
+      </div>
+      
+      <div class="order-status-badges">
+        <span class="status-badge status-{{ order.financial_status }}">
+          {{ order.financial_status_label }}
+        </span>
+        <span class="status-badge status-{{ order.fulfillment_status | default: 'unfulfilled' }}">
+          {{ order.fulfillment_status_label | default: 'Unfulfilled' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="order-grid">
+      {%- comment -%} Order Items {%- endcomment -%}
+      <section class="order-items-section">
+        <h2 class="section-title">Order Items</h2>
+        <div class="order-items">
+          {%- for line_item in order.line_items -%}
+            <div class="order-item">
+              <div class="order-item-image">
+                {%- if line_item.image -%}
+                  <img
+                    src="{{ line_item.image | image_url: width: 100 }}"
+                    alt="{{ line_item.title }}"
+                    width="{{ line_item.image.width }}"
+                    height="{{ line_item.image.height }}"
+                  >
+                {%- else -%}
+                  <div class="placeholder-image">
+                    {% render 'icon-package' %}
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="order-item-details">
+                <h3 class="item-title">
+                  {%- if line_item.url -%}
+                    <a href="{{ line_item.url }}">{{ line_item.title }}</a>
+                  {%- else -%}
+                    {{ line_item.title }}
+                  {%- endif -%}
+                </h3>
+                {%- if line_item.variant_title != 'Default Title' -%}
+                  <p class="item-variant">{{ line_item.variant_title }}</p>
+                {%- endif -%}
+                <p class="item-sku">SKU: {{ line_item.sku | default: 'N/A' }}</p>
+              </div>
+              <div class="order-item-quantity">
+                <span>Qty: {{ line_item.quantity }}</span>
+              </div>
+              <div class="order-item-price">
+                {{ line_item.final_line_price | money }}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- comment -%} Order Summary {%- endcomment -%}
+        <div class="order-summary">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>{{ order.line_items_subtotal_price | money }}</span>
+          </div>
+          
+          {%- for discount_application in order.discount_applications -%}
+            <div class="summary-row discount">
+              <span>
+                Discount
+                {%- if discount_application.title -%}
+                  ({{ discount_application.title }})
+                {%- endif -%}
+              </span>
+              <span>-{{ discount_application.total_allocated_amount | money }}</span>
+            </div>
+          {%- endfor -%}
+
+          {%- for shipping_method in order.shipping_methods -%}
+            <div class="summary-row">
+              <span>Shipping ({{ shipping_method.title }})</span>
+              <span>{{ shipping_method.price | money }}</span>
+            </div>
+          {%- endfor -%}
+
+          {%- for tax_line in order.tax_lines -%}
+            <div class="summary-row">
+              <span>{{ tax_line.title }} ({{ tax_line.rate_percentage }}%)</span>
+              <span>{{ tax_line.price | money }}</span>
+            </div>
+          {%- endfor -%}
+
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>{{ order.total_price | money }}</span>
+          </div>
+        </div>
+      </section>
+
+      {%- comment -%} Order Details Sidebar {%- endcomment -%}
+      <aside class="order-sidebar">
+        {%- comment -%} Shipping Address {%- endcomment -%}
+        <div class="sidebar-card">
+          <h3 class="card-title">Shipping Address</h3>
+          {%- if order.shipping_address -%}
+            <address>{{ order.shipping_address | format_address }}</address>
+          {%- else -%}
+            <p class="no-info">No shipping address provided</p>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Billing Address {%- endcomment -%}
+        <div class="sidebar-card">
+          <h3 class="card-title">Billing Address</h3>
+          <address>{{ order.billing_address | format_address }}</address>
+        </div>
+
+        {%- comment -%} Fulfillment {%- endcomment -%}
+        {%- for fulfillment in order.fulfillments -%}
+          <div class="sidebar-card">
+            <h3 class="card-title">Tracking</h3>
+            <p>{{ fulfillment.tracking_company }}</p>
+            {%- if fulfillment.tracking_url -%}
+              <a href="{{ fulfillment.tracking_url }}" target="_blank" class="tracking-link">
+                {{ fulfillment.tracking_number }}
+                {% render 'icon-external-link' %}
+              </a>
+            {%- else -%}
+              <p>{{ fulfillment.tracking_number }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </aside>
+    </div>
+
+    <div class="order-actions">
+      <a href="{{ routes.account_url }}" class="btn btn-outline">
+        {% render 'icon-chevron-left' %}
+        Back to Account
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Order",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Order"
+    }
+  ]
+}
+{% endschema %}

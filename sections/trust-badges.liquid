@@ -1,0 +1,290 @@
+{%- if section.settings.show_section -%}
+  {%- assign bv_region = localization.country.iso_code | default: 'CA' | upcase -%}
+  {%- assign bv_market_handle = localization.market.handle | default: '' | downcase -%}
+  {%- if bv_market_handle == 'united-states' or bv_market_handle == 'us' or bv_region == 'US' -%}
+    {%- assign bv_region = 'US' -%}
+  {%- elsif bv_market_handle == 'pakistan' or bv_market_handle == 'pk' or bv_region == 'PK' -%}
+    {%- assign bv_region = 'PK' -%}
+  {%- else -%}
+    {%- assign bv_region = 'CA' -%}
+  {%- endif -%}
+
+  {%- assign tagline_ca = 'Quality standards, clearly documented' -%}
+  {%- assign tagline_us = 'Quality standards, clearly documented' -%}
+  {%- assign tagline_pk = 'Quality standards, clearly documented' -%}
+  {%- assign body_ca = 'Rooted in Canada and built around certification, compliant labels, and everyday wellness support. Halal details belong here for customers who want to verify them.' -%}
+  {%- assign body_us = 'Built around market-specific compliance, familiar delivery, and transparent product standards. Halal details belong here for customers who want to verify them.' -%}
+  {%- assign body_pk = 'Built around local delivery, clear quality signals, and trusted everyday supplement support. Halal details belong here for customers who want to verify them.' -%}
+
+  {%- assign title_1_ca = 'Halal certification' -%}
+  {%- assign title_1_us = 'Halal certification' -%}
+  {%- assign title_1_pk = 'Halal certification' -%}
+  {%- assign text_1_ca = 'ISNA / IFANCA-aligned trust signal for Canadian shoppers.' -%}
+  {%- assign text_1_us = 'IFANCA-recognized trust signal for US shoppers.' -%}
+  {%- assign text_1_pk = 'Halal certified for Pakistan market expectations.' -%}
+
+  {%- assign title_2_ca = 'Health Canada NPN' -%}
+  {%- assign title_2_us = 'FDA compliant' -%}
+  {%- assign title_2_pk = 'PSQCA approved' -%}
+  {%- assign text_2_ca = 'Natural health product positioning with Health Canada NPN approval.' -%}
+  {%- assign text_2_us = 'Manufactured in compliance with FDA regulations.' -%}
+  {%- assign text_2_pk = 'Local quality signal aligned with PSQCA expectations.' -%}
+
+  {%- assign title_3_ca = 'Canada delivery' -%}
+  {%- assign title_3_us = 'US delivery' -%}
+  {%- assign title_3_pk = 'Pakistan delivery' -%}
+  {%- assign text_3_ca = 'Shipping across Canada with Canada Post support.' -%}
+  {%- assign text_3_us = 'Shipping across the US with USPS / UPS support.' -%}
+  {%- assign text_3_pk = 'Fast delivery across Pakistan with TCS / Leopards support.' -%}
+
+  {%- assign tagline = tagline_ca -%}
+  {%- assign body = body_ca -%}
+  {%- assign title_1 = title_1_ca -%}
+  {%- assign text_1 = text_1_ca -%}
+  {%- assign title_2 = title_2_ca -%}
+  {%- assign text_2 = text_2_ca -%}
+  {%- assign title_3 = title_3_ca -%}
+  {%- assign text_3 = text_3_ca -%}
+  {%- if bv_region == 'US' -%}
+    {%- assign tagline = tagline_us -%}
+    {%- assign body = body_us -%}
+    {%- assign title_1 = title_1_us -%}
+    {%- assign text_1 = text_1_us -%}
+    {%- assign title_2 = title_2_us -%}
+    {%- assign text_2 = text_2_us -%}
+    {%- assign title_3 = title_3_us -%}
+    {%- assign text_3 = text_3_us -%}
+  {%- elsif bv_region == 'PK' -%}
+    {%- assign tagline = tagline_pk -%}
+    {%- assign body = body_pk -%}
+    {%- assign title_1 = title_1_pk -%}
+    {%- assign text_1 = text_1_pk -%}
+    {%- assign title_2 = title_2_pk -%}
+    {%- assign text_2 = text_2_pk -%}
+    {%- assign title_3 = title_3_pk -%}
+    {%- assign text_3 = text_3_pk -%}
+  {%- endif -%}
+
+  <section class="trust-badges" id="TrustBadges-{{ section.id }}">
+    <div class="container trust-badges__inner">
+      <div class="trust-badges__intro">
+        <p class="trust-badges__eyebrow">About our standards</p>
+        <h2
+          class="trust-badges__heading"
+          data-region-text
+          data-region-ca="{{ tagline_ca | escape }}"
+          data-region-us="{{ tagline_us | escape }}"
+          data-region-pk="{{ tagline_pk | escape }}"
+        >{{ tagline }}</h2>
+        <p
+          class="trust-badges__body"
+          data-region-text
+          data-region-ca="{{ body_ca | escape }}"
+          data-region-us="{{ body_us | escape }}"
+          data-region-pk="{{ body_pk | escape }}"
+        >{{ body }}</p>
+      </div>
+
+      <div class="trust-badges__grid" aria-label="Regional trust signals">
+        <article class="trust-badge">
+          <span class="trust-badge__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 3 5 6v5c0 4.4 2.8 8.2 7 10 4.2-1.8 7-5.6 7-10V6l-7-3Z"></path>
+              <path d="m8.8 12 2.1 2.1 4.3-4.5"></path>
+            </svg>
+          </span>
+          <span
+            class="trust-badge__title"
+            data-region-text
+            data-region-ca="{{ title_1_ca | escape }}"
+            data-region-us="{{ title_1_us | escape }}"
+            data-region-pk="{{ title_1_pk | escape }}"
+          >{{ title_1 }}</span>
+          <span
+            class="trust-badge__text"
+            data-region-text
+            data-region-ca="{{ text_1_ca | escape }}"
+            data-region-us="{{ text_1_us | escape }}"
+            data-region-pk="{{ text_1_pk | escape }}"
+          >{{ text_1 }}</span>
+        </article>
+
+        <article class="trust-badge">
+          <span class="trust-badge__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M9 12.5 11 15l4-6"></path>
+              <path d="M7 3h10a2 2 0 0 1 2 2v14l-7-3-7 3V5a2 2 0 0 1 2-2Z"></path>
+            </svg>
+          </span>
+          <span
+            class="trust-badge__title"
+            data-region-text
+            data-region-ca="{{ title_2_ca | escape }}"
+            data-region-us="{{ title_2_us | escape }}"
+            data-region-pk="{{ title_2_pk | escape }}"
+          >{{ title_2 }}</span>
+          <span
+            class="trust-badge__text"
+            data-region-text
+            data-region-ca="{{ text_2_ca | escape }}"
+            data-region-us="{{ text_2_us | escape }}"
+            data-region-pk="{{ text_2_pk | escape }}"
+          >{{ text_2 }}</span>
+        </article>
+
+        <article class="trust-badge">
+          <span class="trust-badge__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M3 7h11v10H3z"></path>
+              <path d="M14 10h4l3 3v4h-7z"></path>
+              <circle cx="7" cy="18" r="1.7"></circle>
+              <circle cx="17.5" cy="18" r="1.7"></circle>
+            </svg>
+          </span>
+          <span
+            class="trust-badge__title"
+            data-region-text
+            data-region-ca="{{ title_3_ca | escape }}"
+            data-region-us="{{ title_3_us | escape }}"
+            data-region-pk="{{ title_3_pk | escape }}"
+          >{{ title_3 }}</span>
+          <span
+            class="trust-badge__text"
+            data-region-text
+            data-region-ca="{{ text_3_ca | escape }}"
+            data-region-us="{{ text_3_us | escape }}"
+            data-region-pk="{{ text_3_pk | escape }}"
+          >{{ text_3 }}</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    #TrustBadges-{{ section.id }} {
+      background: #f7faf8;
+      border-block: 1px solid rgba(10, 40, 44, 0.08);
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badges__inner {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.45fr);
+      gap: clamp(1rem, 2.5vw, 2.25rem);
+      align-items: center;
+      padding-block: clamp(1.25rem, 3vw, 2.25rem);
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badges__intro {
+      display: grid;
+      gap: 0.42rem;
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badges__eyebrow {
+      margin: 0;
+      color: var(--brand-primary, #0A282C);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badges__heading {
+      margin: 0;
+      color: var(--brand-primary, #0A282C);
+      font-size: clamp(1.45rem, 2.2vw, 2.2rem);
+      line-height: 1.08;
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badges__body {
+      max-width: 42rem;
+      margin: 0;
+      color: rgba(34, 52, 58, 0.78);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badges__grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(0.75rem, 1.35vw, 1rem);
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badge {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 0.25rem 0.72rem;
+      align-content: start;
+      min-height: 132px;
+      padding: 1rem;
+      border: 1px solid rgba(10, 40, 44, 0.1);
+      border-radius: 8px;
+      background: #ffffff;
+      box-shadow: 0 10px 22px rgba(10, 40, 44, 0.06);
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badge__icon {
+      grid-row: span 2;
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: rgba(250, 208, 84, 0.22);
+      color: var(--brand-primary, #0A282C);
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badge__icon svg {
+      width: 23px;
+      height: 23px;
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badge__title {
+      color: var(--brand-primary, #0A282C);
+      font-size: 0.96rem;
+      font-weight: 800;
+      line-height: 1.18;
+    }
+
+    #TrustBadges-{{ section.id }} .trust-badge__text {
+      color: rgba(34, 52, 58, 0.72);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 989px) {
+      #TrustBadges-{{ section.id }} .trust-badges__inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 749px) {
+      #TrustBadges-{{ section.id }} .trust-badges__grid {
+        grid-template-columns: 1fr;
+      }
+
+      #TrustBadges-{{ section.id }} .trust-badge {
+        min-height: auto;
+      }
+    }
+  </style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "class": "section-trust-badges",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_section",
+      "label": "Show trust badges",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges"
+    }
+  ]
+}
+{% endschema %}

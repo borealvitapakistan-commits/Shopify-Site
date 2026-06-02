@@ -1,0 +1,1616 @@
+{%- comment -%}
+  Header Section
+{%- endcomment -%}
+
+{%- assign logo_width = section.settings.logo_width | default: 250 -%}
+{%- assign fallback_logo_height = logo_width | times: 496 | divided_by: 1749 -%}
+{%- assign logo_height = fallback_logo_height -%}
+{%- assign sticky_logo_width = 190 -%}
+{%- assign sticky_fallback_logo_height = sticky_logo_width | times: 496 | divided_by: 1749 -%}
+{%- assign sticky_logo_height = sticky_fallback_logo_height -%}
+{%- assign brand_name = settings.brand_name | default: shop.name -%}
+{%- if section.settings.logo != blank -%}
+  {%- assign logo_height = logo_width | times: section.settings.logo.height | divided_by: section.settings.logo.width -%}
+{%- endif -%}
+{%- if section.settings.sticky_logo != blank -%}
+  {%- assign sticky_logo_height = sticky_logo_width | times: section.settings.sticky_logo.height | divided_by: section.settings.sticky_logo.width -%}
+{%- endif -%}
+{%- capture header_white_logo_markup -%}
+  <img
+    src="{{ 'logo-white-440.png' | asset_url }}"
+    alt="{{ brand_name | escape }}"
+    class="header-brand-lockup__logo"
+    width="220"
+    height="62"
+    loading="eager"
+  >
+{%- endcapture -%}
+{%- capture mobile_header_logo_markup -%}
+  {%- if section.settings.logo != blank -%}
+    <img
+      src="{{ section.settings.logo | image_url: width: logo_width }}"
+      alt="{{ brand_name | escape }}"
+      class="header-brand-lockup__logo"
+      width="{{ logo_width }}"
+      height="{{ logo_height }}"
+      loading="eager"
+    >
+  {%- else -%}
+    <img
+      src="{{ 'logo-white-440.png' | asset_url }}"
+      alt="{{ brand_name | escape }}"
+      class="header-brand-lockup__logo"
+      width="{{ logo_width }}"
+      height="{{ logo_height }}"
+      loading="eager"
+    >
+  {%- endif -%}
+{%- endcapture -%}
+{%- capture sticky_header_logo_markup -%}
+  {%- if section.settings.sticky_logo != blank -%}
+    <img
+      src="{{ section.settings.sticky_logo | image_url: width: sticky_logo_width }}"
+      alt="{{ brand_name | escape }}"
+      class="header-brand-lockup__logo"
+      width="{{ sticky_logo_width }}"
+      height="{{ sticky_logo_height }}"
+      loading="eager"
+    >
+  {%- else -%}
+    <img
+      src="{{ 'header-logo-color-380.png' | asset_url }}"
+      alt="{{ brand_name | escape }}"
+      class="header-brand-lockup__logo"
+      width="{{ sticky_logo_width }}"
+      height="{{ sticky_logo_height }}"
+      loading="eager"
+    >
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- assign search_placeholder = section.settings.search_placeholder | default: 'Search all of Boreal Vita' -%}
+{%- assign bv_region = localization.country.iso_code | default: 'CA' | upcase -%}
+{%- assign bv_market_handle = localization.market.handle | default: '' | downcase -%}
+{%- if bv_market_handle == 'united-states' or bv_market_handle == 'us' or bv_region == 'US' -%}
+  {%- assign bv_region = 'US' -%}
+{%- elsif bv_market_handle == 'pakistan' or bv_market_handle == 'pk' or bv_region == 'PK' -%}
+  {%- assign bv_region = 'PK' -%}
+{%- else -%}
+  {%- assign bv_region = 'CA' -%}
+{%- endif -%}
+{%- assign top_strip_message_ca = section.settings.top_bar_text | default: 'Herbal By Nature | Health Canada NPN quality signals | Free shipping across Canada' -%}
+{%- assign top_strip_message_us = section.settings.top_bar_text_us | default: 'Herbal wellness formulas | Clear labels | Fast US delivery' -%}
+{%- assign top_strip_message_pk = section.settings.top_bar_text_pk | default: 'Fast delivery across Pakistan | Clear-label herbal wellness | Shop Boreal Vita' -%}
+{%- assign top_strip_message = top_strip_message_ca -%}
+{%- if bv_region == 'US' -%}
+  {%- assign top_strip_message = top_strip_message_us -%}
+{%- elsif bv_region == 'PK' -%}
+  {%- assign top_strip_message = top_strip_message_pk -%}
+{%- endif -%}
+
+{%- assign products_url = routes.all_products_collection_url -%}
+{%- assign about_url = '/pages/about-us' -%}
+{%- assign blog_url = '/blogs/news' -%}
+{%- assign concern_url = routes.root_url | append: '#shop-by-concern' -%}
+{%- capture header_concerns_raw -%}
+Allergy & Respiratory||Gut & Liver Health||Immunity Booster||Kidney & Urology||Weight Management||Joint Care||Everyday Health Support||Mental Wellness||Skin Care||Hair Care||Heart Health
+{%- endcapture -%}
+{%- assign header_concerns = header_concerns_raw | strip | split: '||' -%}
+{%- capture header_catalog_products_raw -%}
+Acetyl-L-Carnitine||Alfalfa||Allergy Relief||ALPHA-LIPOIC ACID||Amla||Angelica archangelica||Antioxidant Formula||Arterial-Venous Support-Amendment||Arterial-Venous Support||Arthromend - Back to Practice||Ashwagandha||Astragalus||Bearberry||Berberine||Bilberry||Black cohosh||BLD Formula||Blessed thistle||Boswellia||Burdock||Calcium, Magnesium with Potassium, Zinc Manganese||Calendula||Cascara Sagrada||Chamomile||Chaste Tree Berry||Circulatory Support||Conjugated Linoleic Acid||CoQ10||Cortisol Control Formula||CranRich Super Strength Cranberry Concentrate 36:1||Curcumin (Plus)||Dandelion||Diuretic (Saved as Paragon Lymphatic Support)||Double Strength Acidophilus Bifidum||Dr. Formulated Probiotics Once Daily Women's 50 Billion||Echinacea||Fenugreek||Garcinia||Garlic||Ginger||Ginkgo biloba||Glucosamine and Chondroitin||Goldenseal||Green Tea Extract||Gut-Ease - General (non-traditional)||Hair Formula||Hair, Skin and Nails - General (non-traditional)||Hawthorn||Hormonal Support Formula||Hyssop||Immune support||Inflammation Away - General (non-traditional)||Joint Flex Pain Free Formula||L-Arginine||L-Carnitine||L-Citrulline||L-Glutamine||L-Theanine||L-Tryptophan||L-Tyrosine||Lemon Balm||Lion's Mane||Maca||Magnesium + GABA, Melatonin||Magnesium Citrate||Magnesium Glycinate||Magnesium L-Threonate||Magnesium Malate||Maitake||MEN'S PROBIOTICS||Milk Thistle (Capsule)||MSM||Nattokinase||NattoSept||Navitol - General (non-traditional)||Nettle||Niacinamide Vitamin B3 500 mg||Norwegian Kelp||Nutri Flex Complete Joint Care Formula||OLIVE LEAF||Optimax Pro 100||Optimax Pro 200||Optimax Pro 50||P-5-P Vitamin B6||Panax ginseng||Passionflower||Phosphatidylserine||Potency B Complex||Pro Curcumin 95||Pro Curcumin Whole Root||Pro K2 100mcg||Pro Zinc Bisglycinate||Pro-Biotik||Probiotic Complex||Prostate Support||Quercetin||Red Clover Isoflavone Extract||Reishi||Relaxant Formula||Resveratrol||Rhodiola||Saw palmetto||Seniors Multi Probiotic||Serrapeptase||Siberian ginseng||SUPER DIGEST||Taurine||Taurine 1000 mg||Thyroid Support Formula||Tribulus terrestris||Turkey Tail||Ubiquinol||Ultimate Performance with Tongkat Ali||Ultimate Testosterone Boost-General||Uric Cleanse||UTI||Utiva UTI Control||Valerian||Vitamin C Calcium Ascorbate||Vitamin D||Vitamin K2||VitaMinerals||Zinc (Zinc Picolinate)
+{%- endcapture -%}
+{%- assign header_catalog_products = header_catalog_products_raw | strip | split: '||' -%}
+{%- capture header_catalog_daily_essentials_raw -%}{%- endcapture -%}
+{%- capture header_catalog_herbal_raw -%}{%- endcapture -%}
+{%- capture header_catalog_gut_detox_raw -%}{%- endcapture -%}
+{%- capture header_catalog_mind_mood_raw -%}{%- endcapture -%}
+{%- capture header_catalog_beauty_recovery_raw -%}{%- endcapture -%}
+{%- capture header_catalog_hormonal_support_raw -%}{%- endcapture -%}
+{%- capture header_catalog_performance_raw -%}{%- endcapture -%}
+{%- for product_title in header_catalog_products -%}
+  {%- assign product_title = product_title | strip -%}
+  {%- assign product_key = product_title | downcase -%}
+  {%- if product_key contains 'vitamin' or product_key contains 'magnesium' or product_key contains 'calcium' or product_key contains 'zinc' or product_key contains 'coq10' or product_key contains 'ubiquinol' or product_key contains 'alpha-lipoic acid' or product_key contains 'niacinamide' or product_key contains 'p-5-p' or product_key contains 'b complex' or product_key contains 'vitaminerals' -%}
+    {%- capture header_catalog_daily_essentials_raw -%}{{ header_catalog_daily_essentials_raw }}||{{ product_title }}{%- endcapture -%}
+  {%- elsif product_key contains 'probiotic' or product_key contains 'digest' or product_key contains 'gut' or product_key contains 'uti' or product_key contains 'cran' or product_key contains 'diuretic' or product_key contains 'lymphatic' or product_key contains 'milk thistle' or product_key contains 'natto' or product_key contains 'uric' or product_key contains 'kelp' or product_key contains 'olive leaf' -%}
+    {%- capture header_catalog_gut_detox_raw -%}{{ header_catalog_gut_detox_raw }}||{{ product_title }}{%- endcapture -%}
+  {%- elsif product_key contains 'cortisol' or product_key contains 'theanine' or product_key contains 'tryptophan' or product_key contains 'tyrosine' or product_key contains 'gaba' or product_key contains 'melatonin' or product_key contains "lion's mane" or product_key contains 'phosphatidylserine' or product_key contains 'relaxant' or product_key contains 'taurine' or product_key contains 'thyroid' -%}
+    {%- capture header_catalog_mind_mood_raw -%}{{ header_catalog_mind_mood_raw }}||{{ product_title }}{%- endcapture -%}
+  {%- elsif product_key contains 'joint' or product_key contains 'arthro' or product_key contains 'glucosamine' or product_key contains 'curcumin' or product_key contains 'inflammation' or product_key contains 'skin' or product_key contains 'hair' or product_key contains 'nails' or product_key contains 'msm' or product_key contains 'serrapeptase' or product_key contains 'boswellia' or product_key contains 'circulatory' or product_key contains 'resveratrol' -%}
+    {%- capture header_catalog_beauty_recovery_raw -%}{{ header_catalog_beauty_recovery_raw }}||{{ product_title }}{%- endcapture -%}
+  {%- elsif product_key contains 'prostate' or product_key contains 'testosterone' or product_key contains 'tongkat' or product_key contains "men's" or product_key contains "women's" or product_key contains 'hormonal' or product_key contains 'black cohosh' or product_key contains 'red clover' or product_key contains 'saw palmetto' or product_key contains 'tribulus' -%}
+    {%- capture header_catalog_hormonal_support_raw -%}{{ header_catalog_hormonal_support_raw }}||{{ product_title }}{%- endcapture -%}
+  {%- elsif product_key contains 'arginine' or product_key contains 'citrulline' or product_key contains 'glutamine' or product_key contains 'carnitine' or product_key contains 'optimax' or product_key contains 'conjugated linoleic' or product_key contains 'maca' or product_key contains 'performance' -%}
+    {%- capture header_catalog_performance_raw -%}{{ header_catalog_performance_raw }}||{{ product_title }}{%- endcapture -%}
+  {%- else -%}
+    {%- capture header_catalog_herbal_raw -%}{{ header_catalog_herbal_raw }}||{{ product_title }}{%- endcapture -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign header_catalog_daily_essentials = header_catalog_daily_essentials_raw | remove_first: '||' | split: '||' -%}
+{%- assign header_catalog_herbal = header_catalog_herbal_raw | remove_first: '||' | split: '||' -%}
+{%- assign header_catalog_gut_detox = header_catalog_gut_detox_raw | remove_first: '||' | split: '||' -%}
+{%- assign header_catalog_mind_mood = header_catalog_mind_mood_raw | remove_first: '||' | split: '||' -%}
+{%- assign header_catalog_beauty_recovery = header_catalog_beauty_recovery_raw | remove_first: '||' | split: '||' -%}
+{%- assign header_catalog_hormonal_support = header_catalog_hormonal_support_raw | remove_first: '||' | split: '||' -%}
+{%- assign header_catalog_performance = header_catalog_performance_raw | remove_first: '||' | split: '||' -%}
+{%- assign account_entry_url = routes.account_url -%}
+{%- assign account_logout_url = routes.account_logout_url | default: '/account/logout' -%}
+{%- assign account_dashboard_url = routes.account_url -%}
+{%- assign account_orders_url = routes.account_url | append: '#orders' -%}
+{%- assign account_reviews_url = routes.account_url | append: '#reviews' -%}
+{%- assign account_messages_url = routes.account_url | append: '#messages' -%}
+{%- assign account_entry_label = 'Sign in' -%}
+{%- assign sticky_account_label = 'Sign In' -%}
+{%- assign account_cta_url = routes.account_login_url | default: '/account/login' -%}
+{%- assign account_cta_label = 'Sign In/Create an Account' -%}
+{%- if customer -%}
+  {%- assign account_entry_label = 'My account' -%}
+  {%- assign sticky_account_label = 'My account' -%}
+  {%- assign account_cta_url = routes.account_url -%}
+  {%- assign account_cta_label = 'Manage Your Account' -%}
+{%- elsif routes.account_login_url != blank -%}
+  {%- assign account_entry_url = routes.account_login_url -%}
+{%- endif -%}
+
+{%- if blogs['news'] != blank -%}
+  {%- assign blog_url = blogs['news'].url -%}
+{%- endif -%}
+
+{%- if section.settings.about_page != blank and pages[section.settings.about_page] != blank -%}
+  {%- assign about_url = pages[section.settings.about_page].url -%}
+{%- elsif pages['about-us'] != blank -%}
+  {%- assign about_url = pages['about-us'].url -%}
+{%- elsif pages['about'] != blank -%}
+  {%- assign about_url = pages['about'].url -%}
+{%- elsif pages['contact'] != blank -%}
+  {%- assign about_url = pages['contact'].url | append: '?view=about-us' -%}
+{%- elsif pages['contact-us'] != blank -%}
+  {%- assign about_url = pages['contact-us'].url | append: '?view=about-us' -%}
+{%- else -%}
+  {%- assign about_url = '/pages/contact?view=about-us' -%}
+{%- endif -%}
+
+{%- unless customer -%}
+  {%- assign account_dashboard_url = account_entry_url -%}
+  {%- assign account_orders_url = account_entry_url -%}
+  {%- assign account_reviews_url = account_entry_url -%}
+  {%- assign account_messages_url = account_entry_url -%}
+{%- endunless -%}
+
+{%- capture account_menu_panel_markup -%}
+  <div class="header-account-menu__content">
+    <p class="header-account-menu__welcome">Welcome!</p>
+
+    <div class="header-account-menu__list">
+      <a href="{{ account_dashboard_url }}" class="header-account-menu__link">
+        <span class="header-account-menu__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21a8 8 0 0 0-16 0"></path>
+            <circle cx="12" cy="8" r="4"></circle>
+          </svg>
+        </span>
+        <span>My Account</span>
+      </a>
+
+      <a href="{{ account_orders_url }}" class="header-account-menu__link">
+        <span class="header-account-menu__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="3" width="14" height="18" rx="2"></rect>
+            <path d="M9 8h6M9 12h6M9 16h4"></path>
+          </svg>
+        </span>
+        <span>Orders</span>
+      </a>
+
+      <button type="button" class="header-account-menu__link header-account-menu__link--button" data-open-wishlist>
+        <span class="header-account-menu__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 6h11M9 12h11M9 18h11"></path>
+            <path d="M4 6h.01M4 12h.01M4 18h.01"></path>
+          </svg>
+        </span>
+        <span>My Wishlist</span>
+        <span class="wishlist-count-badge header-account-menu__count" style="display: none;">0</span>
+      </button>
+
+      <a href="{{ account_reviews_url }}" class="header-account-menu__link">
+        <span class="header-account-menu__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"></path>
+          </svg>
+        </span>
+        <span>My Reviews</span>
+      </a>
+
+      <a href="{{ account_messages_url }}" class="header-account-menu__link">
+        <span class="header-account-menu__icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"></path>
+          </svg>
+        </span>
+        <span>Messages</span>
+      </a>
+    </div>
+
+    <a href="{{ account_cta_url }}" class="header-account-menu__cta">{{ account_cta_label }}</a>
+
+    {% if customer %}
+      <a href="{{ account_logout_url }}" class="header-account-menu__secondary-link">Log out</a>
+    {% endif %}
+  </div>
+{%- endcapture -%}
+
+{%- capture comfort_toggle_markup -%}
+  <button
+    type="button"
+    class="header-comfort-toggle"
+    aria-pressed="false"
+    aria-label="Toggle Comfort Mode: larger text and higher contrast"
+    data-comfort-toggle
+  >
+    <span class="header-comfort-toggle__mark" aria-hidden="true">Aa</span>
+    <span class="header-comfort-toggle__label" data-comfort-label>Comfort</span>
+  </button>
+{%- endcapture -%}
+
+{%- capture all_products_dropdown_markup -%}
+  <div class="header-nav-dropdown header-nav-dropdown--catalog" aria-label="Shop by product menu">
+    <div class="header-nav-dropdown__catalog-shell header-nav-dropdown__catalog-shell--browse">
+      <div class="header-nav-dropdown__browse-grid header-nav-dropdown__browse-grid--products">
+        <div class="header-nav-dropdown__browse-stack">
+          <div class="header-nav-dropdown__browse-column header-nav-dropdown__browse-column--products">
+            <h4 class="header-nav-dropdown__catalog-group-title">Daily Essentials</h4>
+            <ul class="header-nav-dropdown__catalog-group-list">
+              {%- for product_title in header_catalog_daily_essentials -%}
+                {%- assign product_title = product_title | strip -%}
+                {%- if product_title != blank -%}
+                  <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="header-nav-dropdown__catalog-group-link">{{ product_title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+
+          <div class="header-nav-dropdown__browse-column header-nav-dropdown__browse-column--products">
+            <h4 class="header-nav-dropdown__catalog-group-title">Hormonal Support</h4>
+            <ul class="header-nav-dropdown__catalog-group-list">
+              {%- for product_title in header_catalog_hormonal_support -%}
+                {%- assign product_title = product_title | strip -%}
+                {%- if product_title != blank -%}
+                  <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="header-nav-dropdown__catalog-group-link">{{ product_title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+
+        <div class="header-nav-dropdown__browse-stack">
+          <div class="header-nav-dropdown__browse-column header-nav-dropdown__browse-column--products">
+            <h4 class="header-nav-dropdown__catalog-group-title">Herbal Remedies</h4>
+            <ul class="header-nav-dropdown__catalog-group-list">
+              {%- for product_title in header_catalog_herbal -%}
+                {%- assign product_title = product_title | strip -%}
+                {%- if product_title != blank -%}
+                  <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="header-nav-dropdown__catalog-group-link">{{ product_title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+
+        <div class="header-nav-dropdown__browse-stack">
+          <div class="header-nav-dropdown__browse-column header-nav-dropdown__browse-column--products">
+            <h4 class="header-nav-dropdown__catalog-group-title">Gut &amp; Detox</h4>
+            <ul class="header-nav-dropdown__catalog-group-list">
+              {%- for product_title in header_catalog_gut_detox -%}
+                {%- assign product_title = product_title | strip -%}
+                {%- if product_title != blank -%}
+                  <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="header-nav-dropdown__catalog-group-link">{{ product_title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+
+        <div class="header-nav-dropdown__browse-stack">
+          <div class="header-nav-dropdown__browse-column header-nav-dropdown__browse-column--products">
+            <h4 class="header-nav-dropdown__catalog-group-title">Mind &amp; Mood</h4>
+            <ul class="header-nav-dropdown__catalog-group-list">
+              {%- for product_title in header_catalog_mind_mood -%}
+                {%- assign product_title = product_title | strip -%}
+                {%- if product_title != blank -%}
+                  <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="header-nav-dropdown__catalog-group-link">{{ product_title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+
+          <div class="header-nav-dropdown__browse-column header-nav-dropdown__browse-column--products">
+            <h4 class="header-nav-dropdown__catalog-group-title">Performance &amp; Vitality</h4>
+            <ul class="header-nav-dropdown__catalog-group-list">
+              {%- for product_title in header_catalog_performance -%}
+                {%- assign product_title = product_title | strip -%}
+                {%- if product_title != blank -%}
+                  <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="header-nav-dropdown__catalog-group-link">{{ product_title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+
+        <div class="header-nav-dropdown__browse-stack">
+          <div class="header-nav-dropdown__browse-column header-nav-dropdown__browse-column--products">
+            <h4 class="header-nav-dropdown__catalog-group-title">Beauty &amp; Recovery</h4>
+            <ul class="header-nav-dropdown__catalog-group-list">
+              {%- for product_title in header_catalog_beauty_recovery -%}
+                {%- assign product_title = product_title | strip -%}
+                {%- if product_title != blank -%}
+                  <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="header-nav-dropdown__catalog-group-link">{{ product_title }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+
+        <div class="header-nav-dropdown__browse-footer">
+          <a href="{{ products_url }}" class="header-nav-dropdown__browse-strong">Browse All Products</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endcapture -%}
+
+{%- capture concern_dropdown_markup -%}
+  <div class="header-nav-dropdown header-nav-dropdown--concern" aria-label="Shop by health benefit menu">
+    <div class="header-nav-dropdown__concern-layout">
+      <div class="header-nav-dropdown__catalog-groups header-nav-dropdown__concern-groups">
+        <div class="header-nav-dropdown__catalog-group">
+          <h4 class="header-nav-dropdown__catalog-group-title">Beauty Care</h4>
+          <ul class="header-nav-dropdown__catalog-group-list">
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Skin Care' | handleize }}" class="header-nav-dropdown__catalog-group-link">Skin Care</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Hair Care' | handleize }}" class="header-nav-dropdown__catalog-group-link">Hair Care</a></li>
+          </ul>
+        </div>
+
+        <div class="header-nav-dropdown__catalog-group">
+          <h4 class="header-nav-dropdown__catalog-group-title">Respiratory Care</h4>
+          <ul class="header-nav-dropdown__catalog-group-list">
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Allergy & Respiratory' | handleize }}" class="header-nav-dropdown__catalog-group-link">Allergy & Respiratory</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Immunity Booster' | handleize }}" class="header-nav-dropdown__catalog-group-link">Immunity Booster</a></li>
+          </ul>
+        </div>
+
+        <div class="header-nav-dropdown__catalog-group">
+          <h4 class="header-nav-dropdown__catalog-group-title">Digestive Care</h4>
+          <ul class="header-nav-dropdown__catalog-group-list">
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Gut & Liver Health' | handleize }}" class="header-nav-dropdown__catalog-group-link">Gut & Liver Health</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Kidney & Urology' | handleize }}" class="header-nav-dropdown__catalog-group-link">Kidney & Urology</a></li>
+          </ul>
+        </div>
+
+        <div class="header-nav-dropdown__catalog-group">
+          <h4 class="header-nav-dropdown__catalog-group-title">Heart & Joint Care</h4>
+          <ul class="header-nav-dropdown__catalog-group-list">
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Heart Health' | handleize }}" class="header-nav-dropdown__catalog-group-link">Heart Health</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Joint Care' | handleize }}" class="header-nav-dropdown__catalog-group-link">Joint Care</a></li>
+          </ul>
+        </div>
+
+        <div class="header-nav-dropdown__catalog-group">
+          <h4 class="header-nav-dropdown__catalog-group-title">Wellness Goals</h4>
+          <ul class="header-nav-dropdown__catalog-group-list">
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Weight Management' | handleize }}" class="header-nav-dropdown__catalog-group-link">Weight Management</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Everyday Health Support' | handleize }}" class="header-nav-dropdown__catalog-group-link">Everyday Health Support</a></li>
+            <li><a href="{{ routes.all_products_collection_url }}/{{ 'Mental Wellness' | handleize }}" class="header-nav-dropdown__catalog-group-link">Mental Wellness</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endcapture -%}
+
+{%- assign is_about_active = false -%}
+{%- assign is_products_active = false -%}
+{%- if request.page_type == 'product' or request.page_type == 'collection' or request.page_type == 'list-collections' or request.path contains '/collections' -%}
+  {%- assign is_products_active = true -%}
+{%- endif -%}
+{%- if template.suffix == 'about-us' or page.handle == 'about-us' or page.handle == 'about' or request.path contains '/about' -%}
+  {%- assign is_about_active = true -%}
+{%- endif -%}
+
+<style>
+  html.bv-comfort-mode .product-information-layout__content,
+  html.bv-comfort-mode .product-information-layout__panel,
+  html.bv-comfort-mode .product-ingredients-showcase {
+    max-width: 100% !important;
+    overflow-x: clip !important;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase {
+    grid-template-columns: minmax(0, 1fr) !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase__header,
+  html.bv-comfort-mode .product-ingredients-showcase__viewport,
+  html.bv-comfort-mode .product-ingredients-showcase__controls,
+  html.bv-comfort-mode .product-ingredients-showcase__grid {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase__viewport {
+    overflow: hidden !important;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase__controls,
+  html.bv-comfort-mode .product-ingredients-showcase__dots {
+    flex-wrap: wrap !important;
+  }
+
+  html.bv-comfort-mode .product-ingredients-showcase__dots {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+</style>
+
+<header class="site-header" data-header style="--header-logo-width: {{ logo_width }}px; --header-logo-height: {{ logo_height }}px;">
+  {% if section.settings.show_top_bar %}
+    <div class="header-top-strip" aria-label="Store updates">
+      <div class="container header-top-strip__inner">
+        <div class="header-top-strip__marquee" aria-label="Store updates">
+          <div class="header-top-strip__marquee-track header-top-strip__marquee-track--static">
+            <div class="header-top-strip__marquee-group">
+              <span
+                class="header-top-strip__marquee-item"
+                data-region-text
+                data-region-ca="{{ top_strip_message_ca | escape }}"
+                data-region-us="{{ top_strip_message_us | escape }}"
+                data-region-pk="{{ top_strip_message_pk | escape }}"
+              >{{ top_strip_message }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="header-desktop">
+    <div class="container header-desktop__grid">
+      <a href="{{ routes.root_url }}" class="header-brand-lockup header-brand-lockup--desktop" aria-label="{{ brand_name }}">
+        {{ header_white_logo_markup }}
+      </a>
+
+      <div class="header-desktop__search">
+        <form action="{{ routes.search_url }}" method="get" class="header-search-form" role="search">
+          <label class="visually-hidden" for="HeaderSearchDesktop-{{ section.id }}">Search</label>
+          <input
+            id="HeaderSearchDesktop-{{ section.id }}"
+            type="search"
+            name="q"
+            class="header-search-form__input"
+            placeholder="{{ search_placeholder }}"
+            autocomplete="off"
+            aria-label="Search the store"
+          >
+          <button type="submit" class="header-search-form__submit" aria-label="Submit search">
+            {% render 'icon-search' %}
+          </button>
+          <div class="header-search-suggestions" aria-label="Search suggestions">
+            <div class="header-search-suggestions__section">
+              <p class="header-search-suggestions__title">Trending now</p>
+              <div class="header-search-suggestions__chips">
+                <a href="{{ routes.search_url }}?q=B-Complex">B-Complex</a>
+                <a href="{{ routes.search_url }}?q=Magnesium">Magnesium</a>
+                <a href="{{ routes.search_url }}?q=Zinc">Zinc</a>
+                <a href="{{ routes.search_url }}?q=Ashwagandha">Ashwagandha</a>
+                <a href="{{ routes.search_url }}?q=Vitamin%20D">Vitamin D</a>
+                <a href="{{ routes.search_url }}?q=Probiotic">Probiotic</a>
+              </div>
+            </div>
+
+            <div class="header-search-suggestions__section header-search-suggestions__section--browse">
+              <p class="header-search-suggestions__title">Browse</p>
+              <div class="header-search-suggestions__grid">
+                <a href="{{ products_url }}">All Products</a>
+                <a href="{{ routes.search_url }}?q=Heart%20Health">Heart Health</a>
+                <a href="{{ routes.search_url }}?q=Gut%20Health">Gut Health</a>
+                <a href="{{ routes.search_url }}?q=Immune%20Support">Immune Support</a>
+                <a href="{{ routes.search_url }}?q=Joint%20Care">Joint Care</a>
+                <a href="{{ routes.search_url }}?q=Weight%20Management">Weight Management</a>
+                <a href="{{ concern_url }}">Health Benefits</a>
+                <a href="{{ blog_url }}">Learning Center</a>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="header-desktop__tools">
+        <div class="header-tools-bottom" aria-label="Header utilities">
+          {{ comfort_toggle_markup }}
+
+          <div class="header-account-menu" data-account-menu>
+            <button type="button" class="header-toolbar-action header-toolbar-action--account header-account-menu__trigger" aria-haspopup="true" aria-expanded="false" aria-label="{{ account_entry_label }}" data-account-menu-toggle>
+              <span class="header-toolbar-action__icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21a8 8 0 0 0-16 0"></path>
+                  <circle cx="12" cy="8" r="4"></circle>
+                </svg>
+              </span>
+              <span class="header-toolbar-action__label">{{ account_entry_label }}</span>
+              <span class="header-toolbar-action__chevron" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 3.5 5 6.5 8 3.5"></path>
+                </svg>
+              </span>
+            </button>
+
+            <div class="header-account-menu__panel" aria-label="Account options" data-account-menu-panel>
+              {{ account_menu_panel_markup }}
+            </div>
+          </div>
+
+          <a href="{{ routes.cart_url }}" class="header-toolbar-cart" aria-label="Cart">
+            <span class="visually-hidden">Cart</span>
+            <span class="header-toolbar-cart__icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="20" r="1.4"></circle>
+                <circle cx="18" cy="20" r="1.4"></circle>
+                <path d="M2 3h3l2.3 10.5a1.8 1.8 0 0 0 1.8 1.5h8.8a1.8 1.8 0 0 0 1.8-1.4L22 6H6.2"></path>
+              </svg>
+            </span>
+            <span class="header-toolbar-cart__count{% if cart.item_count > 0 %} has-items{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-secondary-nav">
+    <div class="container">
+      <nav class="header-secondary-nav__inner" aria-label="Primary links">
+        <ul class="header-secondary-nav__list">
+          <li class="header-secondary-nav__item header-secondary-nav__item--has-dropdown header-secondary-nav__item--catalog">
+            <a href="{{ products_url }}" class="header-secondary-nav__link {% if is_products_active %}is-active{% endif %}">
+              <span class="header-secondary-nav__label">Shop by Product</span>
+              <span class="header-secondary-nav__chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 6.5 8 10 12 6.5"></path>
+                </svg>
+              </span>
+            </a>
+            {{ all_products_dropdown_markup }}
+          </li>
+
+          <li class="header-secondary-nav__item header-secondary-nav__item--has-dropdown header-secondary-nav__item--concern">
+            <a href="{{ concern_url }}" class="header-secondary-nav__link">
+              <span class="header-secondary-nav__label">Shop by Health Benefit</span>
+              <span class="header-secondary-nav__chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 6.5 8 10 12 6.5"></path>
+                </svg>
+              </span>
+            </a>
+            {{ concern_dropdown_markup }}
+          </li>
+
+          <li class="header-secondary-nav__item">
+            <a href="{{ blog_url }}" class="header-secondary-nav__link {% if request.page_type == 'blog' or request.page_type == 'article' or request.path contains '/blogs' %}is-active{% endif %}">Learn</a>
+          </li>
+
+          <li class="header-secondary-nav__item">
+            <a href="{{ about_url }}" class="header-secondary-nav__link {% if is_about_active %}is-active{% endif %}" data-page-link="about">About Us</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="header-sticky-desktop">
+    <div class="container header-sticky-desktop__inner">
+      <a href="{{ routes.root_url }}" class="header-brand-lockup header-brand-lockup--sticky" aria-label="{{ brand_name }}">
+        {{ sticky_header_logo_markup }}
+      </a>
+
+      <nav class="header-sticky-nav" aria-label="Sticky primary links">
+        <ul class="header-sticky-nav__list">
+          <li class="header-sticky-nav__item header-secondary-nav__item--has-dropdown header-secondary-nav__item--catalog">
+            <a href="{{ products_url }}" class="header-sticky-nav__link header-secondary-nav__link {% if is_products_active %}is-active{% endif %}">
+              <span class="header-secondary-nav__label">Shop by Product</span>
+              <span class="header-secondary-nav__chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 6.5 8 10 12 6.5"></path>
+                </svg>
+              </span>
+            </a>
+            {{ all_products_dropdown_markup }}
+          </li>
+
+          <li class="header-sticky-nav__item header-secondary-nav__item--has-dropdown header-secondary-nav__item--concern">
+            <a href="{{ concern_url }}" class="header-sticky-nav__link header-secondary-nav__link">
+              <span class="header-secondary-nav__label">Shop by Health Benefit</span>
+              <span class="header-secondary-nav__chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 6.5 8 10 12 6.5"></path>
+                </svg>
+              </span>
+            </a>
+            {{ concern_dropdown_markup }}
+          </li>
+
+          <li class="header-sticky-nav__item">
+            <a href="{{ blog_url }}" class="header-sticky-nav__link header-secondary-nav__link {% if request.page_type == 'blog' or request.page_type == 'article' or request.path contains '/blogs' %}is-active{% endif %}">Learn</a>
+          </li>
+
+          <li class="header-sticky-nav__item">
+            <a href="{{ about_url }}" class="header-sticky-nav__link header-secondary-nav__link {% if is_about_active %}is-active{% endif %}" data-page-link="about">About Us</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header-sticky-actions" aria-label="Sticky header utilities">
+        {{ comfort_toggle_markup }}
+
+        <div class="header-account-menu" data-account-menu>
+          <button type="button" class="header-toolbar-action header-toolbar-action--sticky header-account-menu__trigger" aria-haspopup="true" aria-expanded="false" aria-label="{{ sticky_account_label }}" data-account-menu-toggle>
+            <span class="header-toolbar-action__icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21a8 8 0 0 0-16 0"></path>
+                <circle cx="12" cy="8" r="4"></circle>
+              </svg>
+            </span>
+            <span class="header-toolbar-action__label">{{ sticky_account_label }}</span>
+            <span class="header-toolbar-action__chevron" aria-hidden="true">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3.5 5 6.5 8 3.5"></path>
+                </svg>
+              </span>
+            </button>
+
+          <div class="header-account-menu__panel header-account-menu__panel--sticky" aria-label="Account options" data-account-menu-panel>
+            {{ account_menu_panel_markup }}
+          </div>
+        </div>
+
+        <a href="{{ routes.cart_url }}" class="header-toolbar-cart header-toolbar-cart--sticky" aria-label="Cart">
+          <span class="visually-hidden">Cart</span>
+          <span class="header-toolbar-cart__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="20" r="1.4"></circle>
+              <circle cx="18" cy="20" r="1.4"></circle>
+              <path d="M2 3h3l2.3 10.5a1.8 1.8 0 0 0 1.8 1.5h8.8a1.8 1.8 0 0 0 1.8-1.4L22 6H6.2"></path>
+            </svg>
+          </span>
+          <span class="header-toolbar-cart__count{% if cart.item_count > 0 %} has-items{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+        </a>
+
+        <a href="{{ routes.search_url }}" class="header-sticky-search-link" aria-label="Search">
+          <span class="visually-hidden">Search</span>
+          {% render 'icon-search' %}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-mobile">
+    <div class="container header-mobile__inner">
+      <button class="mobile-menu-toggle" aria-label="Toggle menu" data-mobile-toggle>
+        <svg class="menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <a href="{{ routes.root_url }}" class="header-brand-lockup header-brand-lockup--mobile" aria-label="{{ brand_name }}">
+        {{ mobile_header_logo_markup }}
+      </a>
+
+      <form action="{{ routes.search_url }}" method="get" class="header-mobile-inline-search" role="search">
+        <label class="visually-hidden" for="HeaderSearchMobileInline-{{ section.id }}">Search</label>
+        <input
+          id="HeaderSearchMobileInline-{{ section.id }}"
+          type="search"
+          name="q"
+          class="header-mobile-inline-search__input"
+          placeholder="{{ search_placeholder }}"
+          autocomplete="off"
+          aria-label="Search the store"
+        >
+        <button type="submit" class="header-mobile-inline-search__submit" aria-label="Submit search">
+          {% render 'icon-search' %}
+        </button>
+      </form>
+
+      <div class="header-mobile__actions">
+        {{ comfort_toggle_markup }}
+
+        <button
+          type="button"
+          class="header-mobile__action header-mobile__action--search"
+          aria-label="Toggle search"
+          aria-controls="HeaderSearchMobilePanel-{{ section.id }}"
+          aria-expanded="false"
+          data-mobile-search-toggle
+        >
+          {% render 'icon-search' %}
+        </button>
+        <a href="{{ account_entry_url }}" class="header-mobile__action header-mobile__action--account" aria-label="{{ account_entry_label }}">
+          <span class="visually-hidden">{{ account_entry_label }}</span>
+          {% render 'icon-user' %}
+          <span class="header-mobile__action-label">{{ account_entry_label }}</span>
+        </a>
+        <a href="{{ routes.cart_url }}" class="header-mobile__action header-mobile__action--cart">
+          <span class="visually-hidden">Cart</span>
+          {% render 'icon-cart' %}
+          <span class="cart-count" data-cart-count>{{ cart.item_count }}</span>
+        </a>
+      </div>
+
+      <form
+        id="HeaderSearchMobilePanel-{{ section.id }}"
+        action="{{ routes.search_url }}"
+        method="get"
+        class="header-mobile__search"
+        role="search"
+        data-mobile-search
+        aria-hidden="true"
+      >
+        <label class="visually-hidden" for="HeaderSearchMobile-{{ section.id }}">Search</label>
+        <input
+          id="HeaderSearchMobile-{{ section.id }}"
+          type="search"
+          name="q"
+          class="header-mobile__search-input"
+          placeholder="{{ search_placeholder }}"
+          autocomplete="off"
+          aria-label="Search the store"
+        >
+        <button type="submit" class="header-mobile__search-submit" aria-label="Submit search">
+          {% render 'icon-search' %}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="mobile-nav" data-mobile-nav>
+    <div class="mobile-nav__shell">
+      <nav class="mobile-nav__rail" aria-label="Mobile primary links">
+        <a href="{{ products_url }}" class="mobile-nav__rail-link {% if is_products_active %}is-active{% endif %}">
+          <span>Shop by Product</span>
+          <span aria-hidden="true">&rsaquo;</span>
+        </a>
+        <a href="{{ concern_url }}" class="mobile-nav__rail-link">
+          <span>Shop by Health Benefit</span>
+          <span aria-hidden="true">&rsaquo;</span>
+        </a>
+        <a href="{{ blog_url }}" class="mobile-nav__rail-link {% if request.page_type == 'blog' or request.page_type == 'article' or request.path contains '/blogs' %}is-active{% endif %}">
+          <span>Learn</span>
+          <span aria-hidden="true">&rsaquo;</span>
+        </a>
+        <a href="{{ about_url }}" class="mobile-nav__rail-link {% if is_about_active %}is-active{% endif %}" data-page-link="about">
+          <span>About Us</span>
+          <span aria-hidden="true">&rsaquo;</span>
+        </a>
+      </nav>
+
+      <div class="mobile-nav__content">
+        <div class="mobile-nav__panel">
+          <div class="mobile-nav__group">
+            <a href="{{ products_url }}" class="mobile-nav__heading">Shop by Product</a>
+            <div class="mobile-nav__columns">
+              <div class="mobile-nav__column">
+                <h3 class="mobile-nav__title">Daily Essentials</h3>
+                <ul class="mobile-nav__sublist">
+                  {%- for product_title in header_catalog_daily_essentials -%}
+                    {%- assign product_title = product_title | strip -%}
+                    {%- if product_title != blank -%}
+                      <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="mobile-nav__sublink">{{ product_title }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+
+              <div class="mobile-nav__column">
+                <h3 class="mobile-nav__title">Herbal Remedies</h3>
+                <ul class="mobile-nav__sublist">
+                  {%- for product_title in header_catalog_herbal -%}
+                    {%- assign product_title = product_title | strip -%}
+                    {%- if product_title != blank -%}
+                      <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="mobile-nav__sublink">{{ product_title }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+
+              <div class="mobile-nav__column">
+                <h3 class="mobile-nav__title">Gut &amp; Detox</h3>
+                <ul class="mobile-nav__sublist">
+                  {%- for product_title in header_catalog_gut_detox -%}
+                    {%- assign product_title = product_title | strip -%}
+                    {%- if product_title != blank -%}
+                      <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="mobile-nav__sublink">{{ product_title }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+
+              <div class="mobile-nav__column">
+                <h3 class="mobile-nav__title">Mind &amp; Mood</h3>
+                <ul class="mobile-nav__sublist">
+                  {%- for product_title in header_catalog_mind_mood -%}
+                    {%- assign product_title = product_title | strip -%}
+                    {%- if product_title != blank -%}
+                      <li><a href="{{ routes.all_products_collection_url }}/{{ product_title | handleize }}" class="mobile-nav__sublink">{{ product_title }}</a></li>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="mobile-nav__group mobile-nav__group--benefits">
+            <a href="{{ concern_url }}" class="mobile-nav__heading">Shop by Health Benefit</a>
+            <div class="mobile-nav__benefit-grid">
+              {%- for concern_name in header_concerns -%}
+                {%- assign concern_name = concern_name | strip -%}
+                {%- if concern_name != blank -%}
+                  <a href="{{ routes.all_products_collection_url }}/{{ concern_name | handleize }}" class="mobile-nav__benefit-link">{{ concern_name }}</a>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+
+          <div class="mobile-nav__footer">
+            <a href="{{ products_url }}" class="mobile-nav__footer-link">Shop all products</a>
+            <a href="{{ blog_url }}" class="mobile-nav__footer-link">Learn</a>
+            <a href="{{ about_url }}" class="mobile-nav__footer-link" data-page-link="about">About Us</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  window.themeMoneyFormat = {{ shop.money_format | json }};
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('[data-header]');
+    const accountMenus = header ? Array.from(header.querySelectorAll('[data-account-menu]')) : [];
+    const mobileToggle = header ? header.querySelector('[data-mobile-toggle]') : null;
+    const mobileNav = header ? header.querySelector('[data-mobile-nav]') : null;
+    const mobileSearchToggle = header ? header.querySelector('[data-mobile-search-toggle]') : null;
+    const mobileSearch = header ? header.querySelector('[data-mobile-search]') : null;
+    const mobileSearchInput = mobileSearch ? mobileSearch.querySelector('.header-mobile__search-input') : null;
+    const topStripMarquee = header ? header.querySelector('[data-top-strip-marquee]') : null;
+    const pageLinks = header ? Array.from(header.querySelectorAll('[data-page-link]')) : [];
+    const navDropdowns = header ? Array.from(header.querySelectorAll('.header-nav-dropdown')) : [];
+    let topStripMarqueeFrame = null;
+    let dropdownPositionFrame = null;
+
+    const syncDropdownPosition = function(dropdown) {
+      if (!dropdown) return;
+
+      const dropdownItem = dropdown.closest('.header-secondary-nav__item--has-dropdown');
+      const itemRect = dropdownItem ? dropdownItem.getBoundingClientRect() : null;
+      const top = itemRect ? Math.max(8, itemRect.bottom + 8) : 120;
+
+      dropdown.style.setProperty('--header-dropdown-top', `${Math.round(top)}px`);
+    };
+
+    const syncDropdownPositions = function() {
+      if (!navDropdowns.length) return;
+      navDropdowns.forEach(syncDropdownPosition);
+    };
+
+    const requestDropdownPositionSync = function() {
+      if (!navDropdowns.length) return;
+
+      if (dropdownPositionFrame) {
+        window.cancelAnimationFrame(dropdownPositionFrame);
+      }
+
+      dropdownPositionFrame = window.requestAnimationFrame(function() {
+        syncDropdownPositions();
+        dropdownPositionFrame = null;
+      });
+    };
+
+    const syncTopStripMarquee = function() {
+      if (!topStripMarquee) return;
+
+      const marqueeTrack = topStripMarquee.querySelector('.header-top-strip__marquee-track');
+      const marqueeGroup = topStripMarquee.querySelector('.header-top-strip__marquee-group');
+
+      if (!marqueeTrack || !marqueeGroup) return;
+
+      const groupWidth = Math.ceil(marqueeGroup.getBoundingClientRect().width);
+
+      if (!groupWidth) return;
+
+      const speed = 62;
+      const duration = Math.max(groupWidth / speed, 32);
+
+      marqueeTrack.style.setProperty('--marquee-duration', `${duration}s`);
+    };
+
+    const requestTopStripMarqueeSync = function() {
+      if (!topStripMarquee) return;
+
+      if (topStripMarqueeFrame) {
+        window.cancelAnimationFrame(topStripMarqueeFrame);
+      }
+
+      topStripMarqueeFrame = window.requestAnimationFrame(function() {
+        syncTopStripMarquee();
+        topStripMarqueeFrame = null;
+      });
+    };
+
+    if (topStripMarquee) {
+      requestTopStripMarqueeSync();
+      window.addEventListener('load', requestTopStripMarqueeSync);
+      window.addEventListener('resize', requestTopStripMarqueeSync);
+
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(requestTopStripMarqueeSync);
+      }
+    }
+
+    if (navDropdowns.length) {
+      const dropdownCloseTimers = new WeakMap();
+
+      const clearDropdownClose = function(dropdownItem) {
+        const timer = dropdownCloseTimers.get(dropdownItem);
+        if (!timer) return;
+
+        window.clearTimeout(timer);
+        dropdownCloseTimers.delete(dropdownItem);
+      };
+
+	      const closeDropdown = function(dropdownItem) {
+	        if (!dropdownItem) return;
+	
+	        clearDropdownClose(dropdownItem);
+	        dropdownItem.classList.remove('is-dropdown-open');
+	        const trigger = dropdownItem.querySelector('.header-secondary-nav__link, .header-sticky-nav__link');
+	        if (trigger) {
+	          trigger.setAttribute('aria-expanded', 'false');
+	        }
+	      };
+
+      const openDropdown = function(dropdownItem, dropdown) {
+        if (!dropdownItem || !dropdown) return;
+
+        navDropdowns.forEach(function(otherDropdown) {
+          const otherItem = otherDropdown.closest('.header-secondary-nav__item--has-dropdown');
+
+          if (otherItem && otherItem !== dropdownItem) {
+            closeDropdown(otherItem);
+          }
+        });
+
+	        clearDropdownClose(dropdownItem);
+	        syncDropdownPosition(dropdown);
+	        dropdownItem.classList.add('is-dropdown-open');
+	        const trigger = dropdownItem.querySelector('.header-secondary-nav__link, .header-sticky-nav__link');
+	        if (trigger) {
+	          trigger.setAttribute('aria-expanded', 'true');
+	        }
+	      };
+
+      const scheduleDropdownClose = function(dropdownItem) {
+        if (!dropdownItem) return;
+
+        clearDropdownClose(dropdownItem);
+
+        const timer = window.setTimeout(function() {
+          const hasPointer = dropdownItem.matches(':hover');
+          const hasFocus = dropdownItem.contains(document.activeElement);
+
+          if (!hasPointer && !hasFocus) {
+            dropdownItem.classList.remove('is-dropdown-open');
+          }
+
+          dropdownCloseTimers.delete(dropdownItem);
+        }, 420);
+
+        dropdownCloseTimers.set(dropdownItem, timer);
+      };
+
+	      navDropdowns.forEach(function(dropdown) {
+	        const dropdownItem = dropdown.closest('.header-secondary-nav__item--has-dropdown');
+	        const trigger = dropdownItem ? dropdownItem.querySelector('.header-secondary-nav__link, .header-sticky-nav__link') : null;
+	
+	        if (!dropdownItem) return;
+	
+	        if (trigger) {
+	          trigger.setAttribute('aria-haspopup', 'true');
+	          trigger.setAttribute('aria-expanded', 'false');
+	          trigger.addEventListener('click', function(event) {
+	            event.preventDefault();
+	            event.stopPropagation();
+	
+	            if (dropdownItem.classList.contains('is-dropdown-open')) {
+	              closeDropdown(dropdownItem);
+	              return;
+	            }
+	
+	            openDropdown(dropdownItem, dropdown);
+	          });
+	        }
+	
+	        dropdown.addEventListener('click', function(event) {
+	          event.stopPropagation();
+	        });
+
+        dropdownItem.addEventListener('keydown', function(event) {
+          if (event.key === 'Escape') {
+            closeDropdown(dropdownItem);
+            const trigger = dropdownItem.querySelector('.header-secondary-nav__link, .header-sticky-nav__link');
+
+            if (trigger) {
+              trigger.focus();
+            }
+          }
+        });
+      });
+
+	      requestDropdownPositionSync();
+	      window.addEventListener('load', requestDropdownPositionSync);
+	      window.addEventListener('resize', requestDropdownPositionSync);
+	      document.addEventListener('click', function(event) {
+	        const clickedInsideDropdown = navDropdowns.some(function(dropdown) {
+	          const dropdownItem = dropdown.closest('.header-secondary-nav__item--has-dropdown');
+	          return dropdownItem && dropdownItem.contains(event.target);
+	        });
+	
+	        if (!clickedInsideDropdown) {
+	          navDropdowns.forEach(function(dropdown) {
+	            closeDropdown(dropdown.closest('.header-secondary-nav__item--has-dropdown'));
+	          });
+	        }
+	      });
+	    }
+
+    const syncPageLinkState = function() {
+      if (!pageLinks.length) return;
+
+      const pathname = window.location.pathname.toLowerCase();
+      const searchParams = new URLSearchParams(window.location.search);
+      const isAboutPage = pathname.includes('/about') || searchParams.get('view') === 'about-us';
+      const isContactPage = !isAboutPage && pathname.includes('/contact');
+
+      if (!isAboutPage && !isContactPage) {
+        return;
+      }
+
+      pageLinks.forEach(function(link) {
+        const isActive =
+          (link.dataset.pageLink === 'about' && isAboutPage) ||
+          (link.dataset.pageLink === 'contact' && isContactPage);
+
+        link.classList.toggle('is-active', isActive);
+
+        if (isActive) {
+          link.setAttribute('aria-current', 'page');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    };
+
+    syncPageLinkState();
+
+    const accountMenuCloseTimers = new WeakMap();
+
+    const clearAccountMenuCloseTimer = function(menu) {
+      const existingTimer = accountMenuCloseTimers.get(menu);
+
+      if (existingTimer) {
+        window.clearTimeout(existingTimer);
+        accountMenuCloseTimers.delete(menu);
+      }
+    };
+
+    const setAccountMenuOpen = function(menu, isOpen, pinned) {
+      if (!menu) return;
+
+      const trigger = menu.querySelector('[data-account-menu-toggle]');
+      clearAccountMenuCloseTimer(menu);
+      menu.classList.toggle('is-open', isOpen);
+      menu.classList.toggle('is-pinned', Boolean(isOpen && pinned));
+
+      if (trigger) {
+        trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      }
+    };
+
+    const closeAccountMenus = function(exceptMenu) {
+      accountMenus.forEach(function(menu) {
+        if (menu !== exceptMenu) {
+          setAccountMenuOpen(menu, false, false);
+        }
+      });
+    };
+
+    const scheduleAccountMenuClose = function(menu) {
+      if (!menu || menu.classList.contains('is-pinned')) return;
+
+      clearAccountMenuCloseTimer(menu);
+
+      const closeTimer = window.setTimeout(function() {
+        if (!menu.matches(':hover') && !menu.contains(document.activeElement) && !menu.classList.contains('is-pinned')) {
+          setAccountMenuOpen(menu, false, false);
+        }
+      }, 360);
+
+      accountMenuCloseTimers.set(menu, closeTimer);
+    };
+
+    if (accountMenus.length) {
+      accountMenus.forEach(function(menu) {
+        const trigger = menu.querySelector('[data-account-menu-toggle]');
+        const panel = menu.querySelector('[data-account-menu-panel]');
+
+        menu.addEventListener('mouseenter', function() {
+          closeAccountMenus(menu);
+          setAccountMenuOpen(menu, true, false);
+        });
+
+        menu.addEventListener('mouseleave', function() {
+          scheduleAccountMenuClose(menu);
+        });
+
+        menu.addEventListener('focusin', function() {
+          closeAccountMenus(menu);
+          setAccountMenuOpen(menu, true, false);
+        });
+
+        menu.addEventListener('focusout', function() {
+          window.setTimeout(function() {
+            if (!menu.contains(document.activeElement) && !menu.matches(':hover') && !menu.classList.contains('is-pinned')) {
+              setAccountMenuOpen(menu, false, false);
+            }
+          }, 0);
+        });
+
+        if (trigger) {
+          trigger.addEventListener('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const shouldOpen = !menu.classList.contains('is-open') || !menu.classList.contains('is-pinned');
+            closeAccountMenus(shouldOpen ? menu : null);
+
+            if (shouldOpen) {
+              setAccountMenuOpen(menu, true, true);
+            } else {
+              setAccountMenuOpen(menu, false, false);
+            }
+          });
+        }
+
+        if (panel) {
+          panel.addEventListener('click', function(event) {
+            const wishlistTrigger = event.target.closest('[data-open-wishlist]');
+
+            if (wishlistTrigger) {
+              event.preventDefault();
+              event.stopPropagation();
+
+              if (window.Wishlist && typeof window.Wishlist.openModal === 'function') {
+                window.Wishlist.openModal();
+              }
+
+              return;
+            }
+
+            event.stopPropagation();
+          });
+        }
+      });
+
+      document.addEventListener('click', function(event) {
+        const clickedInsideMenu = accountMenus.some(function(menu) {
+          return menu.contains(event.target);
+        });
+
+        if (!clickedInsideMenu) {
+          closeAccountMenus(null);
+        }
+      });
+
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          closeAccountMenus(null);
+        }
+      });
+    }
+
+    const setMobileMenuOpen = function(isOpen) {
+      if (!mobileToggle || !mobileNav) return;
+      mobileNav.classList.toggle('is-open', isOpen);
+      mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      mobileToggle.querySelector('.menu-icon').style.display = isOpen ? 'none' : 'block';
+      mobileToggle.querySelector('.close-icon').style.display = isOpen ? 'block' : 'none';
+      document.body.classList.toggle('menu-open', isOpen);
+    };
+
+    const setMobileSearchOpen = function(isOpen) {
+      if (!mobileSearchToggle || !mobileSearch) return;
+      mobileSearch.classList.toggle('is-open', isOpen);
+      mobileSearch.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      mobileSearchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if (isOpen && mobileSearchInput) {
+        window.setTimeout(function() {
+          mobileSearchInput.focus();
+        }, 120);
+      }
+    };
+
+    if (mobileToggle && mobileNav) {
+      mobileToggle.setAttribute('aria-expanded', 'false');
+      mobileToggle.addEventListener('click', function() {
+        const isOpen = !mobileNav.classList.contains('is-open');
+        if (isOpen) {
+          setMobileSearchOpen(false);
+        }
+        setMobileMenuOpen(isOpen);
+      });
+    }
+
+    if (mobileSearchToggle && mobileSearch) {
+      mobileSearchToggle.addEventListener('click', function() {
+        const isOpen = !mobileSearch.classList.contains('is-open');
+        if (isOpen) {
+          setMobileMenuOpen(false);
+        }
+        setMobileSearchOpen(isOpen);
+      });
+    }
+
+    const syncStickyState = function() {
+      const currentScroll = window.pageYOffset;
+      if (header) {
+        header.classList.toggle('is-sticky', currentScroll > 100);
+      }
+      if (currentScroll > 100) {
+        closeAccountMenus(null);
+        setMobileSearchOpen(false);
+        setMobileMenuOpen(false);
+      }
+    };
+
+    syncStickyState();
+    window.addEventListener('scroll', function() {
+      syncStickyState();
+      requestDropdownPositionSync();
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_top_bar",
+      "label": "Show top bar",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "top_bar_text",
+      "label": "Top bar text - Canada",
+      "default": "Herbal By Nature | Health Canada NPN quality signals | Free shipping across Canada"
+    },
+    {
+      "type": "text",
+      "id": "top_bar_text_us",
+      "label": "Top bar text - United States",
+      "default": "Herbal wellness formulas | Clear labels | Fast US delivery"
+    },
+    {
+      "type": "text",
+      "id": "top_bar_text_pk",
+      "label": "Top bar text - Pakistan",
+      "default": "Fast delivery across Pakistan | Clear-label herbal wellness | Shop Boreal Vita"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "sticky_logo",
+      "label": "Sticky logo"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Header search placeholder",
+      "default": "Search For Supplements & Nutrition"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone number",
+      "default": "1-800-555-0199"
+    },
+    {
+      "type": "text",
+      "id": "support_hours",
+      "label": "Support hours",
+      "default": "M-F 9-9 Sat 9-6 Sun 10-5 EST"
+    },
+    {
+      "type": "text",
+      "id": "cart_label",
+      "label": "Cart summary label",
+      "default": "Total:"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country_badge",
+      "label": "Show market badges",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "primary_market_label",
+      "label": "Primary market label",
+      "default": "CDN$"
+    },
+    {
+      "type": "text",
+      "id": "secondary_market_label",
+      "label": "Secondary market label",
+      "default": "FRAN"
+    },
+    {
+      "type": "text",
+      "id": "country_label",
+      "label": "Legacy country label",
+      "default": "Canada"
+    },
+    {
+      "type": "header",
+      "content": "Desktop promo links"
+    },
+    {
+      "type": "text",
+      "id": "shipping_promo_text",
+      "label": "Shipping promo text",
+      "default": "FREE Shipping @ $79+"
+    },
+    {
+      "type": "url",
+      "id": "shipping_promo_url",
+      "label": "Shipping promo link"
+    },
+    {
+      "type": "text",
+      "id": "bonus_promo_text",
+      "label": "Bonus promo text",
+      "default": "Get a BONUS @ $149+"
+    },
+    {
+      "type": "url",
+      "id": "bonus_promo_url",
+      "label": "Bonus promo link"
+    },
+    {
+      "type": "text",
+      "id": "feature_promo_prefix",
+      "label": "Feature promo prefix",
+      "default": "BUY 1 GET 1:"
+    },
+    {
+      "type": "text",
+      "id": "feature_promo_highlight",
+      "label": "Feature promo highlight",
+      "default": "Magnesium Bisglycinate 260 + 100 Caps FREE"
+    },
+    {
+      "type": "url",
+      "id": "feature_promo_link",
+      "label": "Feature promo link"
+    },
+    {
+      "type": "header",
+      "content": "Desktop utility links"
+    },
+    {
+      "type": "text",
+      "id": "live_chat_label",
+      "label": "Live chat label",
+      "default": "Live Chat"
+    },
+    {
+      "type": "url",
+      "id": "live_chat_url",
+      "label": "Live chat link"
+    },
+    {
+      "type": "text",
+      "id": "tracking_label",
+      "label": "Tracking label",
+      "default": "Tracking"
+    },
+    {
+      "type": "url",
+      "id": "tracking_url",
+      "label": "Tracking link"
+    },
+    {
+      "type": "text",
+      "id": "help_label",
+      "label": "Help label",
+      "default": "Help"
+    },
+    {
+      "type": "url",
+      "id": "help_url",
+      "label": "Help link"
+    },
+    {
+      "type": "text",
+      "id": "account_label",
+      "label": "Account label",
+      "default": "My Account/New"
+    },
+    {
+      "type": "text",
+      "id": "deals_label",
+      "label": "Legacy deals label",
+      "default": "Offers"
+    },
+    {
+      "type": "text",
+      "id": "deals_eyebrow",
+      "label": "Legacy deals eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "deals_heading",
+      "label": "Legacy deals heading",
+      "default": "Offers"
+    },
+    {
+      "type": "textarea",
+      "id": "deals_text",
+      "label": "Legacy deals supporting text"
+    },
+    {
+      "type": "url",
+      "id": "deals_link",
+      "label": "Legacy deals link"
+    },
+    {
+      "type": "page",
+      "id": "about_page",
+      "label": "Fallback About page"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 250,
+      "step": 10,
+      "default": 220,
+      "label": "Logo Width",
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mega_promo",
+      "name": "Mega promo (right)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Attach to menu item",
+          "default": "Products"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Shop Best Sellers"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "mega_category",
+      "name": "Mega menu category image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Menu item title",
+          "default": "Vitamins"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    },
+    {
+      "type": "deals_card",
+      "name": "Deals card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge",
+          "default": "New this month"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Fresh products this month"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "highlight",
+          "label": "Highlight line"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 24
+}
+{% endschema %}

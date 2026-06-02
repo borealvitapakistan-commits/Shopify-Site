@@ -1,0 +1,250 @@
+{%- assign section_heading = section.settings.heading | default: 'About Boreal Vita' -%}
+{%- assign section_button_link = section.settings.button_link | default: '#' -%}
+{%- assign fallback_asset = 'deals-mission-healthcare.jfif' -%}
+{%- assign fallback_alt = 'Healthcare professionals illustration' -%}
+
+{%- if section.settings.fallback_image == 'science-doctor' -%}
+  {%- assign fallback_asset = 'wellness-bundles-science-doctor.jfif' -%}
+  {%- assign fallback_alt = 'Healthcare science illustration' -%}
+{%- endif -%}
+
+<section
+  id="AboutFeatureBanner-{{ section.id }}"
+  class="about-feature-banner-section"
+>
+  <div class="container">
+    <div class="about-feature-banner{% if section.settings.reverse_layout %} is-reverse{% endif %}">
+      <div class="about-feature-banner__copy">
+        {% if section.settings.heading != blank %}
+          <h2 class="about-feature-banner__title">{{ section_heading }}</h2>
+        {% endif %}
+
+        {% if section.settings.body != blank %}
+          <div class="about-feature-banner__text rte">
+            {{ section.settings.body }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.button_label != blank %}
+          <a class="about-feature-banner__button" href="{{ section_button_link }}">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="about-feature-banner__media">
+        {% if section.settings.image != blank %}
+          <img
+            class="about-feature-banner__image"
+            src="{{ section.settings.image | image_url: width: 2200 }}"
+            srcset="
+              {{ section.settings.image | image_url: width: 900 }} 900w,
+              {{ section.settings.image | image_url: width: 1400 }} 1400w,
+              {{ section.settings.image | image_url: width: 1800 }} 1800w,
+              {{ section.settings.image | image_url: width: 2200 }} 2200w
+            "
+            sizes="(max-width: 989px) 100vw, 48vw"
+            alt="{{ section.settings.image.alt | default: section_heading | escape }}"
+            width="{{ section.settings.image.width }}"
+            height="{{ section.settings.image.height }}"
+            loading="lazy"
+          >
+        {% else %}
+          <img
+            class="about-feature-banner__image"
+            src="{{ fallback_asset | asset_url }}"
+            alt="{{ fallback_alt }}"
+            width="900"
+            height="540"
+            loading="lazy"
+          >
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #AboutFeatureBanner-{{ section.id }} {
+    padding: clamp(2rem, 4vw, 3.4rem) 0;
+    background: #ffffff;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(1.6rem, 4vw, 4.5rem);
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner.is-reverse .about-feature-banner__copy {
+    order: 2;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner.is-reverse .about-feature-banner__media {
+    order: 1;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__copy {
+    display: grid;
+    align-content: center;
+    gap: 1rem;
+    max-width: 38rem;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__title {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    background: var(--brand-title-gradient, linear-gradient(135deg, #0A282C 0%, #163E43 100%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(1.8rem, 1.2rem + 2vw, 3rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__text {
+    color: var(--brand-text, #22343A);
+    font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    font-size: clamp(1rem, 0.95rem + 0.22vw, 1.14rem);
+    line-height: 1.8;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__text p {
+    margin: 0 0 0.9rem;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__text p:last-child {
+    margin-bottom: 0;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    width: fit-content;
+    padding: 0 1.65rem;
+    border-radius: 0.8rem;
+    background: var(--brand-green-gradient, linear-gradient(135deg, #C89F27 0%, #FAD054 100%));
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-heading, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: 0.94rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    text-transform: uppercase;
+    box-shadow: 0 0.9rem 1.8rem rgba(var(--brand-green-rgb, 250, 208, 84), 0.22);
+    transition: transform 0.18s ease, box-shadow 0.22s ease, filter 0.18s ease;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__button:hover,
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__button:focus-visible {
+    color: var(--brand-primary, #0A282C);
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    box-shadow: 0 1rem 2rem rgba(var(--brand-green-rgb, 250, 208, 84), 0.3);
+    outline: none;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__media {
+    display: grid;
+    place-items: center;
+    width: 100%;
+  }
+
+  #AboutFeatureBanner-{{ section.id }} .about-feature-banner__image {
+    display: block;
+    width: 100%;
+    max-width: 46rem;
+    height: auto;
+  }
+
+  @media (max-width: 989px) {
+    #AboutFeatureBanner-{{ section.id }} .about-feature-banner,
+    #AboutFeatureBanner-{{ section.id }} .about-feature-banner.is-reverse {
+      grid-template-columns: 1fr;
+      gap: 1.4rem;
+    }
+
+    #AboutFeatureBanner-{{ section.id }} .about-feature-banner.is-reverse .about-feature-banner__copy,
+    #AboutFeatureBanner-{{ section.id }} .about-feature-banner.is-reverse .about-feature-banner__media {
+      order: initial;
+    }
+
+    #AboutFeatureBanner-{{ section.id }} .about-feature-banner__copy {
+      max-width: 100%;
+      justify-items: center;
+      text-align: center;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "About Feature Banner",
+  "tag": "section",
+  "class": "section-about-feature-banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "OUR MISSION - WELLNESS FOR LIFE!"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>At Boreal Vita we aim to explore the goodness of nature with innovation. We are dedicated to play our role in building a happy and healthy community.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "fallback_image",
+      "label": "Fallback image",
+      "default": "mission-healthcare",
+      "options": [
+        {
+          "value": "mission-healthcare",
+          "label": "Mission healthcare image"
+        },
+        {
+          "value": "science-doctor",
+          "label": "Science doctor image"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse_layout",
+      "label": "Show image on the left",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Feature Banner"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,38 @@
+{%- comment -%}
+  List Collections Page - Matches React design
+{%- endcomment -%}
+
+<div class="main-list-collections">
+  <div class="container">
+    {%- assign category_titles = 'Anti-inflammatory|Anxiety Relief|Blood Sugar Balance|Bone Health|Boost Energy|Boost Stamina|Brain Health|Cardio|Vascular Health|Sports|Digestive Health|General Health Herbal Supplements|Immune Support|Joint Health|Menopause Relief|Muscle Recovery|Pain Relief|Prostate Health|Respiratory Health|Sexual Health|Skin Health|Sleep Aid|Urinary Tract Health|Weight Loss' | split: '|' -%}
+
+    <div class="page-header">
+      <h1 class="page-title">Shop by Category</h1>
+      <p class="page-description">Choose a medicine category to explore the matching collection.</p>
+    </div>
+
+    <div class="shop-category-tabs" aria-label="Shop by Category">
+      {%- for category_title in category_titles -%}
+        {%- assign category_handle = category_title | handleize -%}
+        {%- assign category_collection = collections[category_handle] -%}
+        {%- capture category_url -%}/collections/{{ category_handle }}{%- endcapture -%}
+        {%- if category_collection != blank -%}
+          {%- assign category_url = category_collection.url -%}
+        {%- endif -%}
+        <a href="{{ category_url }}" class="shop-category-tab">{{ category_title }}</a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "List Collections",
+  "settings": [],
+  "presets": [
+    {
+      "name": "List Collections"
+    }
+  ]
+}
+{% endschema %}

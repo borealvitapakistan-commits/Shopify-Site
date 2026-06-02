@@ -1,0 +1,37 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "Footer Group",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "settings": {
+        "tagline": "Your trusted source for premium health supplements.",
+        "menu_secondary": "",
+        "menu_secondary_title": "Customer Service",
+        "email": "info@borealvita.com",
+        "phone": "+1 306-954-4990",
+        "address": "<p>3230 Preston Ave S, Saskatoon, SK S7T 0Y3, Canada</p>",
+        "hours": "",
+        "show_payment_icons": true,
+        "show_newsletter": true,
+        "newsletter_heading": "Join The Community!",
+        "newsletter_text": "Sign up for our newsletter and enjoy 10% off on your next purchase - stay updated and save big!",
+        "newsletter_placeholder": "Enter your email",
+        "newsletter_button": "Subscribe",
+        "newsletter_success": "Thanks for subscribing."
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

@@ -1,0 +1,375 @@
+{%- comment -%}
+  Personalized vitamin recommendation banner shown below the homepage category section.
+{%- endcomment -%}
+
+{% liquid
+  assign banner_link = section.settings.button_link
+  if banner_link == blank
+    assign banner_link = routes.all_products_collection_url
+  endif
+%}
+
+<section class="personalized-vitamin-banner" id="take-your-vitamins" data-section-anchor="PersonalizedVitaminBanner-{{ section.id }}">
+  <div class="container personalized-vitamin-banner__container">
+    <div class="personalized-vitamin-banner__card">
+      <span class="personalized-vitamin-banner__shape personalized-vitamin-banner__shape--berry" aria-hidden="true"></span>
+      <span class="personalized-vitamin-banner__shape personalized-vitamin-banner__shape--pink-pill" aria-hidden="true"></span>
+      <span class="personalized-vitamin-banner__shape personalized-vitamin-banner__shape--cyan-pill-one" aria-hidden="true"></span>
+      <span class="personalized-vitamin-banner__shape personalized-vitamin-banner__shape--cyan-pill-two" aria-hidden="true"></span>
+      <span class="personalized-vitamin-banner__shape personalized-vitamin-banner__shape--orange-slice" aria-hidden="true"></span>
+      <span class="personalized-vitamin-banner__shape personalized-vitamin-banner__shape--yellow-big-one" aria-hidden="true"></span>
+      <span class="personalized-vitamin-banner__shape personalized-vitamin-banner__shape--yellow-big-two" aria-hidden="true"></span>
+      <span class="personalized-vitamin-banner__shape personalized-vitamin-banner__shape--gold-capsule" aria-hidden="true"></span>
+
+      <div class="personalized-vitamin-banner__content">
+        {% if section.settings.eyebrow != blank %}
+          <p class="personalized-vitamin-banner__eyebrow">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+
+        <h2 class="personalized-vitamin-banner__title">
+          {% if section.settings.heading_prefix != blank %}
+            <span>{{ section.settings.heading_prefix }}</span>
+          {% endif %}
+          {% if section.settings.heading_emphasis != blank %}
+            <em>{{ section.settings.heading_emphasis }}</em>
+          {% endif %}
+          {% if section.settings.heading_suffix != blank %}
+            <span>{{ section.settings.heading_suffix }}</span>
+          {% endif %}
+        </h2>
+
+        {% if section.settings.button_label != blank %}
+          <a class="personalized-vitamin-banner__button" href="{{ banner_link }}">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .personalized-vitamin-banner {
+    padding: clamp(1.1rem, 2.1vw, 1.8rem) 0 clamp(2rem, 3.6vw, 3rem);
+    background: #ffffff;
+  }
+
+  .personalized-vitamin-banner__container {
+    max-width: 1320px;
+  }
+
+  .personalized-vitamin-banner__card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: clamp(300px, 34vw, 430px);
+    padding: clamp(2.7rem, 4.8vw, 4.8rem) clamp(1.35rem, 4vw, 3.4rem);
+    border: 1px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.06);
+    border-radius: clamp(1.2rem, 2vw, 1.85rem);
+    background:
+      radial-gradient(circle at 19% 36%, rgba(255, 197, 212, 0.28) 0%, rgba(255, 197, 212, 0) 22%),
+      radial-gradient(circle at 79% 40%, rgba(255, 228, 140, 0.24) 0%, rgba(255, 228, 140, 0) 24%),
+      linear-gradient(180deg, #ffffff 0%, #fffdfa 100%);
+    box-shadow: 0 1.4rem 3rem rgba(10, 40, 44, 0.08);
+  }
+
+  .personalized-vitamin-banner__card::before {
+    content: "";
+    position: absolute;
+    inset: 16% 8% auto;
+    height: 34%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(255, 198, 210, 0.22), rgba(255, 245, 231, 0));
+    filter: blur(20px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .personalized-vitamin-banner__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    gap: clamp(1rem, 2.2vw, 1.55rem);
+    max-width: 58rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .personalized-vitamin-banner__eyebrow {
+    margin: 0;
+    color: rgba(var(--brand-primary-rgb, 10, 40, 44), 0.9);
+    font-family: var(--font-body, "DM Sans", sans-serif);
+    font-size: clamp(0.94rem, 0.84rem + 0.35vw, 1.12rem);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+
+  .personalized-vitamin-banner__title {
+    margin: 0;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: clamp(2rem, 1.2rem + 2.4vw, 4rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .personalized-vitamin-banner__title em {
+    font-style: italic;
+  }
+
+  .personalized-vitamin-banner__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 210px;
+    min-height: 3.5rem;
+    padding: 0.85rem 1.85rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #0f8f54 0%, #0b7c49 100%);
+    color: #ffffff;
+    font-family: var(--font-title, "FuturaBT Bold", "DM Sans", sans-serif);
+    font-size: 0.98rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    box-shadow: 0 14px 28px rgba(15, 143, 84, 0.22);
+    transition: transform 0.18s ease, box-shadow 0.22s ease, filter 0.18s ease;
+  }
+
+  .personalized-vitamin-banner__button:hover,
+  .personalized-vitamin-banner__button:focus-visible {
+    outline: none;
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px rgba(15, 143, 84, 0.28);
+    filter: saturate(1.04);
+  }
+
+  .personalized-vitamin-banner__shape {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    box-shadow: 0 1.2rem 2rem rgba(10, 40, 44, 0.1);
+  }
+
+  .personalized-vitamin-banner__shape--berry {
+    top: 1.2rem;
+    left: -1.8rem;
+    width: clamp(4.4rem, 9vw, 7rem);
+    height: clamp(4.4rem, 9vw, 7rem);
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #db463a 0%, #bf231e 72%, #971712 100%);
+  }
+
+  .personalized-vitamin-banner__shape--pink-pill {
+    bottom: 2rem;
+    left: 1.1rem;
+    width: clamp(6.8rem, 13vw, 10.4rem);
+    height: clamp(2.65rem, 4.8vw, 4.2rem);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #d1a9ce 0%, #bea0ca 100%);
+    transform: rotate(-34deg);
+  }
+
+  .personalized-vitamin-banner__shape--cyan-pill-one,
+  .personalized-vitamin-banner__shape--cyan-pill-two {
+    border-radius: 999px;
+    background: linear-gradient(135deg, #b9d7e4 0%, #c8dde4 100%);
+  }
+
+  .personalized-vitamin-banner__shape--cyan-pill-one {
+    top: -0.4rem;
+    left: 23%;
+    width: clamp(7rem, 14vw, 10.6rem);
+    height: clamp(2.9rem, 5.1vw, 4.3rem);
+    transform: rotate(-52deg);
+  }
+
+  .personalized-vitamin-banner__shape--cyan-pill-two {
+    top: -0.8rem;
+    left: 34%;
+    width: clamp(5rem, 10vw, 7.6rem);
+    height: clamp(2.4rem, 4.2vw, 3.6rem);
+    transform: rotate(-56deg);
+  }
+
+  .personalized-vitamin-banner__shape--orange-slice {
+    top: 0.9rem;
+    right: 33%;
+    width: clamp(4.8rem, 9vw, 6.6rem);
+    height: clamp(4.1rem, 8vw, 5.8rem);
+    border-radius: 62% 62% 58% 58% / 36% 36% 62% 62%;
+    background: linear-gradient(145deg, #f4a254 0%, #ffbe75 100%);
+    transform: rotate(16deg);
+  }
+
+  .personalized-vitamin-banner__shape--yellow-big-one,
+  .personalized-vitamin-banner__shape--yellow-big-two {
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #ffde63 0%, #f8ca2d 80%, #e9b81e 100%);
+  }
+
+  .personalized-vitamin-banner__shape--yellow-big-one {
+    top: 3rem;
+    right: 10rem;
+    width: clamp(6.3rem, 12vw, 9.5rem);
+    height: clamp(6.3rem, 12vw, 9.5rem);
+  }
+
+  .personalized-vitamin-banner__shape--yellow-big-two {
+    top: 1.2rem;
+    right: 1.2rem;
+    width: clamp(5.6rem, 10vw, 8.2rem);
+    height: clamp(5.6rem, 10vw, 8.2rem);
+  }
+
+  .personalized-vitamin-banner__shape--gold-capsule {
+    bottom: -0.25rem;
+    left: 49%;
+    width: clamp(3.8rem, 8vw, 5.9rem);
+    height: clamp(8rem, 15vw, 12.2rem);
+    border-radius: 999px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0) 28%),
+      linear-gradient(135deg, #efe17a 0%, #efe3a0 50%, #d8c45c 100%);
+    transform: rotate(35deg);
+  }
+
+  @media (max-width: 1023px) {
+    .personalized-vitamin-banner__card {
+      min-height: 340px;
+      padding-top: 3.4rem;
+      padding-bottom: 3.4rem;
+    }
+
+    .personalized-vitamin-banner__shape--yellow-big-one {
+      right: 7rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .personalized-vitamin-banner {
+      padding: 1rem 0 1.8rem;
+    }
+
+    .personalized-vitamin-banner__card {
+      min-height: 300px;
+      padding: 2.6rem 1.1rem 2.9rem;
+      border-radius: 1.25rem;
+    }
+
+    .personalized-vitamin-banner__eyebrow {
+      font-size: 0.82rem;
+    }
+
+    .personalized-vitamin-banner__title {
+      font-size: clamp(1.7rem, 7vw, 2.35rem);
+      line-height: 1.14;
+    }
+
+    .personalized-vitamin-banner__button {
+      min-width: 188px;
+      min-height: 3.15rem;
+      font-size: 0.94rem;
+    }
+
+    .personalized-vitamin-banner__shape--berry {
+      left: -1.4rem;
+      top: 0.8rem;
+    }
+
+    .personalized-vitamin-banner__shape--pink-pill {
+      left: -0.8rem;
+      bottom: 1.25rem;
+    }
+
+    .personalized-vitamin-banner__shape--cyan-pill-one {
+      left: 18%;
+      top: -0.9rem;
+    }
+
+    .personalized-vitamin-banner__shape--cyan-pill-two {
+      left: 33%;
+      top: -0.65rem;
+    }
+
+    .personalized-vitamin-banner__shape--orange-slice {
+      right: 26%;
+      top: 1rem;
+    }
+
+    .personalized-vitamin-banner__shape--yellow-big-one {
+      right: 4.2rem;
+      top: 4rem;
+    }
+
+    .personalized-vitamin-banner__shape--yellow-big-two {
+      right: -0.85rem;
+      top: 1.5rem;
+    }
+
+    .personalized-vitamin-banner__shape--gold-capsule {
+      left: 58%;
+      bottom: -1.2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .personalized-vitamin-banner__button {
+      transition: none !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Vitamin Quiz Banner",
+  "tag": "section",
+  "class": "section-personalized-vitamin-banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "WHAT SHOULD I TAKE?"
+    },
+    {
+      "type": "text",
+      "id": "heading_prefix",
+      "label": "Heading prefix",
+      "default": "Get Your"
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Heading emphasis",
+      "default": "Personalized"
+    },
+    {
+      "type": "text",
+      "id": "heading_suffix",
+      "label": "Heading suffix",
+      "default": "Vitamin Recommendation"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Take the Quiz"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vitamin Quiz Banner"
+    }
+  ]
+}
+{% endschema %}

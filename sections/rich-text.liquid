@@ -1,0 +1,58 @@
+<section class="section">
+  <div class="container card" style="padding: 28px;">
+    {% if section.settings.tag != blank %}
+      <span class="badge">{{ section.settings.tag }}</span>
+    {% endif %}
+    {% if section.settings.heading != blank %}
+      <h2>{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.text != blank %}
+      <p>{{ section.settings.text }}</p>
+    {% endif %}
+    {% if section.settings.button_label != blank %}
+      <a class="button" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Tag",
+      "default": "Our promise"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Plants grown with intention"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "We partner with small farms, harvest at peak potency, and test every batch for purity."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Meet our growers"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rich text"
+    }
+  ]
+}
+{% endschema %}

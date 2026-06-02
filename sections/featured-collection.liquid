@@ -1,0 +1,176 @@
+{%- comment -%}
+  Featured Collection Section
+{%- endcomment -%}
+
+<section class="featured-collection">
+  <div class="container">
+    {% if section.settings.title != blank %}
+      <h2 class="section-title section-title--center">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    <div class="products-grid">
+      {% assign collection = collections[section.settings.collection] %}
+      {% for product in collection.products limit: section.settings.products_to_show %}
+        {% render 'product-card-amzn',
+          product: product,
+          show_rating: section.settings.show_rating,
+          show_pricing: section.settings.show_pricing,
+          show_unit_price: section.settings.show_unit_price,
+          show_delivery: section.settings.show_delivery,
+          show_social_proof: section.settings.show_social_proof,
+          show_add_to_cart: section.settings.show_add_to_cart
+        %}
+      {% else %}
+        {% for i in (1..4) %}
+          <div class="amzn-card amzn-card--placeholder">
+            <div class="amzn-card__media">
+              <div class="amzn-card__img-placeholder"></div>
+            </div>
+            <div class="amzn-card__body">
+              <h3 class="amzn-card__title">Sample Product {{ i }}</h3>
+            </div>
+          </div>
+        {% endfor %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_view_all %}
+      <div class="featured-collection__footer">
+        <a href="{{ collection.url | default: '/collections/all' }}" class="btn btn--secondary">
+          View All Products
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .featured-collection {
+    padding: clamp(2rem, 4vw, 3.25rem) 0;
+  }
+
+  .featured-collection > .container {
+    width: min(1280px, calc(100vw - clamp(2rem, 10vw, 11rem)));
+    max-width: 1280px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .featured-collection .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13.75rem, 14.75rem));
+    justify-content: center;
+    gap: clamp(1rem, 1.45vw, 1.35rem);
+  }
+
+  @media (min-width: 768px) {
+    .featured-collection .products-grid {
+      grid-template-columns: repeat(auto-fill, minmax(13.75rem, 14.75rem));
+    }
+  }
+
+  .featured-collection__footer {
+    text-align: center;
+    margin-top: 1.6rem;
+  }
+
+  .featured-collection__footer .btn {
+    min-height: 2.25rem;
+    padding: 0 1rem;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--brand-primary, #0A282C);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  @media (max-width: 767px) {
+    .featured-collection > .container {
+      width: 100%;
+      max-width: var(--site-content-max-width, var(--site-max-width, 1920px));
+      padding-right: var(--site-edge-gutter, 0.9rem);
+      padding-left: var(--site-edge-gutter, 0.9rem);
+    }
+
+    .featured-collection .products-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "tag": "section",
+  "class": "section-featured-collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4,
+      "label": "Products to show"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pricing",
+      "label": "Show pricing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_unit_price",
+      "label": "Show unit price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery",
+      "label": "Show delivery text",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_proof",
+      "label": "Show social proof",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_to_cart",
+      "label": "Show add to cart",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

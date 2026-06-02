@@ -1,0 +1,25 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "bv_cache_revision": "m5-comfort-mode-20260531-2",
+    "color_primary": "#0A282C",
+    "color_primary_foreground": "#ffffff",
+    "color_background": "#ffffff",
+    "color_foreground": "#000000",
+    "color_muted": "#F4F8F7",
+    "color_muted_foreground": "#33585D",
+    "color_border": "#0A282C",
+    "font_heading": "assistant_n6",
+    "font_body": "assistant_n4",
+    "font_size_base": 16,
+    "cart_type": "drawer"
+  }
+}

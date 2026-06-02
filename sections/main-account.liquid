@@ -1,0 +1,133 @@
+{%- comment -%}
+  Customer Account Dashboard - Matches React design
+{%- endcomment -%}
+
+<div class="main-account">
+  <div class="container">
+    <div class="account-header">
+      <h1 class="account-title">{{ 'customer.account.title' | t }}</h1>
+      <a href="{{ routes.account_logout_url }}" class="logout-link">
+        {% render 'icon-logout' %}
+        {{ 'customer.log_out' | t }}
+      </a>
+    </div>
+
+    <div class="account-grid">
+      {%- comment -%} Account Sidebar {%- endcomment -%}
+      <aside class="account-sidebar">
+        <nav class="account-nav">
+          <a href="{{ routes.account_url }}" class="account-nav-link active">
+            {% render 'icon-user' %}
+            Account Overview
+          </a>
+          <a href="{{ routes.account_url }}#orders" class="account-nav-link">
+            {% render 'icon-package' %}
+            Order History
+          </a>
+          <a href="{{ routes.account_addresses_url }}" class="account-nav-link">
+            {% render 'icon-map-pin' %}
+            Addresses
+          </a>
+          <a href="#wishlist" class="account-nav-link">
+            {% render 'icon-heart' %}
+            Wishlist
+          </a>
+        </nav>
+      </aside>
+
+      {%- comment -%} Main Content {%- endcomment -%}
+      <main class="account-main">
+        {%- comment -%} Account Overview {%- endcomment -%}
+        <section class="account-section">
+          <h2 class="section-title">Account Details</h2>
+          <div class="account-details-card">
+            <div class="account-info">
+              <p><strong>Name:</strong> {{ customer.name }}</p>
+              <p><strong>Email:</strong> {{ customer.email }}</p>
+              {%- if customer.default_address -%}
+                <p><strong>Default Address:</strong><br>
+                  {{ customer.default_address | format_address }}
+                </p>
+              {%- endif -%}
+            </div>
+            <a href="{{ routes.account_addresses_url }}" class="btn btn-outline">
+              Manage Addresses
+            </a>
+          </div>
+        </section>
+
+        {%- comment -%} Order History {%- endcomment -%}
+        <section id="orders" class="account-section">
+          <h2 class="section-title">{{ 'customer.orders.title' | t }}</h2>
+          {%- paginate customer.orders by 20 -%}
+            {%- if customer.orders.size > 0 -%}
+              <div class="orders-table-wrapper">
+                <table class="orders-table">
+                  <thead>
+                    <tr>
+                      <th>{{ 'customer.orders.order_number' | t }}</th>
+                      <th>{{ 'customer.orders.date' | t }}</th>
+                      <th>{{ 'customer.orders.payment_status' | t }}</th>
+                      <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+                      <th>{{ 'customer.orders.total' | t }}</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {%- for order in customer.orders -%}
+                      <tr>
+                        <td>{{ order.name }}</td>
+                        <td>{{ order.created_at | date: format: 'date' }}</td>
+                        <td>
+                          <span class="status-badge status-{{ order.financial_status }}">
+                            {{ order.financial_status_label }}
+                          </span>
+                        </td>
+                        <td>
+                          <span class="status-badge status-{{ order.fulfillment_status }}">
+                            {{ order.fulfillment_status_label | default: 'Unfulfilled' }}
+                          </span>
+                        </td>
+                        <td>{{ order.total_price | money }}</td>
+                        <td>
+                          <a href="{{ order.customer_url }}" class="view-order-link">
+                            View
+                            {% render 'icon-chevron-right' %}
+                          </a>
+                        </td>
+                      </tr>
+                    {%- endfor -%}
+                  </tbody>
+                </table>
+              </div>
+
+              {%- if paginate.pages > 1 -%}
+                {% render 'pagination', paginate: paginate %}
+              {%- endif -%}
+            {%- else -%}
+              <div class="empty-state">
+                {% render 'icon-package' %}
+                <p>{{ 'customer.orders.none' | t }}</p>
+                <a href="{{ routes.all_products_collection_url }}" class="btn btn-primary">
+                  Start Shopping
+                </a>
+              </div>
+            {%- endif -%}
+          {%- endpaginate -%}
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Account",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Account"
+    }
+  ]
+}
+{% endschema %}

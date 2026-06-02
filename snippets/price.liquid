@@ -1,0 +1,29 @@
+{%- comment -%}
+  Renders product price with sale badge
+
+  Usage:
+  {% render 'price', product: product, use_variant: true %}
+{%- endcomment -%}
+
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price
+-%}
+
+<span class="price price--current">
+  {{ price | money }}
+</span>
+
+{%- if compare_at_price > price -%}
+  <span class="price price--compare">
+    {{ compare_at_price | money }}
+  </span>
+  {%- assign savings = compare_at_price | minus: price | times: 100.0 | divided_by: compare_at_price | round -%}
+  <span class="price-badge">Save {{ savings }}%</span>
+{%- endif -%}

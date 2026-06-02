@@ -1,0 +1,419 @@
+{%- assign primary_collection = collections[section.settings.primary_collection] -%}
+{%- assign secondary_collection = collections[section.settings.secondary_collection] -%}
+{%- assign tertiary_collection = collections[section.settings.tertiary_collection] -%}
+{%- assign default_panel_id = blank -%}
+
+{%- if primary_collection != blank and section.settings.primary_tab != blank -%}
+  {%- assign default_panel_id = 'primary' -%}
+{%- elsif secondary_collection != blank and section.settings.secondary_tab != blank -%}
+  {%- assign default_panel_id = 'secondary' -%}
+{%- elsif tertiary_collection != blank and section.settings.tertiary_tab != blank -%}
+  {%- assign default_panel_id = 'tertiary' -%}
+{%- endif -%}
+
+<section class="seasonal-deals-feature" id="SeasonalDealsFeature-{{ section.id }}">
+  <div class="container">
+    <div class="seasonal-deals-feature__inner">
+      {% if section.settings.heading != blank %}
+        <h2 class="section-title seasonal-deals-feature__title">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <p class="seasonal-deals-feature__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+
+      <div class="seasonal-deals-feature__tabs" role="tablist" aria-label="Seasonal deal categories">
+        {% if primary_collection != blank and section.settings.primary_tab != blank %}
+          <button
+            class="seasonal-deals-feature__tab{% if default_panel_id == 'primary' %} is-active{% endif %}"
+            type="button"
+            role="tab"
+            aria-selected="{% if default_panel_id == 'primary' %}true{% else %}false{% endif %}"
+            aria-controls="SeasonalDealsPanel-{{ section.id }}-primary"
+            id="SeasonalDealsTab-{{ section.id }}-primary"
+            data-seasonal-tab="primary"
+          >
+            {{ section.settings.primary_tab }}
+          </button>
+        {% endif %}
+
+        {% if secondary_collection != blank and section.settings.secondary_tab != blank %}
+          <button
+            class="seasonal-deals-feature__tab{% if default_panel_id == 'secondary' %} is-active{% endif %}"
+            type="button"
+            role="tab"
+            aria-selected="{% if default_panel_id == 'secondary' %}true{% else %}false{% endif %}"
+            aria-controls="SeasonalDealsPanel-{{ section.id }}-secondary"
+            id="SeasonalDealsTab-{{ section.id }}-secondary"
+            data-seasonal-tab="secondary"
+          >
+            {{ section.settings.secondary_tab }}
+          </button>
+        {% endif %}
+
+        {% if tertiary_collection != blank and section.settings.tertiary_tab != blank %}
+          <button
+            class="seasonal-deals-feature__tab{% if default_panel_id == 'tertiary' %} is-active{% endif %}"
+            type="button"
+            role="tab"
+            aria-selected="{% if default_panel_id == 'tertiary' %}true{% else %}false{% endif %}"
+            aria-controls="SeasonalDealsPanel-{{ section.id }}-tertiary"
+            id="SeasonalDealsTab-{{ section.id }}-tertiary"
+            data-seasonal-tab="tertiary"
+          >
+            {{ section.settings.tertiary_tab }}
+          </button>
+        {% endif %}
+      </div>
+
+      <div class="seasonal-deals-feature__panels">
+        {% if primary_collection != blank and section.settings.primary_tab != blank %}
+          <div
+            class="seasonal-deals-feature__panel{% if default_panel_id == 'primary' %} is-active{% endif %}"
+            id="SeasonalDealsPanel-{{ section.id }}-primary"
+            role="tabpanel"
+            aria-labelledby="SeasonalDealsTab-{{ section.id }}-primary"
+            {% unless default_panel_id == 'primary' %}hidden{% endunless %}
+            data-seasonal-panel="primary"
+          >
+            <div class="seasonal-deals-feature__grid">
+              {% for product in primary_collection.products limit: section.settings.products_to_show %}
+                {% render 'product-card-amzn',
+                  product: product,
+                  show_rating: false,
+                  show_pricing: true,
+                  show_unit_price: false,
+                  show_delivery: false,
+                  show_social_proof: false,
+                  show_add_to_cart: true
+                %}
+              {% else %}
+                <div class="seasonal-deals-feature__empty">No products found in {{ section.settings.primary_tab }}.</div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if secondary_collection != blank and section.settings.secondary_tab != blank %}
+          <div
+            class="seasonal-deals-feature__panel{% if default_panel_id == 'secondary' %} is-active{% endif %}"
+            id="SeasonalDealsPanel-{{ section.id }}-secondary"
+            role="tabpanel"
+            aria-labelledby="SeasonalDealsTab-{{ section.id }}-secondary"
+            {% unless default_panel_id == 'secondary' %}hidden{% endunless %}
+            data-seasonal-panel="secondary"
+          >
+            <div class="seasonal-deals-feature__grid">
+              {% for product in secondary_collection.products limit: section.settings.products_to_show %}
+                {% render 'product-card-amzn',
+                  product: product,
+                  show_rating: false,
+                  show_pricing: true,
+                  show_unit_price: false,
+                  show_delivery: false,
+                  show_social_proof: false,
+                  show_add_to_cart: true
+                %}
+              {% else %}
+                <div class="seasonal-deals-feature__empty">No products found in {{ section.settings.secondary_tab }}.</div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if tertiary_collection != blank and section.settings.tertiary_tab != blank %}
+          <div
+            class="seasonal-deals-feature__panel{% if default_panel_id == 'tertiary' %} is-active{% endif %}"
+            id="SeasonalDealsPanel-{{ section.id }}-tertiary"
+            role="tabpanel"
+            aria-labelledby="SeasonalDealsTab-{{ section.id }}-tertiary"
+            {% unless default_panel_id == 'tertiary' %}hidden{% endunless %}
+            data-seasonal-panel="tertiary"
+          >
+            <div class="seasonal-deals-feature__grid">
+              {% for product in tertiary_collection.products limit: section.settings.products_to_show %}
+                {% render 'product-card-amzn',
+                  product: product,
+                  show_rating: false,
+                  show_pricing: true,
+                  show_unit_price: false,
+                  show_delivery: false,
+                  show_social_proof: false,
+                  show_add_to_cart: true
+                %}
+              {% else %}
+                <div class="seasonal-deals-feature__empty">No products found in {{ section.settings.tertiary_tab }}.</div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #SeasonalDealsFeature-{{ section.id }} {
+    scroll-margin-top: calc(var(--header-height, 146px) + 24px);
+    padding: clamp(2rem, 3.4vw, 3.2rem) 0 clamp(2.2rem, 3.8vw, 3.6rem);
+    background:
+      radial-gradient(circle at 50% 0%, rgba(var(--brand-green-rgb, 250, 208, 84), 0.08), transparent 24rem),
+      linear-gradient(180deg, #ffffff 0%, rgba(var(--brand-purple-rgb, 10, 40, 44), 0.035) 100%);
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__inner {
+    width: min(1600px, 100%);
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__title.section-title {
+    display: block;
+    margin-bottom: 0.45rem;
+    text-align: center;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__subheading {
+    width: min(760px, 100%);
+    margin: 0 auto;
+    color: var(--color-muted-foreground);
+    font-size: clamp(0.98rem, 1.25vw, 1.12rem);
+    line-height: 1.6;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.55rem 0 1.7rem;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: min(100%, 240px);
+    min-height: 54px;
+    padding: 0.8rem 1.8rem;
+    border: 1.5px solid rgba(var(--color-primary-rgb, 10, 40, 44), 0.28);
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--brand-purple, #0A282C);
+    font-family: var(--font-body, "DM Sans", "Segoe UI", sans-serif);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__tab:hover,
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__tab:focus-visible {
+    transform: translateY(-1px);
+    border-color: rgba(var(--brand-green-rgb, 250, 208, 84), 0.72);
+    box-shadow: 0 8px 20px rgba(var(--color-primary-rgb, 10, 40, 44), 0.08);
+    outline: none;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__tab.is-active {
+    background: var(--brand-title-gradient, linear-gradient(135deg, #0A282C 0%, #163E43 100%));
+    color: var(--color-primary-foreground, #ffffff);
+    border-color: transparent;
+    box-shadow: 0 14px 30px rgba(var(--color-primary-rgb, 10, 40, 44), 0.16);
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__panel {
+    display: none;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__panel.is-active {
+    display: block;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13.75rem, 14.75rem));
+    gap: clamp(1rem, 1.45vw, 1.35rem);
+    align-items: stretch;
+    justify-items: center;
+    justify-content: center;
+    width: min(1500px, 100%);
+    margin: 0 auto;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__grid .amzn-card {
+    width: 100%;
+    max-width: 14.75rem;
+    height: 100%;
+    margin: 0 auto;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__grid .amzn-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__grid .amzn-card__body > .amzn-card__form {
+    margin-top: auto;
+    padding-top: 14px;
+  }
+
+  #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__empty {
+    grid-column: 1 / -1;
+    padding: 2rem;
+    border: 1px dashed var(--color-border);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--color-muted-foreground);
+    text-align: center;
+  }
+
+  @media (min-width: 560px) {
+    #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__grid {
+      grid-template-columns: repeat(auto-fill, minmax(13.75rem, 14.75rem));
+    }
+  }
+
+  @media (min-width: 900px) {
+    #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__grid {
+      grid-template-columns: repeat(auto-fill, minmax(13.75rem, 14.75rem));
+    }
+  }
+
+  @media (min-width: 1200px) {
+    #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__grid {
+      grid-template-columns: repeat(auto-fill, minmax(13.75rem, 14.75rem));
+    }
+  }
+
+  @media (max-width: 767px) {
+    #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__title.section-title {
+      margin-bottom: 0.35rem;
+    }
+
+    #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__tabs {
+      gap: 0.75rem;
+      margin: 1.2rem 0 1.35rem;
+    }
+
+    #SeasonalDealsFeature-{{ section.id }} .seasonal-deals-feature__tab {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var section = document.getElementById('SeasonalDealsFeature-{{ section.id }}');
+    if (!section) return;
+
+    var tabs = Array.prototype.slice.call(section.querySelectorAll('[data-seasonal-tab]'));
+    var panels = Array.prototype.slice.call(section.querySelectorAll('[data-seasonal-panel]'));
+
+    if (!tabs.length || !panels.length) return;
+
+    var activateTab = function(tabId) {
+      tabs.forEach(function(tab) {
+        var isActive = tab.getAttribute('data-seasonal-tab') === tabId;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      panels.forEach(function(panel) {
+        var isActive = panel.getAttribute('data-seasonal-panel') === tabId;
+        panel.classList.toggle('is-active', isActive);
+        panel.hidden = !isActive;
+      });
+    };
+
+    tabs.forEach(function(tab, index) {
+      tab.addEventListener('click', function() {
+        activateTab(tab.getAttribute('data-seasonal-tab'));
+      });
+
+      tab.addEventListener('keydown', function(event) {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+
+        event.preventDefault();
+        var direction = event.key === 'ArrowRight' ? 1 : -1;
+        var nextIndex = (index + direction + tabs.length) % tabs.length;
+        tabs[nextIndex].focus();
+        activateTab(tabs[nextIndex].getAttribute('data-seasonal-tab'));
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Seasonal deals",
+  "tag": "section",
+  "class": "section-seasonal-deals",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Seasonal Deals & Features"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Shop National Nutrition's top seasonal selections year round"
+    },
+    {
+      "type": "text",
+      "id": "primary_tab",
+      "label": "First tab",
+      "default": "All Month Offer"
+    },
+    {
+      "type": "collection",
+      "id": "primary_collection",
+      "label": "First tab collection"
+    },
+    {
+      "type": "text",
+      "id": "secondary_tab",
+      "label": "Second tab",
+      "default": "Spring Detox"
+    },
+    {
+      "type": "collection",
+      "id": "secondary_collection",
+      "label": "Second tab collection"
+    },
+    {
+      "type": "text",
+      "id": "tertiary_tab",
+      "label": "Third tab",
+      "default": "Previous Month Offer"
+    },
+    {
+      "type": "collection",
+      "id": "tertiary_collection",
+      "label": "Third tab collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show per tab",
+      "min": 4,
+      "max": 10,
+      "step": 1,
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Seasonal deals"
+    }
+  ]
+}
+{% endschema %}

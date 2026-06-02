@@ -1,0 +1,92 @@
+{%- comment -%}
+  Guarantee Banner Section
+{%- endcomment -%}
+
+<section class="guarantee-banner">
+  <div class="container">
+    <div class="guarantee-grid">
+      <div class="guarantee-item">
+        <div class="guarantee-item__icon">🚚</div>
+        <div class="guarantee-item__content">
+          <h3 class="guarantee-item__title">Free Shipping</h3>
+          <p class="guarantee-item__desc">On orders over $49</p>
+        </div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-item__icon">🔒</div>
+        <div class="guarantee-item__content">
+          <h3 class="guarantee-item__title">Secure Payment</h3>
+          <p class="guarantee-item__desc">100% protected checkout</p>
+        </div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-item__icon">🧪</div>
+        <div class="guarantee-item__content">
+          <h3 class="guarantee-item__title">Lab Tested</h3>
+          <p class="guarantee-item__desc">Third-party verified</p>
+        </div>
+      </div>
+      <div class="guarantee-item">
+        <div class="guarantee-item__icon">💯</div>
+        <div class="guarantee-item__content">
+          <h3 class="guarantee-item__title">Satisfaction Guaranteed</h3>
+          <p class="guarantee-item__desc">30-day money back</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .guarantee-banner {
+    background: var(--color-muted);
+    padding: 2rem 0;
+  }
+
+  .guarantee-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .guarantee-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .guarantee-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .guarantee-item__icon {
+    font-size: 2rem;
+  }
+
+  .guarantee-item__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin: 0 0 0.125rem;
+  }
+
+  .guarantee-item__desc {
+    font-size: 0.75rem;
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Guarantee Banner",
+  "tag": "section",
+  "class": "section-guarantee-banner",
+  "presets": [
+    {
+      "name": "Guarantee Banner"
+    }
+  ]
+}
+{% endschema %}

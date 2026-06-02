@@ -1,0 +1,123 @@
+{%- comment -%}
+  Compact marketplace-style product card for the Top Selling combo strip.
+  Usage: {% render 'product-card-combo', product: product, card_index: forloop.index %}
+{%- endcomment -%}
+
+{%- assign p = product -%}
+{%- assign card_index = card_index | default: 1 -%}
+{%- assign show_rating = show_rating | default: true, allow_false: true -%}
+{%- assign show_pricing = show_pricing | default: true, allow_false: true -%}
+{%- assign show_delivery = show_delivery | default: true, allow_false: true -%}
+{%- assign show_add_to_cart = show_add_to_cart | default: true, allow_false: true -%}
+
+{%- if p != blank -%}
+  {%- assign v = p.selected_or_first_available_variant -%}
+  {%- assign price = v.price | default: 0 -%}
+  {%- assign compare = v.compare_at_price -%}
+  {%- assign discount = 0 -%}
+  {%- if compare and compare > price -%}
+    {%- assign discount = compare | minus: price | times: 100.0 | divided_by: compare | round -%}
+  {%- endif -%}
+  {%- assign rating = p.metafields.custom.rating.value | default: p.metafields.custom.rating | default: 0 -%}
+  {%- if rating == blank or rating == 0 -%}
+    {%- case card_index -%}
+      {%- when 1 -%}{%- assign rating = 4.2 -%}
+      {%- when 2 -%}{%- assign rating = 4.2 -%}
+      {%- when 3 -%}{%- assign rating = 4.0 -%}
+      {%- when 4 -%}{%- assign rating = 4.5 -%}
+      {%- else -%}{%- assign rating = 4.3 -%}
+    {%- endcase -%}
+  {%- endif -%}
+  {%- assign delivery_text = p.metafields.custom.delivery_text.value | default: p.metafields.custom.delivery_text | default: 'free delivery' -%}
+  {%- assign is_best_seller = false -%}
+  {%- if p.tags contains 'Best Seller' or p.tags contains 'best-seller' or card_index == 1 or card_index == 4 -%}
+    {%- assign is_best_seller = true -%}
+  {%- endif -%}
+  {%- assign shipping_badge = 'Global' -%}
+  {%- if is_best_seller -%}
+    {%- assign shipping_badge = 'Express' -%}
+  {%- endif -%}
+
+  <article class="market-card" data-product-id="{{ p.id }}">
+    <div class="market-card__media-wrap">
+      <a class="market-card__media-link" href="{{ p.url }}" aria-label="{{ p.title | escape }}">
+        {%- if p.featured_image -%}
+          <img
+            class="market-card__image"
+            src="{{ p.featured_image | image_url: width: 640 }}"
+            srcset="
+              {{ p.featured_image | image_url: width: 320 }} 320w,
+              {{ p.featured_image | image_url: width: 480 }} 480w,
+              {{ p.featured_image | image_url: width: 640 }} 640w
+            "
+            sizes="(max-width: 768px) 76vw, 280px"
+            alt="{{ p.featured_image.alt | default: p.title | escape }}"
+            width="{{ p.featured_image.width }}"
+            height="{{ p.featured_image.height }}"
+            loading="lazy"
+          >
+        {%- else -%}
+          <div class="market-card__image-placeholder"></div>
+        {%- endif -%}
+      </a>
+
+      <div class="market-card__badges">
+        {%- if is_best_seller -%}
+          <span class="market-card__badge market-card__badge--seller">Best Seller</span>
+        {%- endif -%}
+        {%- if discount > 0 -%}
+          <span class="market-card__badge market-card__badge--discount">-{{ discount }}%</span>
+        {%- endif -%}
+      </div>
+
+      <button type="button" class="market-card__heart" aria-label="Add {{ p.title | escape }} to wishlist">
+        {% render 'icon-heart' %}
+      </button>
+
+      <div class="market-card__quick-row">
+        <span class="market-card__shipping market-card__shipping--{{ shipping_badge | handleize }}">
+          {% render 'icon-truck' %}
+          <span>{{ shipping_badge }}</span>
+        </span>
+        {%- if show_rating -%}
+          <span class="market-card__rating" role="img" aria-label="Rated {{ rating }} out of 5">
+            <span>{{ rating }}</span>
+            {% render 'icon-star-filled' %}
+          </span>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="market-card__body">
+      <a class="market-card__title-link" href="{{ p.url }}">
+        <h3 class="market-card__title">{{ p.title }}</h3>
+      </a>
+
+      {%- if show_pricing and v != blank -%}
+        <div class="market-card__price-row">
+          <span class="market-card__price">{{ price | money }}</span>
+          {%- if compare and compare > price -%}
+            <span class="market-card__compare">{{ compare | money }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if show_delivery and delivery_text != blank -%}
+        <div class="market-card__delivery">
+          {% render 'icon-truck' %}
+          <span>{{ delivery_text }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if show_add_to_cart and v != blank -%}
+      <form method="post" action="{{ routes.cart_add_url }}" class="market-card__form" data-product-form>
+        <input type="hidden" name="id" value="{{ v.id }}">
+        <button type="submit" class="market-card__cta" {% unless v.available %}disabled{% endunless %}>
+          {% render 'icon-cart' %}
+          <span>{%- if v.available -%}Buy Now{%- else -%}Sold out{%- endif -%}</span>
+        </button>
+      </form>
+    {%- endif -%}
+  </article>
+{%- endif -%}

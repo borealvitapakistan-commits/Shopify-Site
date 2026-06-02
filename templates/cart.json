@@ -1,0 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {
+        "show_free_shipping_bar": true,
+        "free_shipping_threshold": 50,
+        "show_discount_field": true,
+        "show_upsells": true,
+        "upsell_heading": "You May Also Like",
+        "secure_text": "100% Secure Payments",
+        "show_stripe_badge": true
+      }
+    }
+  },
+  "order": ["main"]
+}

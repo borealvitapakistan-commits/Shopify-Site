@@ -1,0 +1,20 @@
+{%- comment -%}
+  Wishlist Feature - Save products for later
+  Uses localStorage for guest wishlist, syncs with customer metafields when logged in
+{%- endcomment -%}
+
+{%- comment -%} Wishlist Button Snippet {%- endcomment -%}
+<button 
+  type="button" 
+  class="wishlist-btn {% if is_large %}wishlist-btn-large{% endif %}"
+  data-wishlist-add="{{ product.handle }}"
+  data-product-id="{{ product.id }}"
+  aria-label="Add to wishlist"
+>
+  <svg class="heart-icon" width="{% if is_large %}24{% else %}20{% endif %}" height="{% if is_large %}24{% else %}20{% endif %}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+  </svg>
+  {%- if show_text -%}
+    <span class="wishlist-text">Add to Wishlist</span>
+  {%- endif -%}
+</button>

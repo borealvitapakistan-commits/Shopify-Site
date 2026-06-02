@@ -1,0 +1,354 @@
+{%- comment -%}
+  Product Description / Important Information
+  - Amazon-style sustainability + important information layout
+{%- endcomment -%}
+
+{% assign ingredients_value = nil %}
+{% assign legal_value = nil %}
+
+{% if section.settings.ingredients_metafield != blank %}
+  {% assign parts = section.settings.ingredients_metafield | split: '.' %}
+  {% assign ns = parts[0] %}
+  {% assign key = parts[1] %}
+  {% if ns != blank and key != blank %}
+    {% assign ingredients_value = product.metafields[ns][key] %}
+  {% endif %}
+{% endif %}
+
+{% if section.settings.legal_disclaimer_metafield != blank %}
+  {% assign parts = section.settings.legal_disclaimer_metafield | split: '.' %}
+  {% assign ns = parts[0] %}
+  {% assign key = parts[1] %}
+  {% if ns != blank and key != blank %}
+    {% assign legal_value = product.metafields[ns][key] %}
+  {% endif %}
+{% endif %}
+
+{% if ingredients_value == blank %}
+  {% assign ingredients_value = product.metafields.custom.ingredients | default: product.metafields.health.ingredients %}
+{% endif %}
+{% if legal_value == blank %}
+  {% assign legal_value = product.metafields.custom.legal_disclaimer | default: product.metafields.health.legal_disclaimer %}
+{% endif %}
+
+{% assign show_important = false %}
+{% if ingredients_value != blank or legal_value != blank or product.description != blank %}
+  {% assign show_important = true %}
+{% endif %}
+
+{% assign show_sustainability = section.settings.show_sustainability %}
+{% if show_sustainability or show_important %}
+  <section class="product-important">
+    <div class="container">
+      {% if show_sustainability %}
+        <div class="product-important__sustainability">
+          <h2 class="product-important__sustainability-title">
+            <span class="product-important__leaf" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 21c8 0 14-6 14-14 0-1.1-.9-2-2-2C9 5 3 11 3 19c0 1.1.9 2 2 2z"></path>
+                <path d="M9 15c1.5 0 3-1 4.2-2.3"></path>
+              </svg>
+            </span>
+            {{ section.settings.sustainability_heading }}
+          </h2>
+          {% if section.settings.sustainability_intro != blank %}
+            <p class="product-important__intro">{{ section.settings.sustainability_intro }}</p>
+          {% endif %}
+
+          {% if section.settings.sustainability_feature_title != blank %}
+            <h3 class="product-important__mini-title">{{ section.settings.sustainability_feature_title }}</h3>
+          {% endif %}
+          {% if section.settings.sustainability_feature_text != blank %}
+            <p>{{ section.settings.sustainability_feature_text }}</p>
+          {% endif %}
+
+          {% if section.settings.sustainability_certifier_value != blank %}
+            <div class="product-important__certifier">
+              {% if section.settings.sustainability_certifier_label != blank %}
+                <span class="product-important__certifier-label">{{ section.settings.sustainability_certifier_label }}</span>
+              {% endif %}
+              <span class="product-important__certifier-value">{{ section.settings.sustainability_certifier_value }}</span>
+            </div>
+          {% endif %}
+
+          {% if section.settings.sustainability_footer_text != blank %}
+            <p class="product-important__footer">{{ section.settings.sustainability_footer_text }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if show_important %}
+        <div class="product-important__details">
+          <h2 class="product-important__title">{{ section.settings.heading | default: 'Important information' }}</h2>
+
+          {% if ingredients_value != blank or product.description != blank %}
+            <div class="product-important__block">
+              <h3>{{ section.settings.ingredients_heading | default: 'Ingredients' }}</h3>
+              <div class="rte">
+                {% if ingredients_value != blank %}
+                  {% if ingredients_value.value != blank %}
+                    {{ ingredients_value | metafield_tag }}
+                  {% else %}
+                    {{ ingredients_value }}
+                  {% endif %}
+                {% else %}
+                  {{ product.description }}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+
+          {% if legal_value != blank %}
+            <div class="product-important__block">
+              <h3>{{ section.settings.legal_heading | default: 'Legal Disclaimer' }}</h3>
+              <div class="rte">
+                {% if legal_value.value != blank %}
+                  {{ legal_value | metafield_tag }}
+                {% else %}
+                  {{ legal_value }}
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <style>
+    .product-important {
+      --info-font: "DM Sans", "Segoe UI", sans-serif;
+      --info-text: #000000;
+      --info-muted: var(--color-muted-foreground, #33585D);
+      --info-border: rgba(var(--color-primary-rgb, 10, 40, 44), 0.2);
+      --info-link: var(--brand-purple, #0A282C);
+      --info-green: var(--brand-green-dark, #C89F27);
+      font-family: var(--info-font);
+      color: var(--info-text);
+      padding: 2.55rem 0 0.2rem;
+      background: #fff;
+    }
+
+    .product-important__sustainability {
+      padding-bottom: 1.95rem;
+      border-bottom: 1px solid var(--info-border);
+      color: var(--info-text);
+    }
+
+    .product-important__sustainability-title {
+      margin: 0 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.52rem;
+      font-size: clamp(1.7rem, 2.35vw, 2.45rem);
+      line-height: 1.14;
+      letter-spacing: 0.005em;
+    }
+
+    .product-important__leaf {
+      display: inline-flex;
+      color: var(--info-green);
+    }
+
+    .product-important__intro {
+      margin: 0 0 1.05rem;
+      color: var(--color-muted-foreground, #33585D);
+      font-size: 1.08rem;
+      line-height: 1.5;
+    }
+
+    .product-important__mini-title {
+      margin: 0 0 0.5rem;
+      font-size: 1.54rem;
+      line-height: 1.25;
+    }
+
+    .product-important__certifier {
+      margin-top: 0.95rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .product-important__certifier-label {
+      font-size: 0.95rem;
+      color: var(--info-muted);
+    }
+
+    .product-important__certifier-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--info-link);
+    }
+
+    .product-important__footer {
+      margin-top: 1.1rem;
+      color: var(--info-green);
+      font-weight: 700;
+      font-size: 1.03rem;
+    }
+
+    .product-important__details {
+      padding: 2rem 0 1.75rem;
+      border-bottom: 1px solid var(--info-border);
+    }
+
+    .product-important__title {
+      font-family: var(--font-heading, "DM Sans", "Segoe UI", sans-serif) !important;
+      font-weight: 400 !important;
+      margin: 0 0 1.15rem;
+      font-size: 1.875rem !important;
+      font-weight: 500 !important;
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+    }
+
+    .product-important__block + .product-important__block {
+      margin-top: 1.15rem;
+    }
+
+    .product-important__block h3 {
+      margin: 0 0 0.45rem;
+      font-size: 2rem;
+      line-height: 1.25;
+    }
+
+    .product-important__block .rte {
+      color: var(--info-text);
+      font-size: 1.14rem;
+      line-height: 1.62;
+    }
+
+    @media (max-width: 989px) {
+      .product-important {
+        padding-top: 2rem;
+      }
+
+      .product-important__sustainability {
+        padding-bottom: 1.55rem;
+      }
+
+      .product-important__sustainability-title {
+        font-size: clamp(1.46rem, 5.5vw, 1.95rem);
+      }
+
+      .product-important__intro {
+        font-size: 1rem;
+      }
+
+      .product-important__mini-title {
+        font-size: 1.28rem;
+      }
+
+      .product-important__details {
+        padding: 1.5rem 0 1.2rem;
+      }
+
+      .product-important__title {
+        font-size: 1.875rem !important;
+      }
+
+      .product-important__block h3 {
+        font-size: 1.24rem;
+      }
+
+      .product-important__block .rte {
+        font-size: 1rem;
+      }
+    }
+  </style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product description",
+  "tag": "section",
+  "class": "section-product-description",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Important information"
+    },
+    {
+      "type": "text",
+      "id": "ingredients_heading",
+      "label": "Ingredients heading",
+      "default": "Ingredients"
+    },
+    {
+      "type": "text",
+      "id": "legal_heading",
+      "label": "Legal heading",
+      "default": "Legal Disclaimer"
+    },
+    {
+      "type": "text",
+      "id": "ingredients_metafield",
+      "label": "Ingredients metafield (namespace.key)",
+      "info": "Example: health.ingredients"
+    },
+    {
+      "type": "text",
+      "id": "legal_disclaimer_metafield",
+      "label": "Legal disclaimer metafield (namespace.key)",
+      "info": "Example: custom.legal_disclaimer"
+    },
+    {
+      "type": "header",
+      "content": "Sustainability block"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sustainability",
+      "label": "Show sustainability block",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "sustainability_heading",
+      "label": "Sustainability heading",
+      "default": "Sustainability features"
+    },
+    {
+      "type": "textarea",
+      "id": "sustainability_intro",
+      "label": "Sustainability intro",
+      "default": "This product has features recognized as more sustainable by certifying organizations."
+    },
+    {
+      "type": "text",
+      "id": "sustainability_feature_title",
+      "label": "Feature title",
+      "default": "Organic content"
+    },
+    {
+      "type": "textarea",
+      "id": "sustainability_feature_text",
+      "label": "Feature text",
+      "default": "Product contains at least 95% organic material."
+    },
+    {
+      "type": "text",
+      "id": "sustainability_certifier_label",
+      "label": "Certifier label",
+      "default": "As certified by"
+    },
+    {
+      "type": "text",
+      "id": "sustainability_certifier_value",
+      "label": "Certifier value",
+      "default": "USDA organic"
+    },
+    {
+      "type": "textarea",
+      "id": "sustainability_footer_text",
+      "label": "Sustainability footer",
+      "default": "Discover more products with sustainability features."
+    }
+  ]
+}
+{% endschema %}

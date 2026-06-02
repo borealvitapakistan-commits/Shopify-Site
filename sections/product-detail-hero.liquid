@@ -1,0 +1,353 @@
+{%- comment -%}
+  Product Detail Hero
+  - Add multiple banner blocks
+  - Each banner block is mapped to a product
+  - Renders only banners for the current product
+{%- endcomment -%}
+
+{% assign rendered_count = 0 %}
+
+<section
+  id="ProductDetailHero-{{ section.id }}"
+  class="product-detail-hero"
+  style="
+    --pdh-max-width: {{ section.settings.max_width }}px;
+    --pdh-gap: {{ section.settings.gap }}px;
+    --pdh-radius: {{ section.settings.radius }}px;
+    --pdh-padding-top: {{ section.settings.padding_top }}px;
+    --pdh-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="container">
+    <div class="product-detail-hero__stack">
+      {% for block in section.blocks %}
+        {% if block.type != 'banner' %}
+          {% continue %}
+        {% endif %}
+        {% if block.settings.product == blank %}
+          {% continue %}
+        {% endif %}
+        {% if block.settings.product.id != product.id %}
+          {% continue %}
+        {% endif %}
+        {% if block.settings.image == blank %}
+          {% continue %}
+        {% endif %}
+
+        {% assign rendered_count = rendered_count | plus: 1 %}
+        {% assign image_alt = block.settings.alt_text %}
+        {% if image_alt == blank %}
+          {% assign image_alt = block.settings.image.alt %}
+        {% endif %}
+        {% if image_alt == blank %}
+          {% assign image_alt = product.title %}
+        {% endif %}
+        {% assign loading = 'lazy' %}
+        {% if rendered_count == 1 %}
+          {% assign loading = 'eager' %}
+        {% endif %}
+        {% assign item_max_width = block.settings.max_width %}
+        {% if item_max_width == blank or item_max_width == 0 %}
+          {% assign item_max_width = section.settings.max_width %}
+        {% endif %}
+
+        <div
+          class="product-detail-hero__item"
+          style="--pdh-item-max-width: {{ item_max_width }}px;"
+          {{ block.shopify_attributes }}
+        >
+          {% if block.settings.link != blank %}
+            <a class="product-detail-hero__link" href="{{ block.settings.link }}">
+          {% endif %}
+            <picture class="product-detail-hero__picture">
+              {% if block.settings.image_mobile != blank %}
+                <source
+                  media="(max-width: 749px)"
+                  srcset="
+                    {{ block.settings.image_mobile | image_url: width: 320 }} 320w,
+                    {{ block.settings.image_mobile | image_url: width: 480 }} 480w,
+                    {{ block.settings.image_mobile | image_url: width: 640 }} 640w,
+                    {{ block.settings.image_mobile | image_url: width: 750 }} 750w,
+                    {{ block.settings.image_mobile | image_url: width: 900 }} 900w
+                  "
+                >
+              {% endif %}
+              {{
+                block.settings.image
+                | image_url: width: 2400
+                | image_tag:
+                  class: 'product-detail-hero__image',
+                  widths: '480,640,750,900,1100,1400,1700,2000,2400',
+                  sizes: '(min-width: 1200px) min(var(--pdh-max-width), var(--pdh-item-max-width)), calc(100vw - 2rem)',
+                  loading: loading,
+                  alt: image_alt
+              }}
+            </picture>
+          {% if block.settings.link != blank %}
+            </a>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      {% if rendered_count == 0 %}
+        {% if section.settings.use_product_featured_fallback and product.featured_image != blank %}
+          <div class="product-detail-hero__item" style="--pdh-item-max-width: {{ section.settings.max_width }}px;">
+            {{
+              product.featured_image
+              | image_url: width: 2400
+              | image_tag:
+                class: 'product-detail-hero__image',
+                widths: '480,640,750,900,1100,1400,1700,2000,2400',
+                sizes: '(min-width: 1200px) min(var(--pdh-max-width), var(--pdh-item-max-width)), calc(100vw - 2rem)',
+                loading: 'lazy',
+                alt: product.title
+            }}
+          </div>
+        {% elsif section.settings.show_fallback and section.settings.fallback_image != blank %}
+          {% assign fallback_alt = section.settings.fallback_alt %}
+          {% if fallback_alt == blank %}
+            {% assign fallback_alt = section.settings.fallback_image.alt %}
+          {% endif %}
+          {% if fallback_alt == blank %}
+            {% assign fallback_alt = product.title %}
+          {% endif %}
+
+          <div class="product-detail-hero__item" style="--pdh-item-max-width: {{ section.settings.max_width }}px;">
+            {% if section.settings.fallback_link != blank %}
+              <a class="product-detail-hero__link" href="{{ section.settings.fallback_link }}">
+            {% endif %}
+              <picture class="product-detail-hero__picture">
+                {% if section.settings.fallback_image_mobile != blank %}
+                  <source
+                    media="(max-width: 749px)"
+                    srcset="
+                      {{ section.settings.fallback_image_mobile | image_url: width: 320 }} 320w,
+                      {{ section.settings.fallback_image_mobile | image_url: width: 480 }} 480w,
+                      {{ section.settings.fallback_image_mobile | image_url: width: 640 }} 640w,
+                      {{ section.settings.fallback_image_mobile | image_url: width: 750 }} 750w,
+                      {{ section.settings.fallback_image_mobile | image_url: width: 900 }} 900w
+                    "
+                  >
+                {% endif %}
+                {{
+                  section.settings.fallback_image
+                  | image_url: width: 2400
+                  | image_tag:
+                    class: 'product-detail-hero__image',
+                    widths: '480,640,750,900,1100,1400,1700,2000,2400',
+                    sizes: '(min-width: 1200px) min(var(--pdh-max-width), var(--pdh-item-max-width)), calc(100vw - 2rem)',
+                    loading: 'lazy',
+                    alt: fallback_alt
+                }}
+              </picture>
+            {% if section.settings.fallback_link != blank %}
+              </a>
+            {% endif %}
+          </div>
+        {% elsif request.design_mode %}
+          <div class="product-detail-hero__placeholder">
+            Add "Product banner" blocks and assign them to this product.
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .product-detail-hero {
+    padding-top: var(--pdh-padding-top, 24px);
+    padding-bottom: var(--pdh-padding-bottom, 24px);
+  }
+
+  .product-detail-hero__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--pdh-gap, 24px);
+  }
+
+  .product-detail-hero__item {
+    width: min(100%, var(--pdh-item-max-width, var(--pdh-max-width, 1200px)));
+    max-width: min(100%, var(--pdh-max-width, 1200px));
+  }
+
+  .product-detail-hero__link,
+  .product-detail-hero__picture {
+    display: block;
+    width: 100%;
+  }
+
+  .product-detail-hero__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--pdh-radius, 0px);
+  }
+
+  .product-detail-hero__placeholder {
+    width: min(100%, var(--pdh-max-width, 1200px));
+    border: 1px dashed var(--color-border);
+    border-radius: max(8px, var(--pdh-radius, 0px));
+    padding: 1rem;
+    color: var(--color-muted-foreground);
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 749px) {
+    .product-detail-hero {
+      padding-top: max(16px, calc(var(--pdh-padding-top, 24px) * 0.75));
+      padding-bottom: max(16px, calc(var(--pdh-padding-bottom, 24px) * 0.75));
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product detail hero",
+  "tag": "section",
+  "class": "section-product-detail-hero",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Desktop max width",
+      "min": 600,
+      "max": 1800,
+      "step": 20,
+      "default": 1200,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Space between banners",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "radius",
+      "label": "Corner radius",
+      "min": 0,
+      "max": 36,
+      "step": 2,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_product_featured_fallback",
+      "label": "Use product featured image if no banner match",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Fallback banner"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_fallback",
+      "label": "Show fallback if no product match",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "fallback_image_mobile",
+      "label": "Fallback mobile image"
+    },
+    {
+      "type": "url",
+      "id": "fallback_link",
+      "label": "Fallback link"
+    },
+    {
+      "type": "text",
+      "id": "fallback_alt",
+      "label": "Fallback alt text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Product banner",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image"
+        },
+        {
+          "type": "range",
+          "id": "max_width",
+          "label": "Desktop max width override",
+          "min": 0,
+          "max": 1800,
+          "step": 20,
+          "default": 0,
+          "unit": "px",
+          "info": "0 uses section desktop max width."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Banner link"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product detail hero"
+    }
+  ]
+}
+{% endschema %}

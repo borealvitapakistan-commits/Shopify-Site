@@ -1,0 +1,121 @@
+{%- comment -%}
+  Related Products Section
+{%- endcomment -%}
+
+<section class="related-products">
+  <div class="container">
+    {% if section.settings.heading != blank %}
+      <h2 class="section-title section-title--center">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="products-grid" id="RelatedProducts">
+      {% assign related = recommendations.products | default: collections.all.products %}
+      {% for product in related limit: section.settings.products_to_show %}
+        {% render 'product-card-amzn',
+          product: product,
+          show_rating: section.settings.show_rating,
+          show_pricing: section.settings.show_pricing,
+          show_unit_price: section.settings.show_unit_price,
+          show_delivery: section.settings.show_delivery,
+          show_social_proof: section.settings.show_social_proof,
+          show_add_to_cart: section.settings.show_add_to_cart
+        %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .related-products {
+    background: var(--color-muted);
+    padding: 4rem 0;
+  }
+
+  .related-products > .container {
+    width: min(1280px, calc(100vw - clamp(2rem, 10vw, 11rem)));
+    max-width: 1280px;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .related-products .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13.75rem, 14.75rem));
+    justify-content: center;
+    gap: clamp(1rem, 1.45vw, 1.35rem);
+  }
+
+  @media (max-width: 767px) {
+    .related-products > .container {
+      width: 100%;
+      max-width: var(--site-content-max-width, var(--site-max-width, 1920px));
+      padding-right: var(--site-edge-gutter, 0.9rem);
+      padding-left: var(--site-edge-gutter, 0.9rem);
+    }
+
+    .related-products .products-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "tag": "section",
+  "class": "section-related-products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You May Also Like"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "label": "Products to show"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pricing",
+      "label": "Show pricing",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_unit_price",
+      "label": "Show unit price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery",
+      "label": "Show delivery text",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_proof",
+      "label": "Show social proof",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_to_cart",
+      "label": "Show add to cart",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

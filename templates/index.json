@@ -1,0 +1,171 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero-banner": {
+      "type": "hero-banner",
+      "blocks": {
+        "slide_EY7A4d": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Apr_21_2026_10_06_03_PM.png",
+            "nav_title": "Women's Health",
+            "nav_caption": "Shop Now",
+            "grid_title": "Women's Health",
+            "grid_text": "Daily wellness essentials for women",
+            "link": "/collections/all"
+          }
+        },
+        "slide_jALWGg": {
+          "type": "slide",
+          "settings": {
+            "nav_title": "Sunscreen",
+            "nav_caption": "BOGO 50% Off",
+            "grid_title": "Sunscreen",
+            "grid_text": "Protect and save on everyday sun care",
+            "link": "/collections/all"
+          }
+        },
+        "slide_7TBgeP": {
+          "type": "slide",
+          "settings": {
+            "nav_title": "Buy One, Get One Free",
+            "nav_caption": "Shop Now",
+            "grid_title": "Buy One, Get One Free",
+            "grid_text": "Double-value wellness picks",
+            "link": "/collections/all"
+          }
+        },
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/ChatGPT_Image_Apr_21_2026_10_06_03_PM.png",
+            "nav_title": "Wellness Essentials",
+            "nav_caption": "Shop Now",
+            "grid_title": "Wellness Essentials",
+            "grid_text": "Supplements and daily health favorites",
+            "link": "/collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "slide_EY7A4d",
+        "slide_jALWGg",
+        "slide_7TBgeP",
+        "slide-1"
+      ],
+      "settings": {
+        "autoplay": false,
+        "autoplay_interval": 5,
+        "mobile_ratio": "auto",
+        "hero_eyebrow": "Northern apothecary meets modern science",
+        "seo_h1": "Herbal By Nature. Antioxidants that protect cells.",
+        "hero_lead": "Canadian-made herbal supplements with clear labels, NPN-registered formulas, and delivery for Pakistan.",
+        "hero_cta_label": "Shop wellness formulas",
+        "hero_cta_link": "/collections/all",
+        "hero_proof_1": "Made in Canada",
+        "hero_proof_2": "NPN registered",
+        "hero_proof_3": "Readable product facts",
+        "show_bottom_strip": true,
+        "view_all_label": "View all",
+        "view_all_heading": "Explore all featured banners",
+        "promo_top_link": "",
+        "promo_bottom_link": ""
+      }
+    },
+    "top-selling-combo": {
+      "type": "product-carousel",
+      "settings": {
+        "header_style": "featured_tabs",
+        "eyebrow": "POPULAR PICKS",
+        "title": "Trending Now",
+        "primary_tab_label": "Best Sellings",
+        "secondary_tab_label": "New Arrivals",
+        "collection": "all",
+        "products_to_show": 12,
+        "products_order": "collection",
+        "show_view_all": false,
+        "view_all_label": "view all",
+        "view_all_style": "link",
+        "show_rating": true,
+        "show_pricing": true,
+        "show_unit_price": true,
+        "show_delivery": true,
+        "show_social_proof": true,
+        "show_add_to_cart": true
+      }
+    },
+    "browse-by-discount": {
+      "type": "browse-by-discount",
+      "settings": {
+        "eyebrow": "SPECIAL OFFERS",
+        "heading": "Deals Picked for You",
+        "collection": "all",
+        "products_to_show": 10,
+        "show_shop_all": true,
+        "show_mission_banner": false
+      }
+    },
+    "trending-now-after-offer": {
+      "type": "product-carousel",
+      "settings": {
+        "header_style": "centered_title",
+        "eyebrow": "WELLNESS BUNDLES",
+        "title": "Wellness Bundles",
+        "primary_tab_label": "Best Sellings",
+        "secondary_tab_label": "New Arrivals",
+        "collection": "all",
+        "products_to_show": 12,
+        "products_order": "collection",
+        "show_view_all": false,
+        "view_all_label": "Spring Essentials!",
+        "view_all_style": "button",
+        "show_rating": true,
+        "show_pricing": true,
+        "show_unit_price": true,
+        "show_delivery": false,
+        "show_social_proof": false,
+        "show_add_to_cart": true,
+        "show_science_banner": false,
+        "science_heading": "WE ARE BACKED BY SCIENCE",
+        "science_text": "<p>Our carefully curated formulations are prepared in a controlled environment under strict supervision of our healthcare experts.</p>",
+        "science_button_label": "Know more"
+      }
+    },
+    "balance-your-wellness": {
+      "type": "balance-your-wellness",
+      "settings": {
+        "eyebrow": "BALANCE YOUR WELLNESS",
+        "heading": "Herbal Products for Your Wellness",
+        "description": "<p>Explore herbal wellness support for every stage of daily health.</p>",
+        "men_collection": "all",
+        "female_collection": "all",
+        "kids_collection": "all"
+      }
+    },
+    "homepage-blogs": {
+      "type": "homepage-blogs",
+      "settings": {
+        "eyebrow": "Wellness journal",
+        "title": "Blogs",
+        "blog": "news",
+        "show_view_all": true
+      }
+    }
+  },
+  "order": [
+    "hero-banner",
+    "top-selling-combo",
+    "browse-by-discount",
+    "trending-now-after-offer",
+    "balance-your-wellness",
+    "homepage-blogs"
+  ]
+}

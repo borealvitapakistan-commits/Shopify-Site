@@ -1,0 +1,211 @@
+{%- comment -%}
+Usage:
+{% render 'product-card-amzn', product: product %}
+{%- endcomment -%}
+
+{%- assign p = product -%}
+{%- assign show_pricing = show_pricing | default: true, allow_false: true -%}
+{%- assign show_add_to_cart = show_add_to_cart | default: true, allow_false: true -%}
+{%- assign show_reviews_icon = settings.show_product_card_reviews_icon -%}
+{%- assign inline_sale_pricing = inline_sale_pricing | default: false, allow_false: true -%}
+{%- assign custom_discount_badge = custom_discount_badge | default: blank -%}
+{%- assign card_image_loading = image_loading | default: 'lazy' -%}
+{%- assign card_image_fetchpriority = image_fetchpriority | default: 'auto' -%}
+
+{%- if p != blank -%}
+  {%- assign v = p.selected_or_first_available_variant -%}
+  {%- assign price = v.price | default: 0 -%}
+  {%- assign compare = v.compare_at_price -%}
+  {%- assign display_price = price_override_cents | default: price -%}
+  {%- assign display_compare = compare_override_cents | default: compare -%}
+  {%- assign has_discount = false -%}
+  {%- assign discount = 0 -%}
+  {%- if display_compare and display_compare > display_price -%}
+    {%- assign discount = display_compare | minus: display_price | times: 100.0 | divided_by: display_compare | round -%}
+    {%- assign has_discount = true -%}
+  {%- endif -%}
+  {%- if custom_discount_badge != blank -%}
+    {%- assign has_discount = true -%}
+  {%- endif -%}
+  {%- assign product_tags = p.tags | join: ',' | downcase -%}
+  {%- assign is_best_seller = false -%}
+  {%- if product_tags contains 'best seller' or product_tags contains 'best-seller' -%}
+    {%- assign is_best_seller = true -%}
+  {%- endif -%}
+  {%- capture price_display -%}{{ display_price | money }}{%- endcapture -%}
+  {%- capture compare_display -%}{{ display_compare | money }}{%- endcapture -%}
+  {%- assign has_price_block = false -%}
+  {%- if show_pricing and v != blank -%}
+    {%- assign has_price_block = true -%}
+  {%- endif -%}
+  {%- assign has_cta_block = false -%}
+  {%- if show_add_to_cart and v != blank -%}
+    {%- assign has_cta_block = true -%}
+  {%- endif -%}
+  {%- assign title_parts = p.title | split: '|' -%}
+  {%- assign count_chip = p.metafields.custom.count.value | default: p.metafields.custom.count | default: p.metafields.custom.capsule_count.value | default: p.metafields.custom.capsule_count -%}
+  {%- if count_chip == blank and title_parts.size > 1 -%}
+    {%- assign count_chip = title_parts.last | strip -%}
+  {%- endif -%}
+  {%- assign strength_chip = p.metafields.custom.strength.value | default: p.metafields.custom.strength | default: p.metafields.custom.amount_per_capsule.value | default: p.metafields.custom.amount_per_capsule -%}
+  {%- assign strength_source = p.title | append: ' ' | append: v.title | append: ' ' | append: product_tags -%}
+  {%- if strength_chip == blank and strength_source contains ' mg' -%}
+    {%- assign before_strength = strength_source | split: ' mg' | first -%}
+    {%- assign strength_number = before_strength | split: ' ' | last | strip -%}
+    {%- if strength_number != blank -%}
+      {%- assign strength_chip = strength_number | append: ' mg' -%}
+    {%- endif -%}
+  {%- endif -%}
+  {%- if strength_chip == blank and strength_source contains ' mcg' -%}
+    {%- assign before_strength = strength_source | split: ' mcg' | first -%}
+    {%- assign strength_number = before_strength | split: ' ' | last | strip -%}
+    {%- if strength_number != blank -%}
+      {%- assign strength_chip = strength_number | append: ' mcg' -%}
+    {%- endif -%}
+  {%- endif -%}
+  {%- if strength_chip == blank and p.handle contains 'allergy-relief' -%}
+    {%- assign strength_chip = '405 mg' -%}
+  {%- endif -%}
+
+  <div class="amzn-card{% if has_discount %} amzn-card--has-discount{% endif %}{% if is_best_seller or has_discount %} amzn-card--has-burst{% endif %}{% if inline_sale_pricing %} amzn-card--inline-sale{% endif %}">
+    <div class="amzn-card__media">
+      <a class="amzn-card__media-link" href="{{ p.url }}" aria-label="{{ p.title | escape }}">
+        {%- if p.featured_image -%}
+          {%- assign hover_image = blank -%}
+          {%- for image in p.images -%}
+            {%- if image.id != p.featured_image.id -%}
+              {%- assign hover_image = image -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+          <img
+            class="amzn-card__img amzn-card__img--primary"
+            src="{{ p.featured_image | image_url: width: 540 }}"
+            srcset="
+              {{ p.featured_image | image_url: width: 320 }} 320w,
+              {{ p.featured_image | image_url: width: 480 }} 480w,
+              {{ p.featured_image | image_url: width: 640 }} 640w,
+              {{ p.featured_image | image_url: width: 720 }} 720w
+            "
+            sizes="(max-width: 768px) 70vw, 320px"
+            alt="{{ p.featured_image.alt | default: p.title | escape }}"
+            width="{{ p.featured_image.width }}"
+            height="{{ p.featured_image.height }}"
+            loading="{{ card_image_loading }}"
+            fetchpriority="{{ card_image_fetchpriority }}"
+            decoding="async"
+          >
+          {%- if hover_image != blank -%}
+            <img
+              class="amzn-card__img amzn-card__img--hover"
+              src="{{ hover_image | image_url: width: 540 }}"
+              srcset="
+                {{ hover_image | image_url: width: 320 }} 320w,
+                {{ hover_image | image_url: width: 480 }} 480w,
+                {{ hover_image | image_url: width: 640 }} 640w,
+                {{ hover_image | image_url: width: 720 }} 720w
+              "
+              sizes="(max-width: 768px) 70vw, 320px"
+              alt="{{ hover_image.alt | default: p.title | escape }}"
+              width="{{ hover_image.width }}"
+              height="{{ hover_image.height }}"
+              loading="lazy"
+              decoding="async"
+            >
+          {%- endif -%}
+        {%- else -%}
+          <div class="amzn-card__img-placeholder"></div>
+        {%- endif -%}
+      </a>
+
+      {%- if has_discount -%}
+        <div class="amzn-card__sale-strip" aria-hidden="true">
+          {%- if custom_discount_badge != blank -%}
+            {{ custom_discount_badge }}
+          {%- else -%}
+            {{ discount }}% OFF
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if is_best_seller or has_discount -%}
+        <div class="amzn-card__deal-burst" aria-hidden="true">
+          {%- if is_best_seller -%}
+            Best Seller
+          {%- else -%}
+            Crazy Deal
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <button
+        type="button"
+        class="amzn-card__wishlist"
+        data-wishlist-add="{{ p.handle }}"
+        data-product-id="{{ p.id }}"
+        aria-label="Add {{ p.title | escape }} to wishlist"
+        aria-pressed="false"
+      >
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div class="amzn-card__body">
+      <div class="amzn-card__title-row">
+        <a class="amzn-card__link" href="{{ p.url }}">
+          <h2 class="amzn-card__title">{{ p.title }}</h2>
+        </a>
+        {%- if show_reviews_icon -%}
+          <span class="amzn-card__reviews" role="img" aria-label="5 star reviews">
+            <span class="amzn-card__reviews-stars" aria-hidden="true"></span>
+          </span>
+        {%- endif -%}
+      </div>
+
+      {%- if count_chip != blank or strength_chip != blank -%}
+        <div class="amzn-card__chips" aria-label="Product label details">
+          {%- if count_chip != blank -%}
+            <span class="amzn-card__chip"><span>Count</span>{{ count_chip }}</span>
+          {%- endif -%}
+          {%- if strength_chip != blank -%}
+            <span class="amzn-card__chip"><span>Strength</span>{{ strength_chip }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if has_price_block or has_cta_block -%}
+        <div class="amzn-card__footer{% if has_cta_block == false %} amzn-card__footer--price-only{% endif %}{% if has_price_block == false %} amzn-card__footer--cta-only{% endif %}">
+          {%- if has_price_block -%}
+            <div class="amzn-card__price-block">
+              <span class="amzn-card__price-label">Price</span>
+              <div class="amzn-card__pricing{% if inline_sale_pricing and display_compare and display_compare > display_price %} amzn-card__pricing--sale-inline{% endif %}">
+                {%- if inline_sale_pricing and display_compare and display_compare > display_price -%}
+                  <span class="amzn-card__compare amzn-card__compare--promo"><s>{{ compare_display | strip }}</s></span>
+                {%- endif -%}
+
+                <span class="amzn-card__price{% if display_compare and display_compare > display_price %} amzn-card__price--sale{% endif %}">{{ price_display | strip }}</span>
+
+                {%- if inline_sale_pricing == false and display_compare and display_compare > display_price -%}
+                  <span class="amzn-card__compare"><s>{{ compare_display | strip }}</s></span>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if has_cta_block -%}
+            <div class="amzn-card__purchase">
+              <form method="post" action="{{ routes.cart_add_url }}" class="amzn-card__form" data-product-form>
+                <input type="hidden" name="id" value="{{ v.id }}">
+                <button type="submit" class="amzn-card__cta" {% unless v.available %}disabled{% endunless %}>
+                  <span>{%- if v.available -%}Buy Now{%- else -%}Sold out{%- endif -%}</span>
+                </button>
+              </form>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

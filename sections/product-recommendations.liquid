@@ -1,0 +1,437 @@
+{%- comment -%}
+  Product Recommendations
+  - Amazon-like horizontal carousel with nav controls
+{%- endcomment -%}
+
+{% if section.settings.enable_recommendations %}
+  <section
+    class="product-recommendations"
+    id="ProductRecommendations-{{ section.id }}"
+    data-recommendations
+    data-product-id="{{ product.id }}"
+    data-limit="{{ section.settings.products_to_show }}"
+  >
+    <div class="container">
+      <div class="product-recommendations__header">
+        <h2 class="product-recommendations__title">{{ section.settings.heading }}</h2>
+        <div class="product-recommendations__page" data-carousel-page hidden></div>
+      </div>
+
+      <div class="product-recommendations__carousel">
+        <button
+          class="product-recommendations__nav product-recommendations__nav--prev"
+          type="button"
+          data-carousel-prev
+          aria-label="Previous products"
+          disabled
+        >
+          <span aria-hidden="true">&#8249;</span>
+        </button>
+
+        <div class="product-recommendations__viewport">
+          <div class="product-recommendations__track" data-recommendations-grid aria-live="polite"></div>
+        </div>
+
+        <button
+          class="product-recommendations__nav product-recommendations__nav--next"
+          type="button"
+          data-carousel-next
+          aria-label="Next products"
+          disabled
+        >
+          <span aria-hidden="true">&#8250;</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .product-recommendations {
+      --rec-font: "DM Sans", "Segoe UI", sans-serif;
+      --rec-text: var(--color-foreground, #000);
+      --rec-muted: var(--brand-text-green, #33585D);
+      --rec-border: color-mix(in srgb, var(--brand-yellow-base, #FAD054) 55%, white);
+      padding: 2rem 0;
+      border-top: 1px solid var(--rec-border);
+      background: transparent;
+      font-family: var(--rec-font);
+      color: var(--rec-text);
+    }
+
+    .product-recommendations > .container {
+      width: min(1280px, calc(100vw - clamp(2rem, 10vw, 11rem)));
+      max-width: 1280px;
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+    .product-recommendations__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .product-recommendations__title {
+      font-family: var(--font-heading, "DM Sans", "Segoe UI", sans-serif) !important;
+      margin: 0;
+      font-size: 1.875rem !important;
+      font-weight: 500 !important;
+      line-height: 1.16;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      color: var(--rec-text);
+    }
+
+    .product-recommendations__page {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--rec-muted);
+      white-space: nowrap;
+    }
+
+    .product-recommendations__carousel {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 0.85rem;
+      align-items: center;
+    }
+
+    .product-recommendations__viewport {
+      overflow: hidden;
+    }
+
+    .product-recommendations__track {
+      display: flex;
+      gap: clamp(0.95rem, 1.35vw, 1.25rem);
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 1.35rem 0.4rem 1rem;
+      margin: 0;
+    }
+
+    .product-recommendations__track::-webkit-scrollbar {
+      display: none;
+    }
+
+    .product-recommendations__slide {
+      flex: 0 0 clamp(13.75rem, 16vw, 14.75rem);
+      min-width: 0;
+      scroll-snap-align: start;
+    }
+
+    @media (max-width: 1199px) {
+      .product-recommendations__slide {
+        flex-basis: clamp(13.5rem, 22vw, 14.5rem);
+      }
+    }
+
+    @media (max-width: 989px) {
+      .product-recommendations__slide {
+        flex-basis: clamp(13.25rem, 42vw, 14.25rem);
+      }
+    }
+
+    .product-recommendations__nav {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--color-border);
+      background: var(--color-background);
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-recommendations__nav span {
+      font-size: 1.5rem;
+      line-height: 1;
+      margin-top: -0.08rem;
+    }
+
+    .product-recommendations__nav:hover:not(:disabled) {
+      background: var(--color-primary);
+      color: var(--color-primary-foreground);
+      border-color: var(--color-primary);
+    }
+
+    .product-recommendations__nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Keep recommendation card internals in the same visual system as Trending,
+       while ensuring CTA stays pinned for uneven title lengths. */
+    .product-recommendations .amzn-card {
+      height: 100%;
+    }
+
+    .product-recommendations .amzn-card__body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .product-recommendations .amzn-card__body > .amzn-card__form {
+      margin-top: auto;
+      display: block;
+    }
+
+    .product-recommendations .amzn-card__cta {
+      display: block;
+    }
+
+    .product-recommendations__empty {
+      width: 100%;
+      padding: 2rem;
+      border: 1px dashed var(--color-border);
+      border-radius: 12px;
+      text-align: center;
+      color: var(--color-muted-foreground);
+    }
+
+    @media (max-width: 767px) {
+      .product-recommendations {
+        padding: 1.85rem 0 2.2rem;
+      }
+
+      .product-recommendations > .container {
+        width: 100%;
+        max-width: var(--site-content-max-width, var(--site-max-width, 1920px));
+        padding-right: var(--site-edge-gutter, 0.9rem);
+        padding-left: var(--site-edge-gutter, 0.9rem);
+      }
+
+      .product-recommendations__header {
+        margin-bottom: 1rem;
+      }
+
+      .product-recommendations__title {
+        font-size: 1.5rem !important;
+      }
+
+      .product-recommendations__carousel {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+      }
+
+      .product-recommendations__nav {
+        display: none;
+      }
+
+      .product-recommendations__slide {
+        flex: 0 0 76vw;
+        max-width: 280px;
+      }
+    }
+  </style>
+
+  <script>
+    (function() {
+      var section = document.getElementById('ProductRecommendations-{{ section.id }}');
+      if (!section) return;
+
+      var track = section.querySelector('[data-recommendations-grid]');
+      var prevBtn = section.querySelector('[data-carousel-prev]');
+      var nextBtn = section.querySelector('[data-carousel-next]');
+      var pageLabel = section.querySelector('[data-carousel-page]');
+      var productId = section.dataset.productId;
+      var limit = Number(section.dataset.limit || 8);
+      var cartAddUrl = {{ routes.cart_add_url | json }};
+      var showReviewsIcon = {{ settings.show_product_card_reviews_icon | json }};
+
+      var formatMoney = function(cents) {
+        var amount = Number(cents || 0) / 100;
+        var rounded = Math.abs(amount % 1) < 0.001 ? amount.toFixed(0) : amount.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+        return '$' + rounded;
+      };
+
+      var escapeHtml = function(text) {
+        return String(text || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      };
+
+      var getVariant = function(item) {
+        if (!item || !Array.isArray(item.variants) || !item.variants.length) return null;
+        var availableVariant = item.variants.find(function(variant) {
+          return variant.available;
+        });
+        return availableVariant || item.variants[0];
+      };
+
+      var renderCard = function(item) {
+        var image = item.featured_image || (item.images && item.images[0]) || '';
+        var hoverImage = '';
+        if (Array.isArray(item.images) && item.images.length > 1) {
+          hoverImage = item.images.find(function(productImage) {
+            return productImage && productImage !== image;
+          }) || '';
+        }
+        var variant = getVariant(item);
+        var price = Number((variant && variant.price) || item.price || 0);
+        var compare = Number((variant && variant.compare_at_price) || item.compare_at_price || 0);
+        var title = escapeHtml(item.title || '');
+        var url = item.url || '#';
+        var variantId = variant && variant.id ? String(variant.id) : '';
+        var isAvailable = !!(variant && variant.available);
+        var buttonLabel = isAvailable ? 'Buy Now' : 'Sold out';
+        var discount = compare > price ? Math.round(((compare - price) * 100) / compare) : 0;
+        var pricingMarkup = '<div class="amzn-card__pricing">';
+        pricingMarkup += '<span class="amzn-card__price' + (compare > price ? ' amzn-card__price--sale' : '') + '">' + formatMoney(price) + '</span>';
+
+        if (compare > price) {
+          pricingMarkup += '<span class="amzn-card__compare"><s>' + formatMoney(compare) + '</s></span>';
+        }
+
+        pricingMarkup += '</div>';
+
+        return (
+          '<article class="product-recommendations__slide">' +
+            '<div class="amzn-card' + (discount > 0 ? ' amzn-card--has-discount amzn-card--has-burst' : '') + '">' +
+              '<div class="amzn-card__media">' +
+                '<a class="amzn-card__media-link" href="' + url + '" aria-label="' + title + '">' +
+                  (image ? '<img class="amzn-card__img amzn-card__img--primary" src="' + image + '" alt="' + title + '" loading="lazy">' : '<div class="amzn-card__img-placeholder"></div>') +
+                  (hoverImage ? '<img class="amzn-card__img amzn-card__img--hover" src="' + hoverImage + '" alt="' + title + '" loading="lazy">' : '') +
+                '</a>' +
+                (discount > 0 ? '<div class="amzn-card__sale-strip" aria-hidden="true">' + discount + '% OFF</div><div class="amzn-card__deal-burst" aria-hidden="true">Crazy Deal</div>' : '') +
+                '<button type="button" class="amzn-card__wishlist" data-wishlist-add="' + escapeHtml(item.handle || '') + '" data-product-id="' + String(item.id || '') + '" aria-label="Add ' + title + ' to wishlist" aria-pressed="false">' +
+                  '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z"></path></svg>' +
+                '</button>' +
+              '</div>' +
+              '<div class="amzn-card__body">' +
+                '<div class="amzn-card__title-row">' +
+                  '<a class="amzn-card__link" href="' + url + '">' +
+                    '<p class="amzn-card__title">' + title + '</p>' +
+                  '</a>' +
+                  (showReviewsIcon ? '<span class="amzn-card__reviews" role="img" aria-label="5 star reviews"><span class="amzn-card__reviews-stars" aria-hidden="true">★★★★★</span></span>' : '') +
+                '</div>' +
+                '<div class="amzn-card__footer">' +
+                  '<div class="amzn-card__price-block">' +
+                    pricingMarkup +
+                  '</div>' +
+                  '<div class="amzn-card__purchase">' +
+                    '<form method="post" action="' + cartAddUrl + '" class="amzn-card__form" data-product-form>' +
+                      '<input type="hidden" name="id" value="' + variantId + '">' +
+                      '<input type="hidden" name="quantity" value="1">' +
+                      '<button type="submit" class="amzn-card__cta" ' + (isAvailable ? '' : 'disabled') + '>' + buttonLabel + '</button>' +
+                    '</form>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</article>'
+        );
+      };
+
+      var updateNavState = function() {
+        if (!track || !prevBtn || !nextBtn) return;
+        var maxScrollLeft = Math.max(0, track.scrollWidth - track.clientWidth);
+        var scrollLeft = track.scrollLeft;
+        prevBtn.disabled = scrollLeft <= 2;
+        nextBtn.disabled = scrollLeft >= (maxScrollLeft - 2);
+
+        if (!pageLabel) return;
+        var slide = track.querySelector('.product-recommendations__slide');
+        if (!slide) return;
+
+        var gap = parseFloat(window.getComputedStyle(track).gap || '0');
+        var slideWidth = slide.getBoundingClientRect().width + gap;
+        var visibleCount = Math.max(1, Math.floor((track.clientWidth + gap) / slideWidth));
+        var totalSlides = track.querySelectorAll('.product-recommendations__slide').length;
+        var totalPages = Math.max(1, Math.ceil(totalSlides / visibleCount));
+        var currentIndex = Math.max(0, Math.round(scrollLeft / slideWidth));
+        var currentPage = Math.min(totalPages, Math.floor(currentIndex / visibleCount) + 1);
+
+        pageLabel.hidden = false;
+        pageLabel.textContent = 'Page ' + currentPage + ' of ' + totalPages;
+      };
+
+      var bindCarouselControls = function() {
+        if (!track || !prevBtn || !nextBtn) return;
+        var getStep = function() {
+          var slide = track.querySelector('.product-recommendations__slide');
+          if (!slide) return track.clientWidth;
+          var gap = parseFloat(window.getComputedStyle(track).gap || '0');
+          var slideWidth = slide.getBoundingClientRect().width + gap;
+          var visibleCount = Math.max(1, Math.floor((track.clientWidth + gap) / slideWidth));
+          return Math.max(slideWidth, slideWidth * visibleCount);
+        };
+
+        prevBtn.addEventListener('click', function() {
+          track.scrollBy({ left: -getStep(), behavior: 'smooth' });
+        });
+
+        nextBtn.addEventListener('click', function() {
+          track.scrollBy({ left: getStep(), behavior: 'smooth' });
+        });
+
+        track.addEventListener('scroll', updateNavState, { passive: true });
+        window.addEventListener('resize', updateNavState);
+      };
+
+      fetch(window.Shopify.routes.root + 'recommendations/products.json?product_id=' + productId + '&limit=' + limit + '&intent=related')
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          if (!data.products || !data.products.length) {
+            section.style.display = 'none';
+            return;
+          }
+
+          track.innerHTML = data.products.map(renderCard).join('');
+          bindCarouselControls();
+          updateNavState();
+        })
+        .catch(function() {
+          section.style.display = 'none';
+        });
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "tag": "section",
+  "class": "section-product-recommendations",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_recommendations",
+      "label": "Enable recommendations",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Products related to this item"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,278 @@
+{%- comment -%}
+  Related Articles Section
+  - Works on article pages and product pages
+{%- endcomment -%}
+
+{% assign blog_handle = section.settings.blog | default: 'news' %}
+{% assign selected_blog = blog %}
+{% if selected_blog == blank and blog_handle != blank %}
+  {% assign selected_blog = blogs[blog_handle] %}
+{% endif %}
+{% if selected_blog == blank %}
+  {% assign selected_blog = blogs.news %}
+{% endif %}
+
+{% assign related_article_cards = '' %}
+{%- if selected_blog != blank and selected_blog.articles.size > 0 -%}
+  {% capture product_search_text %}
+    {{ product.title }}
+    {{ product.handle }}
+    {{ product.vendor }}
+    {{ product.type }}
+    {% for product_tag in product.tags %}
+      {{ product_tag }}
+    {% endfor %}
+    {% for product_collection in product.collections %}
+      {{ product_collection.title }}
+      {{ product_collection.handle }}
+    {% endfor %}
+  {% endcapture %}
+  {% assign product_search_text = product_search_text | strip_html | downcase %}
+  {% assign product_title_text = product.title | downcase | replace: '|', ' ' | replace: '&', ' ' | replace: '-', ' ' | replace: ',', ' ' | replace: '.', ' ' %}
+  {% assign product_title_words = product_title_text | split: ' ' %}
+
+  {%- capture related_article_cards -%}
+    {%- assign article_count = 0 -%}
+    {%- for related_article in selected_blog.articles -%}
+      {%- if article_count >= section.settings.articles_to_show -%}
+        {%- break -%}
+      {%- endif -%}
+
+      {%- if article != blank and related_article.id == article.id -%}
+        {%- continue -%}
+      {%- endif -%}
+
+      {% capture article_search_text %}
+        {{ related_article.title }}
+        {{ related_article.excerpt_or_content | strip_html }}
+        {% for article_tag in related_article.tags %}
+          {{ article_tag }}
+        {% endfor %}
+      {% endcapture %}
+      {% assign article_search_text = article_search_text | strip_html | downcase %}
+      {% assign is_related_article = false %}
+
+      {% if product.handle != blank and article_search_text contains product.handle %}
+        {% assign is_related_article = true %}
+      {% endif %}
+
+      {% if is_related_article == false %}
+        {% for article_tag in related_article.tags %}
+          {% assign article_tag_clean = article_tag | downcase | strip %}
+          {% if article_tag_clean != blank and product_search_text contains article_tag_clean %}
+            {% assign is_related_article = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% if is_related_article == false %}
+        {% assign matched_title_words = 0 %}
+        {% for title_word in product_title_words %}
+          {% assign clean_word = title_word | strip | remove: '(' | remove: ')' | remove: '[' | remove: ']' | remove: '/' %}
+          {% if clean_word.size > 4 and article_search_text contains clean_word %}
+            {% assign matched_title_words = matched_title_words | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+
+        {% if matched_title_words >= 2 %}
+          {% assign is_related_article = true %}
+        {% endif %}
+      {% endif %}
+
+      {%- if is_related_article -%}
+        <a class="related-articles-section__card" href="{{ related_article.url }}" aria-label="{{ related_article.title | escape }}">
+          <span class="related-articles-section__media">
+            {%- if related_article.image -%}
+              <img
+                src="{{ related_article.image | image_url: width: 420 }}"
+                alt="{{ related_article.image.alt | default: related_article.title | escape }}"
+                width="{{ related_article.image.width }}"
+                height="{{ related_article.image.height }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="related-articles-section__placeholder" aria-hidden="true">
+                {{ related_article.title | slice: 0 | upcase }}
+              </span>
+            {%- endif -%}
+          </span>
+          <span class="related-articles-section__card-title">{{ related_article.title }}</span>
+        </a>
+        {%- assign article_count = article_count | plus: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+{%- endif -%}
+
+{% assign related_article_cards_clean = related_article_cards | strip %}
+<section class="related-articles-section">
+  <div class="container">
+    <h2 class="related-articles-section__title">{{ section.settings.heading }}</h2>
+
+    <div class="related-articles-section__grid">
+      {%- if related_article_cards_clean != blank -%}
+        {{ related_article_cards }}
+      {%- else -%}
+        <a class="related-articles-section__card related-articles-section__card--dummy" href="{{ selected_blog.url | default: '/blogs/news' }}" aria-label="Wellness guide coming soon">
+          <span class="related-articles-section__media">
+            <span class="related-articles-section__dummy-art" aria-hidden="true">
+              <svg viewBox="0 0 96 64" fill="none">
+                <rect x="11" y="12" width="74" height="42" rx="6" fill="currentColor" opacity="0.12"></rect>
+                <path d="M25 42c7-13 14-20 23-20s16 7 23 20" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+                <circle cx="36" cy="26" r="5" fill="currentColor" opacity="0.35"></circle>
+                <path d="M48 20v24M36 32h24" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+              </svg>
+            </span>
+          </span>
+          <span class="related-articles-section__card-title">Wellness guide coming soon</span>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .related-articles-section {
+    padding: clamp(1.6rem, 3.2vw, 2.6rem) 0 clamp(3rem, 6vw, 5.4rem);
+    background: #ffffff;
+  }
+
+  .related-articles-section .container {
+    max-width: min(1060px, calc(100vw - 2rem));
+  }
+
+  .related-articles-section__title {
+    margin: 0 0 2.2rem;
+    color: var(--brand-primary, #0A282C);
+    font-family: var(--font-heading, "DM Sans", "Segoe UI", sans-serif) !important;
+    font-size: clamp(1.55rem, 2.2vw, 2rem) !important;
+    font-weight: 500 !important;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-align: left;
+    text-transform: none;
+  }
+
+  .related-articles-section__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 205px));
+    justify-content: start;
+    gap: 1.3rem;
+  }
+
+  .related-articles-section__card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+    min-height: 238px;
+    padding: 0.75rem 0.75rem 1.25rem;
+    border-radius: 14px;
+    background: #eeeeee;
+    color: var(--brand-primary, #0A282C);
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .related-articles-section__card:hover,
+  .related-articles-section__card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(10, 40, 44, 0.1);
+    outline: none;
+  }
+
+  .related-articles-section__media {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1.5 / 1;
+    overflow: hidden;
+    border-radius: 2px;
+    background: #ffffff;
+  }
+
+  .related-articles-section__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .related-articles-section__placeholder {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    color: #ffffff;
+    background: var(--brand-primary, #0A282C);
+    font-family: var(--font-heading, "DM Sans", sans-serif);
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  .related-articles-section__dummy-art {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    color: var(--brand-primary, #0A282C);
+    background: color-mix(in srgb, var(--brand-accent, #FAD054) 22%, white);
+  }
+
+  .related-articles-section__dummy-art svg {
+    width: 74%;
+    max-width: 140px;
+    height: auto;
+  }
+
+  .related-articles-section__card-title {
+    display: block;
+    color: inherit;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 749px) {
+    .related-articles-section__title {
+      margin-bottom: 1.5rem;
+    }
+
+    .related-articles-section__grid {
+      grid-template-columns: minmax(170px, 205px);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Related Articles",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Related Articles",
+      "label": "Heading"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "articles_to_show",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 2,
+      "label": "Articles to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Articles"
+    }
+  ]
+}
+{% endschema %}

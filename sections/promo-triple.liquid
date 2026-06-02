@@ -1,0 +1,592 @@
+{%- comment -%}
+  Three Image Promo Grid
+{%- endcomment -%}
+
+<section class="promo-triple" data-promo-triple-section="{{ section.id }}">
+  <div class="container">
+    <div class="promo-triple__grid">
+      <a class="promo-tile promo-tile--left{% if section.settings.show_left_deal_content %} promo-tile--deal{% endif %}" href="{{ section.settings.left_link | default: '#' }}">
+        {% if section.settings.left_image != blank %}
+          <img
+            src="{{ section.settings.left_image | image_url: width: 900 }}"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.left_image.width }}"
+            height="{{ section.settings.left_image.height }}"
+            loading="lazy"
+          >
+        {% else %}
+          {{ 'collection-1' | placeholder_svg_tag }}
+        {% endif %}
+
+        {% if section.settings.show_left_deal_content %}
+          <div
+            class="promo-deal"
+            data-promo-deal
+            data-countdown-enabled="{{ section.settings.enable_left_countdown }}"
+            data-duration-mode="{{ section.settings.left_countdown_mode }}"
+            data-custom-hours="{{ section.settings.left_custom_hours }}"
+            data-start-at="{{ section.settings.left_timer_start_at | escape }}"
+            data-store-offset="{{ 'now' | date: '%z' }}"
+            data-active-label="{{ section.settings.left_timer_active_label | escape }}"
+            data-expired-label="{{ section.settings.left_timer_expired_label | escape }}"
+          >
+            {% if section.settings.left_badge_text != blank %}
+              <p class="promo-deal__eyebrow">{{ section.settings.left_badge_text }}</p>
+            {% endif %}
+
+            {% if section.settings.left_heading != blank %}
+              <h3 class="promo-deal__title">{{ section.settings.left_heading }}</h3>
+            {% endif %}
+
+            {% if section.settings.left_button_label != blank %}
+              <span class="promo-deal__button">{{ section.settings.left_button_label }}</span>
+            {% endif %}
+
+            {% if section.settings.enable_left_countdown %}
+              <div class="promo-deal__countdown">
+                <p class="promo-deal__label" data-deal-label>{{ section.settings.left_timer_active_label }}</p>
+                <div class="promo-deal__timer" data-deal-display aria-label="{{ section.settings.left_timer_active_label | escape }}">
+                  <div class="promo-deal__unit">
+                    <span data-unit="days">00</span>
+                    <small>Days</small>
+                  </div>
+                  <div class="promo-deal__unit">
+                    <span data-unit="hours">00</span>
+                    <small>Hrs</small>
+                  </div>
+                  <div class="promo-deal__unit">
+                    <span data-unit="minutes">00</span>
+                    <small>Min</small>
+                  </div>
+                  <div class="promo-deal__unit">
+                    <span data-unit="seconds">00</span>
+                    <small>Sec</small>
+                  </div>
+                </div>
+                <p class="promo-deal__message" data-deal-message hidden>{{ section.settings.left_timer_expired_message }}</p>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </a>
+
+      <a class="promo-tile promo-tile--right" href="{{ section.settings.right_link | default: '#' }}">
+        {% if section.settings.right_image != blank %}
+          <img
+            src="{{ section.settings.right_image | image_url: width: 1400 }}"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.right_image.width }}"
+            height="{{ section.settings.right_image.height }}"
+            loading="lazy"
+          >
+        {% else %}
+          {{ 'collection-2' | placeholder_svg_tag }}
+        {% endif %}
+      </a>
+
+      <a class="promo-tile promo-tile--bottom" href="{{ section.settings.bottom_link | default: '#' }}">
+        {% if section.settings.bottom_image != blank %}
+          <img
+            src="{{ section.settings.bottom_image | image_url: width: 1600 }}"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.bottom_image.width }}"
+            height="{{ section.settings.bottom_image.height }}"
+            loading="lazy"
+          >
+        {% else %}
+          {{ 'collection-3' | placeholder_svg_tag }}
+        {% endif %}
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .promo-triple {
+    padding: 2.5rem 0 1.5rem;
+  }
+
+  .promo-triple__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-areas:
+      "left right"
+      "bottom bottom";
+    gap: 1rem;
+  }
+
+  .promo-tile {
+    position: relative;
+    display: block;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-muted);
+    border: 1px solid var(--color-border);
+  }
+
+  .promo-tile img,
+  .promo-tile svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .promo-tile--left {
+    grid-area: left;
+    /* Match right tile height in a 1:2 column layout (8/7 vs 16/7) */
+    aspect-ratio: 8 / 7;
+  }
+
+  .promo-tile--right {
+    grid-area: right;
+    aspect-ratio: 16 / 7;
+  }
+
+  .promo-tile--bottom {
+    grid-area: bottom;
+    aspect-ratio: 16 / 5;
+  }
+
+  .promo-deal {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1.5rem 1.2rem;
+    text-align: center;
+    color: var(--color-primary-foreground, #ffffff);
+    background:
+      linear-gradient(180deg, rgba(var(--color-primary-rgb, 10, 40, 44), 0.16) 0%, rgba(var(--color-primary-rgb, 10, 40, 44), 0.78) 100%),
+      radial-gradient(circle at top, rgba(var(--brand-green-rgb, 250, 208, 84), 0.26) 0%, rgba(var(--brand-green-rgb, 250, 208, 84), 0) 45%);
+  }
+
+  .promo-deal__eyebrow {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .promo-deal__title {
+    margin: 0;
+    max-width: 7ch;
+    font-family: var(--font-heading, "DM Sans", "Segoe UI", sans-serif);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 4vw, 3.4rem);
+    line-height: 0.96;
+    text-transform: uppercase;
+    color: var(--brand-green, #FAD054);
+  }
+
+  .promo-deal__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.8rem 1.4rem;
+    border-radius: 0.45rem;
+    background: var(--brand-yellow-gradient, linear-gradient(135deg, #FAD054 0%, #FFF8E7 100%));
+    color: var(--brand-purple, #0A282C);
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+  }
+
+  .promo-deal__countdown {
+    width: min(100%, 300px);
+  }
+
+  .promo-deal__label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .promo-deal__label::before,
+  .promo-deal__label::after {
+    content: "";
+    flex: 1 1 auto;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .promo-deal__timer {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .promo-deal__unit {
+    position: relative;
+    display: grid;
+    gap: 0.2rem;
+    justify-items: center;
+    padding-inline: 0.15rem;
+  }
+
+  .promo-deal__unit:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0.25rem;
+    right: -0.28rem;
+    width: 1px;
+    height: calc(100% - 0.5rem);
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .promo-deal__unit span {
+    display: block;
+    font-size: clamp(1.35rem, 2.5vw, 2rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .promo-deal__unit small {
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.84;
+  }
+
+  .promo-deal__message {
+    margin: 0.8rem 0 0;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    color: var(--color-primary-foreground, #ffffff);
+  }
+
+  .promo-deal.is-expired .promo-deal__button {
+    opacity: 0.88;
+  }
+
+  @media (max-width: 900px) {
+    .promo-triple__grid {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "left"
+        "right"
+        "bottom";
+    }
+
+    .promo-tile--left,
+    .promo-tile--right,
+    .promo-tile--bottom {
+      aspect-ratio: auto;
+    }
+
+    .promo-tile img,
+    .promo-tile svg {
+      height: auto;
+      object-fit: contain;
+    }
+
+    .promo-deal {
+      padding: 1.5rem 1rem;
+    }
+
+    .promo-deal__title {
+      max-width: none;
+      font-size: clamp(1.8rem, 10vw, 3rem);
+    }
+
+    .promo-deal__countdown {
+      width: min(100%, 280px);
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    const sectionId = "{{ section.id }}";
+    const section = document.querySelector('[data-promo-triple-section="{{ section.id }}"]');
+    if (!section) return;
+
+    const deal = section.querySelector("[data-promo-deal]");
+    if (!deal || deal.dataset.countdownEnabled !== "true") return;
+
+    const label = deal.querySelector("[data-deal-label]");
+    const display = deal.querySelector("[data-deal-display]");
+    const message = deal.querySelector("[data-deal-message]");
+    const days = deal.querySelector('[data-unit="days"]');
+    const hours = deal.querySelector('[data-unit="hours"]');
+    const minutes = deal.querySelector('[data-unit="minutes"]');
+    const seconds = deal.querySelector('[data-unit="seconds"]');
+
+    if (!label || !display || !days || !hours || !minutes || !seconds) return;
+
+    window.__promoTripleCountdowns = window.__promoTripleCountdowns || {};
+    if (window.__promoTripleCountdowns[sectionId]) {
+      clearInterval(window.__promoTripleCountdowns[sectionId]);
+    }
+
+    function pad(value) {
+      return String(Math.max(0, value)).padStart(2, "0");
+    }
+
+    function normalizeOffset(offset) {
+      const trimmed = (offset || "").trim();
+      if (!trimmed) return "+00:00";
+      if (/^[+-]\d{2}:\d{2}$/.test(trimmed) || trimmed === "Z") return trimmed;
+      if (/^[+-]\d{4}$/.test(trimmed)) return trimmed.slice(0, 3) + ":" + trimmed.slice(3);
+      return "+00:00";
+    }
+
+    function parseStartDate(rawValue, fallbackOffset) {
+      const value = (rawValue || "").trim();
+      if (!value) return null;
+
+      const zonedMatch = value.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})(?::(\d{2}))?\s*(Z|[+-]\d{2}:?\d{2})$/i);
+      if (zonedMatch) {
+        const parsedValue = Date.parse(
+          zonedMatch[1] +
+            "T" +
+            zonedMatch[2] +
+            ":" +
+            (zonedMatch[3] || "00") +
+            normalizeOffset(zonedMatch[4])
+        );
+
+        if (!Number.isNaN(parsedValue)) {
+          return new Date(parsedValue);
+        }
+      }
+
+      const localMatch = value.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})(?::(\d{2}))?$/);
+      if (localMatch) {
+        const parsedValue = Date.parse(
+          localMatch[1] +
+            "T" +
+            localMatch[2] +
+            ":" +
+            (localMatch[3] || "00") +
+            normalizeOffset(fallbackOffset)
+        );
+
+        if (!Number.isNaN(parsedValue)) {
+          return new Date(parsedValue);
+        }
+      }
+
+      const fallback = Date.parse(value);
+      return Number.isNaN(fallback) ? null : new Date(fallback);
+    }
+
+    function getDurationMs(mode, customHours) {
+      if (mode === "monthly") return 30 * 24 * 60 * 60 * 1000;
+      if (mode === "custom") return Math.max(1, customHours) * 60 * 60 * 1000;
+      return 7 * 24 * 60 * 60 * 1000;
+    }
+
+    function updateA11y(dayValue, hourValue, minuteValue, secondValue) {
+      display.setAttribute(
+        "aria-label",
+        dayValue +
+          " days, " +
+          hourValue +
+          " hours, " +
+          minuteValue +
+          " minutes, " +
+          secondValue +
+          " seconds remaining"
+      );
+    }
+
+    function renderExpired() {
+      days.textContent = "00";
+      hours.textContent = "00";
+      minutes.textContent = "00";
+      seconds.textContent = "00";
+      label.textContent = deal.dataset.expiredLabel || "Offer ended";
+      updateA11y(0, 0, 0, 0);
+      if (message) message.hidden = false;
+      deal.classList.add("is-expired");
+      if (window.__promoTripleCountdowns[sectionId]) {
+        clearInterval(window.__promoTripleCountdowns[sectionId]);
+        delete window.__promoTripleCountdowns[sectionId];
+      }
+    }
+
+    function renderRemaining(endTime) {
+      const remainingMs = endTime - Date.now();
+      if (remainingMs <= 0) {
+        renderExpired();
+        return;
+      }
+
+      const totalSeconds = Math.floor(remainingMs / 1000);
+      const dayValue = Math.floor(totalSeconds / 86400);
+      const hourValue = Math.floor((totalSeconds % 86400) / 3600);
+      const minuteValue = Math.floor((totalSeconds % 3600) / 60);
+      const secondValue = totalSeconds % 60;
+
+      days.textContent = pad(dayValue);
+      hours.textContent = pad(hourValue);
+      minutes.textContent = pad(minuteValue);
+      seconds.textContent = pad(secondValue);
+      label.textContent = deal.dataset.activeLabel || "Ends In";
+      updateA11y(dayValue, hourValue, minuteValue, secondValue);
+      if (message) message.hidden = true;
+      deal.classList.remove("is-expired");
+    }
+
+    const startDate = parseStartDate(deal.dataset.startAt, deal.dataset.storeOffset);
+    const durationMs = getDurationMs(deal.dataset.durationMode, Number(deal.dataset.customHours || 0));
+
+    if (!startDate || durationMs <= 0) {
+      renderExpired();
+      return;
+    }
+
+    const endTime = startDate.getTime() + durationMs;
+    renderRemaining(endTime);
+    window.__promoTripleCountdowns[sectionId] = window.setInterval(function () {
+      renderRemaining(endTime);
+    }, 1000);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Promo triple",
+  "tag": "section",
+  "class": "section-promo-triple",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Left image"
+    },
+    {
+      "type": "url",
+      "id": "left_link",
+      "label": "Left link"
+    },
+    {
+      "type": "header",
+      "content": "Left deal content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_left_deal_content",
+      "label": "Show left deal content",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "left_badge_text",
+      "label": "Left badge text",
+      "default": "This Week Only"
+    },
+    {
+      "type": "text",
+      "id": "left_heading",
+      "label": "Left heading",
+      "default": "Fresh Offers"
+    },
+    {
+      "type": "text",
+      "id": "left_button_label",
+      "label": "Left button label",
+      "default": "Shop Offers"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_left_countdown",
+      "label": "Enable left countdown",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "left_countdown_mode",
+      "label": "Left countdown duration",
+      "default": "weekly",
+      "options": [
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly (30 days)"
+        },
+        {
+          "value": "custom",
+          "label": "Custom hours"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "left_custom_hours",
+      "label": "Left custom hours",
+      "info": "Enter the number of hours to use when the custom mode is selected.",
+      "default": "72"
+    },
+    {
+      "type": "text",
+      "id": "left_timer_start_at",
+      "label": "Left timer start date/time",
+      "info": "Use YYYY-MM-DD HH:MM or YYYY-MM-DD HH:MM -0600 to control when the countdown starts.",
+      "default": "2026-01-01 00:00"
+    },
+    {
+      "type": "text",
+      "id": "left_timer_active_label",
+      "label": "Left timer active label",
+      "default": "Ends In"
+    },
+    {
+      "type": "text",
+      "id": "left_timer_expired_label",
+      "label": "Left timer expired label",
+      "default": "Offer Ended"
+    },
+    {
+      "type": "textarea",
+      "id": "left_timer_expired_message",
+      "label": "Left timer expired message",
+      "default": "New offers coming soon. Please check back soon."
+    },
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Right image"
+    },
+    {
+      "type": "url",
+      "id": "right_link",
+      "label": "Right link"
+    },
+    {
+      "type": "image_picker",
+      "id": "bottom_image",
+      "label": "Bottom image"
+    },
+    {
+      "type": "url",
+      "id": "bottom_link",
+      "label": "Bottom link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promo triple"
+    }
+  ]
+}
+{% endschema %}

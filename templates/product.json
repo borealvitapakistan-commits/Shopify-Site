@@ -1,0 +1,97 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "product-main-buy",
+      "settings": {
+        "show_thumbnails": true,
+        "variant_label": "Select option",
+        "quantity_label": "Quantity",
+        "add_to_cart_label": "Add to cart",
+        "in_stock_label": "Available",
+        "out_of_stock_label": "Unavailable",
+        "show_dynamic_checkout": false,
+        "enable_mobile_bar": true,
+        "trust_metafield": "",
+        "trust_text": ""
+      }
+    },
+    "description": {
+      "type": "product-description",
+      "disabled": true,
+      "settings": {
+        "heading": "Important information",
+        "ingredients_heading": "Ingredients",
+        "legal_heading": "Legal Disclaimer",
+        "ingredients_metafield": "",
+        "legal_disclaimer_metafield": "",
+        "show_sustainability": false,
+        "sustainability_heading": "Sustainability features",
+        "sustainability_intro": "This product has features recognized as more sustainable by certifying organizations.",
+        "sustainability_feature_title": "Organic content",
+        "sustainability_feature_text": "Product contains at least 95% organic material.",
+        "sustainability_certifier_label": "As certified by",
+        "sustainability_certifier_value": "USDA organic",
+        "sustainability_footer_text": "Discover more products with sustainability features."
+      }
+    },
+    "info": {
+      "type": "product-info-accordions",
+      "settings": {
+        "heading": "Product information ",
+        "ingredients_metafield": "",
+        "supplement_facts_metafield": "",
+        "directions_metafield": "",
+        "warnings_metafield": "",
+        "shipping_metafield": ""
+      }
+    },
+    "detail_hero": {
+      "type": "product-detail-hero",
+      "disabled": true,
+      "settings": {
+        "max_width": 1200,
+        "gap": 24,
+        "radius": 0,
+        "padding_top": 24,
+        "padding_bottom": 24,
+        "use_product_featured_fallback": true,
+        "show_fallback": false,
+        "fallback_link": "",
+        "fallback_alt": ""
+      }
+    },
+    "related_articles": {
+      "type": "related-articles",
+      "settings": {
+        "heading": "Related Articles",
+        "blog": "news",
+        "articles_to_show": 2
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "enable_recommendations": true,
+        "heading": "Products related to this item",
+        "products_to_show": 8
+      }
+    }
+  },
+  "order": [
+    "main",
+    "description",
+    "info",
+    "detail_hero",
+    "related_articles",
+    "recommendations"
+  ]
+}
