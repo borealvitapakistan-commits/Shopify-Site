@@ -531,35 +531,91 @@
   }
 
   body.template-index .health-benefit-card {
-    min-height: auto !important;
-    padding: 1rem 0.65rem !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
+    min-height: clamp(10.75rem, 13vw, 12.8rem) !important;
+    padding: clamp(1rem, 1.45vw, 1.25rem) 0.75rem !important;
+    border: 1px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.12) !important;
+    border-radius: 0.78rem !important;
+    background: #ffffff !important;
     box-shadow: none !important;
+    transform: translateY(0) scale(1) !important;
+    transition:
+      transform 0.22s ease,
+      border-color 0.22s ease,
+      box-shadow 0.22s ease,
+      background-color 0.22s ease !important;
   }
 
   body.template-index .health-benefit-card:hover,
   body.template-index .health-benefit-card:focus-visible {
-    border: 0 !important;
-    box-shadow: none !important;
-    transform: translateY(-1px) !important;
+    border-color: rgba(var(--brand-primary-rgb, 10, 40, 44), 0.24) !important;
+    background: #ffffff !important;
+    box-shadow: 0 0.75rem 1.45rem rgba(10, 40, 44, 0.08) !important;
+    transform: translateY(-0.22rem) scale(1.015) !important;
   }
 
-  body.template-index .amzn-card {
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
+  body.template-index .health-benefit-card__icon,
+  body.template-index .health-benefit-card__title,
+  body.template-index .health-benefit-card__text {
+    transition: transform 0.22s ease, color 0.22s ease !important;
   }
 
-  body.template-index .amzn-card:hover,
-  body.template-index .amzn-card:focus-within {
-    box-shadow: none !important;
+  body.template-index .health-benefit-card:hover .health-benefit-card__icon,
+  body.template-index .health-benefit-card:focus-visible .health-benefit-card__icon {
+    transform: translateY(-0.16rem) !important;
   }
 
-  body.template-index .amzn-card__media {
+  body.template-index .health-benefit-card:hover .health-benefit-card__title,
+  body.template-index .health-benefit-card:focus-visible .health-benefit-card__title {
+    transform: translateY(-0.08rem) !important;
+  }
+
+  body.template-index .product-carousel__slide .amzn-card {
+    border: 1px solid rgba(var(--brand-primary-rgb, 10, 40, 44), 0.13) !important;
+    border-radius: 1rem !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    transform: translateY(0) !important;
+    transition:
+      transform 0.22s ease,
+      border-color 0.22s ease,
+      box-shadow 0.22s ease !important;
+  }
+
+  body.template-index .product-carousel__slide .amzn-card:hover,
+  body.template-index .product-carousel__slide .amzn-card:focus-within {
+    border-color: rgba(var(--brand-primary-rgb, 10, 40, 44), 0.24) !important;
+    box-shadow: 0 0.8rem 1.55rem rgba(10, 40, 44, 0.08) !important;
+    transform: translateY(-0.18rem) !important;
+  }
+
+  body.template-index .product-carousel__slide .amzn-card__media {
     border: 0 !important;
     background: #f2f2f2 !important;
+  }
+
+  body.template-index .product-carousel__slide .amzn-card__body {
+    background: #ffffff !important;
+  }
+
+  body.template-index .product-carousel__slide .amzn-card__title,
+  body.template-index .product-carousel__slide .amzn-card__price {
+    font-family: var(--font-heading, "Coolvetica", "Boreal Heading Fallback", "Montserrat", system-ui, sans-serif) !important;
+    letter-spacing: 0 !important;
+  }
+
+  body.template-index .product-carousel__slide .amzn-card__title {
+    font-weight: 500 !important;
+    line-height: 1.22 !important;
+  }
+
+  body.template-index .product-carousel__slide .amzn-card__price {
+    font-size: 1.08rem !important;
+    font-weight: 500 !important;
+    line-height: 1.08 !important;
+  }
+
+  body.template-index .product-carousel__slide .amzn-card__cta {
+    background: var(--brand-primary, #0A282C) !important;
   }
 
   body.template-index .homepage-knowledge-card {
