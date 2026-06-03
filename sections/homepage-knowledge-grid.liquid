@@ -26,9 +26,13 @@
     <div class="homepage-knowledge__grid">
       {%- if has_articles -%}
         {%- for article in selected_blog.articles limit: 4 -%}
-          <a class="homepage-knowledge-card" href="{{ article.url }}">
-            <span class="homepage-knowledge-card__media">
-              {%- if article.image != blank -%}
+          {%- assign article_has_image = false -%}
+          {%- if article.image != blank -%}
+            {%- assign article_has_image = true -%}
+          {%- endif -%}
+          <a class="homepage-knowledge-card{% unless article_has_image %} homepage-knowledge-card--text-only{% endunless %}" href="{{ article.url }}">
+            {%- if article_has_image -%}
+              <span class="homepage-knowledge-card__media">
                 <img
                   src="{{ article.image | image_url: width: 720 }}"
                   srcset="
@@ -42,10 +46,8 @@
                   height="{{ article.image.height }}"
                   loading="lazy"
                 >
-              {%- else -%}
-                <span class="homepage-knowledge-card__placeholder" aria-hidden="true">{{ article.title | slice: 0 | upcase }}</span>
-              {%- endif -%}
-            </span>
+              </span>
+            {%- endif -%}
             <span class="homepage-knowledge-card__body">
               <strong>{{ article.title }}</strong>
               <span>Read More</span>
@@ -54,12 +56,8 @@
         {%- endfor -%}
       {%- else -%}
         {%- assign fallback_titles = 'How Ashwagandha Helps Manage Stress Naturally|5 Nutrients That Support a Strong Immune System|Omega-3 Benefits for Heart, Brain & Joints|Our Commitment to Clean & Transparent Labels' | split: '|' -%}
-        {%- assign fallback_images = 'leaf|shield|runner|label' | split: '|' -%}
         {%- for title in fallback_titles -%}
-          <a class="homepage-knowledge-card" href="/blogs/news">
-            <span class="homepage-knowledge-card__media homepage-knowledge-card__media--{{ fallback_images[forloop.index0] }}">
-              <span class="homepage-knowledge-card__placeholder" aria-hidden="true">{{ title | slice: 0 }}</span>
-            </span>
+          <a class="homepage-knowledge-card homepage-knowledge-card--text-only" href="/blogs/news">
             <span class="homepage-knowledge-card__body">
               <strong>{{ title }}</strong>
               <span>Read More</span>
@@ -78,13 +76,10 @@
   }
 
   .homepage-knowledge__container {
-    width: min(1540px, calc(100vw - clamp(2rem, 4.2vw, 4rem)));
-    max-width: 1540px;
-    padding: clamp(1.35rem, 2.2vw, 2rem) clamp(1.25rem, 2vw, 2rem);
-    border: 1px solid rgba(10, 40, 44, 0.08);
-    border-radius: 22px;
+    width: min(1280px, calc(100vw - clamp(2rem, 10vw, 11rem)));
+    max-width: 1280px;
+    padding: 0;
     background: #ffffff;
-    box-shadow: 0 14px 34px rgba(10, 40, 44, 0.045);
   }
 
   .homepage-knowledge__header {
@@ -142,6 +137,11 @@
     transform: translateY(-2px);
   }
 
+  .homepage-knowledge-card--text-only {
+    min-height: 10rem;
+    border-top: 3px solid var(--brand-primary, #0A282C);
+  }
+
   .homepage-knowledge-card__media {
     display: block;
     aspect-ratio: 16 / 9;
@@ -170,6 +170,12 @@
     gap: 0.55rem;
     min-height: 118px;
     padding: 0.9rem 1rem 1rem;
+  }
+
+  .homepage-knowledge-card--text-only .homepage-knowledge-card__body {
+    min-height: 100%;
+    align-content: space-between;
+    padding: 1.1rem;
   }
 
   .homepage-knowledge-card__body strong {
